@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="UM Bioinformatics Core" />
+
+<meta name="date" content="2023-08-07" />
+
+<title>R Bonus Content</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link rel="shortcut icon" href="favicon-16x16.png" />
+<!--
+Favicon from
+https://twemoji.twitter.com/
+https://favicon.io/emoji-favicons/dna/
+-->
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">RNA-Seq Demystified</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="Module00_Introduction.html">Intro</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sequence QC
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module01_Warming_Up.html">Warming up</a>
+    </li>
+    <li>
+      <a href="Module02a_Sequence_QC.html">Sequence QC</a>
+    </li>
+    <li>
+      <a href="Module02b_Trimming.html">Trimming</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Alignment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module03a_Reference_Genomes.html">Reference Genomes</a>
+    </li>
+    <li>
+      <a href="Module03b_Alignment.html">Alignment</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Quantification
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module04_Alignment_QC_and_Quantification.html">Alignment QC and Quantification</a>
+    </li>
+    <li>
+      <a href="Module05_Additional_Details.html">Optional: Additional details</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Groups/Model
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module06_DEAnalysisSetup.html">DE Introduction</a>
+    </li>
+    <li>
+      <a href="Module07_DESeq2Init.html">DE Initialization</a>
+    </li>
+    <li>
+      <a href="Module08_DESeq2DE.html">DE Normalization and Modeling</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Expression plots
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module09_SampleQCViz.html">Sample QC</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Diff Expression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module10_DEComparisons.html">DE Testing</a>
+    </li>
+    <li>
+      <a href="Module11_DEVisualizations.html">DE Visualization</a>
+    </li>
+    <li>
+      <a href="Module12_DEAnnotations.html">DE Annotation</a>
+    </li>
+    <li>
+      <a href="R_bonus_content.html">Bonus content</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="Module99_Wrap_up.html">Wrap up</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">R Bonus Content</h1>
+<h4 class="author">UM Bioinformatics Core</h4>
+<h4 class="date">2023-08-07</h4>
+
+</div>
+
+
+<style type="text/css">
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+</style>
+<blockquote>
+<h1 id="objectives" class="unlisted unnumbered">Objectives</h1>
+<ul>
+<li>Additional visualizations for gene/sample level QC assessment</li>
+</ul>
+</blockquote>
+<div id="count-boxplots" class="section level1">
+<h1>Count boxplots</h1>
+<p>To evaluate the difference between the count distributions before and
+after normalization, let’s extract the raw counts and the rlog
+normalized counts, and coerce them to <code>tibble</code>s.</p>
+<pre class="r"><code>raw_counts = as_tibble(counts(dds), rownames = &#39;id&#39;)
+norm_counts = as_tibble(assay(rld), rownames = &#39;id&#39;)
+
+raw_counts</code></pre>
+<pre><code># A tibble: 55,492 × 7
+   id                 sample_A sample_B sample_C sample_D sample_E sample_F
+   &lt;chr&gt;                 &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;
+ 1 ENSMUSG00000000001     1041      905     1296     3481     1283     1921
+ 2 ENSMUSG00000000003        0        0        0        0        0        0
+ 3 ENSMUSG00000000028     1043     1232     1664     2690     1825     2720
+ 4 ENSMUSG00000000031     1819      914     1618     8618     1350     1222
+ 5 ENSMUSG00000000037       19       11       18       48       37       29
+ 6 ENSMUSG00000000049       18        1        4       24        1        1
+ 7 ENSMUSG00000000056    14972    14768    21026    22962    22263    23622
+ 8 ENSMUSG00000000058        1        0        0        0        0        0
+ 9 ENSMUSG00000000078      888      607      911     1689      738     1180
+10 ENSMUSG00000000085      402      483      744      898      811     1261
+# ℹ 55,482 more rows</code></pre>
+<pre class="r"><code>norm_counts</code></pre>
+<pre><code># A tibble: 16,249 × 7
+   id                 sample_A sample_B sample_C sample_D sample_E sample_F
+   &lt;chr&gt;                 &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+ 1 ENSMUSG00000000001    10.5     10.4     10.4     10.8     10.4     10.6 
+ 2 ENSMUSG00000000028    10.6     10.7     10.7     10.7     10.8     11.0 
+ 3 ENSMUSG00000000031    11.2     10.5     10.7     11.9     10.6     10.3 
+ 4 ENSMUSG00000000037     4.64     4.56     4.58     4.66     4.72     4.62
+ 5 ENSMUSG00000000049     3.02     2.82     2.84     2.94     2.81     2.81
+ 6 ENSMUSG00000000056    14.3     14.3     14.3     13.9     14.4     14.2 
+ 7 ENSMUSG00000000078    10.1      9.77     9.86     9.93     9.68     9.90
+ 8 ENSMUSG00000000085     9.28     9.41     9.53     9.23     9.60     9.80
+ 9 ENSMUSG00000000088    10.4     10.6     10.7     10.5     10.5     10.2 
+10 ENSMUSG00000000093     3.88     3.89     3.93     3.91     3.94     3.99
+# ℹ 16,239 more rows</code></pre>
+<p>Next, this is the <strong>perfect</strong> opportunity to use
+<code>tidyr::pivot_longer()</code> because we want to use
+<code>ggplot()</code> for the bar plots, but the data is currently in
+the wide form, not the tidy form!</p>
+<pre class="r"><code>tidy_raw = tidyr::pivot_longer(raw_counts, -id, names_to = &#39;sample&#39;, values_to = &#39;counts&#39;)
+tidy_norm = tidyr::pivot_longer(norm_counts, -id, names_to = &#39;sample&#39;, values_to = &#39;counts&#39;)</code></pre>
+<p>We should also join in the sample metadata so that we can color on
+the sample groups.</p>
+<pre class="r"><code>samplesheet_tbl = as_tibble(colData(dds), rownames = &#39;sample&#39;)
+
+tidy_raw = tidy_raw %&gt;% left_join(samplesheet_tbl, by = &#39;sample&#39;)
+tidy_norm = tidy_norm %&gt;% left_join(samplesheet_tbl, by = &#39;sample&#39;)</code></pre>
+<pre class="r"><code>raw_boxplot = ggplot(tidy_raw, aes(x = sample, y = log2(counts), fill = condition)) +
+    geom_boxplot(notch = TRUE) +
+    labs(
+        title = &#39;Raw Counts&#39;,
+        x = &#39;Sample&#39;,
+        y = &#39;log2 Counts&#39;) +
+    theme_bw() + theme(axis.text.x = element_text(angle = 90))
+raw_boxplot</code></pre>
+<pre><code>Warning: Removed 226538 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+<p><img src="fig/R_bonus_contentRawBoxplot-1.png" width="816" style="display: block; margin: auto;" /></p>
+<blockquote>
+<h1 id="question" class="unlisted unnumbered">Question</h1>
+<p>Why did we get that warning about non-finite values?</p>
+</blockquote>
+<pre class="r"><code>norm_boxplot = ggplot(tidy_norm, aes(x = sample, y = counts, fill = condition)) +
+    geom_boxplot(notch = TRUE) +
+    labs(
+        title = &#39;rlog Normalized Counts&#39;,
+        x = &#39;Sample&#39;,
+        y = &#39;rlog Counts&#39;) +
+    theme_bw() + theme(axis.text.x = element_text(angle = 90))
+norm_boxplot</code></pre>
+<p><img src="fig/R_bonus_contentNormBoxplot-1.png" width="816" style="display: block; margin: auto;" /></p>
+<p>Observe that the normalized plots truly do appear normalized; their
+means are more uniform. Let’s go ahead and save these plots in our
+<code>outputs/figures</code> folder.</p>
+<pre class="r"><code>ggsave(filename = &#39;outputs/figures/Boxplot_raw_condition.pdf&#39;, plot = raw_boxplot, height = 6, width = 6)
+ggsave(filename = &#39;outputs/figures/Boxplot_rlog_condition.pdf&#39;, plot = norm_boxplot, height = 6, width = 6)</code></pre>
+</div>
+<div id="heatmaps" class="section level1">
+<h1>Heatmaps</h1>
+<p>Let’s create a heatmap based on the distance between pair-wise sample
+expression profiles. This is another vantage point of how similar and
+dissimilar the samples are from one another. To get started, we actually
+want a plain matrix, with out a column for the gene IDs, as we did for
+the boxplot.</p>
+<pre class="r"><code>norm_mat = assay(rld)
+head(norm_mat)</code></pre>
+<pre><code>                    sample_A  sample_B  sample_C  sample_D  sample_E  sample_F
+ENSMUSG00000000001 10.514813 10.366709 10.419463 10.840373 10.410449 10.578771
+ENSMUSG00000000028 10.604461 10.734506 10.735026 10.682714 10.820938 10.990999
+ENSMUSG00000000031 11.160276 10.498747 10.742763 11.861617 10.578156 10.298022
+ENSMUSG00000000037  4.642433  4.555500  4.578934  4.656950  4.719012  4.620204
+ENSMUSG00000000049  3.017478  2.820198  2.843894  2.936455  2.814833  2.811619
+ENSMUSG00000000056 14.321672 14.284652 14.337197 13.904238 14.393912 14.235971</code></pre>
+<p>Next, we’ll use the <code>dist()</code> function on the transpose of
+<code>norm_mat</code> to compute the distance. We will use the default
+Euclidean distance.</p>
+<pre class="r"><code>dist_mat = dist(t(norm_mat), upper = TRUE)</code></pre>
+<p>Next, we’ll plot a very simple <code>pheatmap()</code> using this
+matrix. But let’s check the class of <code>dist_mat</code> first,
+because the input to <code>pheatmap()</code> needs to be a
+<code>matrix</code>.</p>
+<pre class="r"><code>class(dist_mat)</code></pre>
+<pre><code>[1] &quot;dist&quot;</code></pre>
+<pre class="r"><code># Have to coerce it
+dist_mat = as.matrix(dist_mat)
+
+dist_heatmap = pheatmap(
+    mat = dist_mat,
+    cluster_rows = TRUE,
+    cluster_cols = TRUE,
+    show_rownames = TRUE,
+    show_colnames = TRUE
+)
+dist_heatmap</code></pre>
+<p><img src="fig/R_bonus_contentDistanceHeatmap-1.png" width="816" style="display: block; margin: auto;" /></p>
+<p>This is nice, but there are a few tweaks we might consider:</p>
+<ol style="list-style-type: decimal">
+<li>The color scale used by default is divergent, but our distances are
+values in [0, Inf), so a linear color scale would be more appropriate
+here.</li>
+<li>We might like for the sample metadata to be included so that we can
+easily tell if the samples cluster by their <code>condition</code>.</li>
+</ol>
+<p>To accomplish the first change, we’ll use the
+<code>colorRampPalette()</code> function from the
+<code>RColorBrewer</code> package. This is <strong>the</strong> package
+to use for creating color scales of all varieties. We highly recommend
+exploring the package website and documentation.</p>
+<pre class="r"><code>colors = colorRampPalette(brewer.pal(9, &#39;Blues&#39;))(50)</code></pre>
+<p>Now let’s use that in the <code>pheatmap()</code> call using the
+<code>color</code> parameter:</p>
+<pre class="r"><code>dist_heatmap = pheatmap(
+    mat = dist_mat,
+    color = colors,
+    cluster_rows = TRUE,
+    cluster_cols = TRUE,
+    show_rownames = TRUE,
+    show_colnames = TRUE
+)
+dist_heatmap</code></pre>
+<p><img src="fig/R_bonus_contentDistanceHeatmaColors-1.png" width="816" style="display: block; margin: auto;" /></p>
+<p>This is a lot more reasonable. More distant samples are a deeper
+blue, while more similar samples are closer to white. Next, let’s add
+some annotation data.</p>
+<pre class="r"><code>annotation_tbl = samplesheet_tbl %&gt;%
+    dplyr::select(sample, condition) %&gt;%
+    tibble::column_to_rownames(var = &#39;sample&#39;)
+
+dist_heatmap = pheatmap(
+    mat = dist_mat,
+    color = colors,
+    cluster_rows = TRUE,
+    cluster_cols = TRUE,
+    show_rownames = TRUE,
+    show_colnames = TRUE,
+    annotation_col = annotation_tbl
+)
+dist_heatmap</code></pre>
+<p><img src="fig/R_bonus_contentDistanceHeatmapAnnotated-1.png" width="816" style="display: block; margin: auto;" /></p>
+<p>And now we have our conditions as a colored annotation bar along the
+columns.</p>
+</div>
+<div id="sources" class="section level1">
+<h1>Sources</h1>
+<ul>
+<li>HBC QC tutorial: <a
+href="https://hbctraining.github.io/DGE_workshop/lessons/03_DGE_QC_analysis.html"
+class="uri">https://hbctraining.github.io/DGE_workshop/lessons/03_DGE_QC_analysis.html</a></li>
+<li>Detailed Heatmap tutorial from Galaxy: <a
+href="https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/rna-seq-viz-with-heatmap2/tutorial.html"
+class="uri">https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/rna-seq-viz-with-heatmap2/tutorial.html</a></li>
+</ul>
+<hr />
+</div>
+<div id="session-info" class="section level1">
+<h1>Session Info</h1>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.3 (2023-03-15)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Ventura 13.5
+
+Matrix products: default
+LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats4    stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] lubridate_1.9.2             forcats_1.0.0              
+ [3] stringr_1.5.0               purrr_1.0.1                
+ [5] readr_2.1.4                 tibble_3.2.1               
+ [7] tidyverse_2.0.0             biomaRt_2.52.0             
+ [9] data.table_1.14.8           RColorBrewer_1.1-3         
+[11] pheatmap_1.0.12             ggrepel_0.9.3              
+[13] dplyr_1.1.1                 tidyr_1.3.0                
+[15] ggplot2_3.4.1               DESeq2_1.36.0              
+[17] SummarizedExperiment_1.26.1 Biobase_2.56.0             
+[19] MatrixGenerics_1.8.1        matrixStats_0.63.0         
+[21] GenomicRanges_1.48.0        GenomeInfoDb_1.32.4        
+[23] IRanges_2.30.1              S4Vectors_0.34.0           
+[25] BiocGenerics_0.42.0         knitr_1.42                 
+[27] rmarkdown_2.21             
+
+loaded via a namespace (and not attached):
+ [1] bitops_1.0-7           bit64_4.0.5            filelock_1.0.2        
+ [4] progress_1.2.2         httr_1.4.5             tools_4.2.3           
+ [7] bslib_0.4.2            utf8_1.2.3             R6_2.5.1              
+[10] DBI_1.1.3              colorspace_2.1-0       withr_2.5.0           
+[13] tidyselect_1.2.0       prettyunits_1.1.1      curl_5.0.0            
+[16] bit_4.0.5              compiler_4.2.3         cli_3.6.1             
+[19] xml2_1.3.3             DelayedArray_0.22.0    labeling_0.4.2        
+[22] sass_0.4.5             scales_1.2.1           genefilter_1.78.0     
+[25] rappdirs_0.3.3         digest_0.6.31          XVector_0.36.0        
+[28] pkgconfig_2.0.3        htmltools_0.5.5        dbplyr_2.3.2          
+[31] fastmap_1.1.1          highr_0.10             rlang_1.1.0           
+[34] rstudioapi_0.14        RSQLite_2.3.1          jquerylib_0.1.4       
+[37] generics_0.1.3         farver_2.1.1           jsonlite_1.8.4        
+[40] BiocParallel_1.30.4    RCurl_1.98-1.9         magrittr_2.0.3        
+[43] GenomeInfoDbData_1.2.8 Matrix_1.5-3           Rcpp_1.0.10           
+[46] munsell_0.5.0          fansi_1.0.4            lifecycle_1.0.3       
+[49] stringi_1.7.12         yaml_2.3.7             zlibbioc_1.16.0       
+[52] BiocFileCache_2.4.0    grid_4.2.3             blob_1.2.4            
+[55] parallel_4.2.3         crayon_1.5.2           lattice_0.20-45       
+[58] Biostrings_2.64.1      splines_4.2.3          annotate_1.48.0       
+[61] hms_1.1.3              KEGGREST_1.36.3        locfit_1.5-9.7        
+[64] pillar_1.9.0           geneplotter_1.74.0     codetools_0.2-19      
+[67] XML_3.99-0.14          glue_1.6.2             evaluate_0.20         
+[70] tzdb_0.3.0             png_0.1-8              vctrs_0.6.1           
+[73] gtable_0.3.3           cachem_1.0.7           xfun_0.38             
+[76] xtable_1.8-4           survival_3.5-3         AnnotationDbi_1.58.0  
+[79] memoise_2.0.1          timechange_0.2.0      </code></pre>
+<hr />
+<p>These materials have been adapted and extended from materials listed
+above. These are open access materials distributed under the terms of
+the <a href="http://creativecommons.org/licenses/by/4.0/">Creative
+Commons Attribution license (CC BY 4.0)</a>, which permits unrestricted
+use, distribution, and reproduction in any medium, provided the original
+author and source are credited.</p>
+<br/> <br/>
+<hr/>
+<table style="width:100%;">
+<colgroup>
+<col width="28%" />
+<col width="42%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"><a href="Module12_DEAnnotations.Rmd.html">Previous
+lesson</a></th>
+<th align="center"><a href="#top">Top of this lesson</a></th>
+<th align="right"><a href="Module99_Wrap_up.html">To wrap-up</a></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBCb251cyBDb250ZW50IgphdXRob3I6ICJVTSBCaW9pbmZvcm1hdGljcyBDb3JlIgpkYXRlOiAiYHIgU3lzLkRhdGUoKWAiCm91dHB1dDoKICAgICAgICBodG1sX2RvY3VtZW50OgogICAgICAgICAgICBpbmNsdWRlczoKICAgICAgICAgICAgICAgIGluX2hlYWRlcjogaGVhZGVyLmh0bWwKICAgICAgICAgICAgdGhlbWU6IHBhcGVyCiAgICAgICAgICAgIHRvYzogdHJ1ZQogICAgICAgICAgICB0b2NfZGVwdGg6IDQKICAgICAgICAgICAgdG9jX2Zsb2F0OiB0cnVlCiAgICAgICAgICAgIG51bWJlcl9zZWN0aW9uczogZmFsc2UKICAgICAgICAgICAgZmlnX2NhcHRpb246IHRydWUKICAgICAgICAgICAgbWFya2Rvd246IEdGTQogICAgICAgICAgICBjb2RlX2Rvd25sb2FkOiB0cnVlCi0tLQoKPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KYm9keSwgdGQgewogICBmb250LXNpemU6IDE4cHg7Cn0KY29kZS5yewogIGZvbnQtc2l6ZTogMTJweDsKfQpwcmUgewogIGZvbnQtc2l6ZTogMTJweAp9Cjwvc3R5bGU+CgpgYGB7ciwgaW5jbHVkZSA9IEZBTFNFfQpzb3VyY2UoIi4uL2Jpbi9jaHVuay1vcHRpb25zLlIiKQprbml0cl9maWdfcGF0aCgiUl9ib251c19jb250ZW50IikKYGBgCgpgYGB7ciBNb2R1bGVzLCBldmFsPVRSVUUsIGVjaG89RkFMU0UsIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9CmxpYnJhcnkoREVTZXEyKQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShnZ3JlcGVsKQpsaWJyYXJ5KHBoZWF0bWFwKQpsaWJyYXJ5KFJDb2xvckJyZXdlcikKYGBgCgo+ICMgT2JqZWN0aXZlcyB7LnVubGlzdGVkIC51bm51bWJlcmVkfQo+ICogQWRkaXRpb25hbCB2aXN1YWxpemF0aW9ucyBmb3IgZ2VuZS9zYW1wbGUgbGV2ZWwgUUMgYXNzZXNzbWVudAoKIyBDb3VudCBib3hwbG90cwoKVG8gZXZhbHVhdGUgdGhlIGRpZmZlcmVuY2UgYmV0d2VlbiB0aGUgY291bnQgZGlzdHJpYnV0aW9ucyBiZWZvcmUgYW5kIGFmdGVyIG5vcm1hbGl6YXRpb24sIGxldCdzIGV4dHJhY3QgdGhlIHJhdyBjb3VudHMgYW5kIHRoZSBybG9nIG5vcm1hbGl6ZWQgY291bnRzLCBhbmQgY29lcmNlIHRoZW0gdG8gYHRpYmJsZWBzLgoKYGBge3IgUmF3Q291bnRzU2V0dXB9CnJhd19jb3VudHMgPSBhc190aWJibGUoY291bnRzKGRkcyksIHJvd25hbWVzID0gJ2lkJykKbm9ybV9jb3VudHMgPSBhc190aWJibGUoYXNzYXkocmxkKSwgcm93bmFtZXMgPSAnaWQnKQoKcmF3X2NvdW50cwpub3JtX2NvdW50cwpgYGAKCk5leHQsIHRoaXMgaXMgdGhlICoqcGVyZmVjdCoqIG9wcG9ydHVuaXR5IHRvIHVzZSBgdGlkeXI6OnBpdm90X2xvbmdlcigpYCBiZWNhdXNlIHdlIHdhbnQgdG8gdXNlIGBnZ3Bsb3QoKWAgZm9yIHRoZSBiYXIgcGxvdHMsIGJ1dCB0aGUgZGF0YSBpcyBjdXJyZW50bHkgaW4gdGhlIHdpZGUgZm9ybSwgbm90IHRoZSB0aWR5IGZvcm0hCgpgYGB7ciBQaXZvdExvbmdlcn0KdGlkeV9yYXcgPSB0aWR5cjo6cGl2b3RfbG9uZ2VyKHJhd19jb3VudHMsIC1pZCwgbmFtZXNfdG8gPSAnc2FtcGxlJywgdmFsdWVzX3RvID0gJ2NvdW50cycpCnRpZHlfbm9ybSA9IHRpZHlyOjpwaXZvdF9sb25nZXIobm9ybV9jb3VudHMsIC1pZCwgbmFtZXNfdG8gPSAnc2FtcGxlJywgdmFsdWVzX3RvID0gJ2NvdW50cycpCmBgYAoKV2Ugc2hvdWxkIGFsc28gam9pbiBpbiB0aGUgc2FtcGxlIG1ldGFkYXRhIHNvIHRoYXQgd2UgY2FuIGNvbG9yIG9uIHRoZSBzYW1wbGUgZ3JvdXBzLgoKYGBge3IgSm9pbk1ldGFkYXRhfQpzYW1wbGVzaGVldF90YmwgPSBhc190aWJibGUoY29sRGF0YShkZHMpLCByb3duYW1lcyA9ICdzYW1wbGUnKQoKdGlkeV9yYXcgPSB0aWR5X3JhdyAlPiUgbGVmdF9qb2luKHNhbXBsZXNoZWV0X3RibCwgYnkgPSAnc2FtcGxlJykKdGlkeV9ub3JtID0gdGlkeV9ub3JtICU+JSBsZWZ0X2pvaW4oc2FtcGxlc2hlZXRfdGJsLCBieSA9ICdzYW1wbGUnKQpgYGAKCmBgYHtyIFJhd0JveHBsb3R9CnJhd19ib3hwbG90ID0gZ2dwbG90KHRpZHlfcmF3LCBhZXMoeCA9IHNhbXBsZSwgeSA9IGxvZzIoY291bnRzKSwgZmlsbCA9IGNvbmRpdGlvbikpICsKICAgIGdlb21fYm94cGxvdChub3RjaCA9IFRSVUUpICsKICAgIGxhYnMoCiAgICAgICAgdGl0bGUgPSAnUmF3IENvdW50cycsCiAgICAgICAgeCA9ICdTYW1wbGUnLAogICAgICAgIHkgPSAnbG9nMiBDb3VudHMnKSArCiAgICB0aGVtZV9idygpICsgdGhlbWUoYXhpcy50ZXh0LnggPSBlbGVtZW50X3RleHQoYW5nbGUgPSA5MCkpCnJhd19ib3hwbG90CmBgYAoKPiAjIFF1ZXN0aW9uIHsudW5saXN0ZWQgLnVubnVtYmVyZWR9Cj4gV2h5IGRpZCB3ZSBnZXQgdGhhdCB3YXJuaW5nIGFib3V0IG5vbi1maW5pdGUgdmFsdWVzPwoKYGBge3IgTm9ybUJveHBsb3R9Cm5vcm1fYm94cGxvdCA9IGdncGxvdCh0aWR5X25vcm0sIGFlcyh4ID0gc2FtcGxlLCB5ID0gY291bnRzLCBmaWxsID0gY29uZGl0aW9uKSkgKwogICAgZ2VvbV9ib3hwbG90KG5vdGNoID0gVFJVRSkgKwogICAgbGFicygKICAgICAgICB0aXRsZSA9ICdybG9nIE5vcm1hbGl6ZWQgQ291bnRzJywKICAgICAgICB4ID0gJ1NhbXBsZScsCiAgICAgICAgeSA9ICdybG9nIENvdW50cycpICsKICAgIHRoZW1lX2J3KCkgKyB0aGVtZShheGlzLnRleHQueCA9IGVsZW1lbnRfdGV4dChhbmdsZSA9IDkwKSkKbm9ybV9ib3hwbG90CmBgYAoKT2JzZXJ2ZSB0aGF0IHRoZSBub3JtYWxpemVkIHBsb3RzIHRydWx5IGRvIGFwcGVhciBub3JtYWxpemVkOyB0aGVpciBtZWFucyBhcmUgbW9yZSB1bmlmb3JtLiBMZXQncyBnbyBhaGVhZCBhbmQgc2F2ZSB0aGVzZSBwbG90cyBpbiBvdXIgYG91dHB1dHMvZmlndXJlc2AgZm9sZGVyLgoKYGBge3IgQm94cGxvdHNSYXdTYXZlLCBldmFsID0gRkFMU0V9Cmdnc2F2ZShmaWxlbmFtZSA9ICdvdXRwdXRzL2ZpZ3VyZXMvQm94cGxvdF9yYXdfY29uZGl0aW9uLnBkZicsIHBsb3QgPSByYXdfYm94cGxvdCwgaGVpZ2h0ID0gNiwgd2lkdGggPSA2KQpnZ3NhdmUoZmlsZW5hbWUgPSAnb3V0cHV0cy9maWd1cmVzL0JveHBsb3RfcmxvZ19jb25kaXRpb24ucGRmJywgcGxvdCA9IG5vcm1fYm94cGxvdCwgaGVpZ2h0ID0gNiwgd2lkdGggPSA2KQpgYGAKCiMgSGVhdG1hcHMKCkxldCdzIGNyZWF0ZSBhIGhlYXRtYXAgYmFzZWQgb24gdGhlIGRpc3RhbmNlIGJldHdlZW4gcGFpci13aXNlIHNhbXBsZSBleHByZXNzaW9uIHByb2ZpbGVzLiBUaGlzIGlzIGFub3RoZXIgdmFudGFnZSBwb2ludCBvZiBob3cgc2ltaWxhciBhbmQgZGlzc2ltaWxhciB0aGUgc2FtcGxlcyBhcmUgZnJvbSBvbmUgYW5vdGhlci4gVG8gZ2V0IHN0YXJ0ZWQsIHdlIGFjdHVhbGx5IHdhbnQgYSBwbGFpbiBtYXRyaXgsIHdpdGggb3V0IGEgY29sdW1uIGZvciB0aGUgZ2VuZSBJRHMsIGFzIHdlIGRpZCBmb3IgdGhlIGJveHBsb3QuCgpgYGB7ciBOb3JtQ291bnRzfQpub3JtX21hdCA9IGFzc2F5KHJsZCkKaGVhZChub3JtX21hdCkKYGBgCgpOZXh0LCB3ZSdsbCB1c2UgdGhlIGBkaXN0KClgIGZ1bmN0aW9uIG9uIHRoZSB0cmFuc3Bvc2Ugb2YgYG5vcm1fbWF0YCB0byBjb21wdXRlIHRoZSBkaXN0YW5jZS4gV2Ugd2lsbCB1c2UgdGhlIGRlZmF1bHQgRXVjbGlkZWFuIGRpc3RhbmNlLgoKYGBge3IgRGlzdGFuY2VNYXR9CmRpc3RfbWF0ID0gZGlzdCh0KG5vcm1fbWF0KSwgdXBwZXIgPSBUUlVFKQpgYGAKCk5leHQsIHdlJ2xsIHBsb3QgYSB2ZXJ5IHNpbXBsZSBgcGhlYXRtYXAoKWAgdXNpbmcgdGhpcyBtYXRyaXguIEJ1dCBsZXQncyBjaGVjayB0aGUgY2xhc3Mgb2YgYGRpc3RfbWF0YCBmaXJzdCwgYmVjYXVzZSB0aGUgaW5wdXQgdG8gYHBoZWF0bWFwKClgIG5lZWRzIHRvIGJlIGEgYG1hdHJpeGAuCgpgYGB7ciBEaXN0YW5jZUhlYXRtYXB9CmNsYXNzKGRpc3RfbWF0KQoKIyBIYXZlIHRvIGNvZXJjZSBpdApkaXN0X21hdCA9IGFzLm1hdHJpeChkaXN0X21hdCkKCmRpc3RfaGVhdG1hcCA9IHBoZWF0bWFwKAogICAgbWF0ID0gZGlzdF9tYXQsCiAgICBjbHVzdGVyX3Jvd3MgPSBUUlVFLAogICAgY2x1c3Rlcl9jb2xzID0gVFJVRSwKICAgIHNob3dfcm93bmFtZXMgPSBUUlVFLAogICAgc2hvd19jb2xuYW1lcyA9IFRSVUUKKQpkaXN0X2hlYXRtYXAKYGBgCgpUaGlzIGlzIG5pY2UsIGJ1dCB0aGVyZSBhcmUgYSBmZXcgdHdlYWtzIHdlIG1pZ2h0IGNvbnNpZGVyOgoKMS4gVGhlIGNvbG9yIHNjYWxlIHVzZWQgYnkgZGVmYXVsdCBpcyBkaXZlcmdlbnQsIGJ1dCBvdXIgZGlzdGFuY2VzIGFyZSB2YWx1ZXMgaW4gWzAsIEluZiksIHNvIGEgbGluZWFyIGNvbG9yIHNjYWxlIHdvdWxkIGJlIG1vcmUgYXBwcm9wcmlhdGUgaGVyZS4KMi4gV2UgbWlnaHQgbGlrZSBmb3IgdGhlIHNhbXBsZSBtZXRhZGF0YSB0byBiZSBpbmNsdWRlZCBzbyB0aGF0IHdlIGNhbiBlYXNpbHkgdGVsbCBpZiB0aGUgc2FtcGxlcyBjbHVzdGVyIGJ5IHRoZWlyIGBjb25kaXRpb25gLgoKVG8gYWNjb21wbGlzaCB0aGUgZmlyc3QgY2hhbmdlLCB3ZSdsbCB1c2UgdGhlIGBjb2xvclJhbXBQYWxldHRlKClgIGZ1bmN0aW9uIGZyb20gdGhlIGBSQ29sb3JCcmV3ZXJgIHBhY2thZ2UuIFRoaXMgaXMgKip0aGUqKiBwYWNrYWdlIHRvIHVzZSBmb3IgY3JlYXRpbmcgY29sb3Igc2NhbGVzIG9mIGFsbCB2YXJpZXRpZXMuIFdlIGhpZ2hseSByZWNvbW1lbmQgZXhwbG9yaW5nIHRoZSBwYWNrYWdlIHdlYnNpdGUgYW5kIGRvY3VtZW50YXRpb24uCgpgYGB7ciBDaG9vc2VDb2xvcnN9CmNvbG9ycyA9IGNvbG9yUmFtcFBhbGV0dGUoYnJld2VyLnBhbCg5LCAnQmx1ZXMnKSkoNTApCmBgYAoKTm93IGxldCdzIHVzZSB0aGF0IGluIHRoZSBgcGhlYXRtYXAoKWAgY2FsbCB1c2luZyB0aGUgYGNvbG9yYCBwYXJhbWV0ZXI6CgpgYGB7ciBEaXN0YW5jZUhlYXRtYUNvbG9yc30KZGlzdF9oZWF0bWFwID0gcGhlYXRtYXAoCiAgICBtYXQgPSBkaXN0X21hdCwKICAgIGNvbG9yID0gY29sb3JzLAogICAgY2x1c3Rlcl9yb3dzID0gVFJVRSwKICAgIGNsdXN0ZXJfY29scyA9IFRSVUUsCiAgICBzaG93X3Jvd25hbWVzID0gVFJVRSwKICAgIHNob3dfY29sbmFtZXMgPSBUUlVFCikKZGlzdF9oZWF0bWFwCmBgYAoKVGhpcyBpcyBhIGxvdCBtb3JlIHJlYXNvbmFibGUuIE1vcmUgZGlzdGFudCBzYW1wbGVzIGFyZSBhIGRlZXBlciBibHVlLCB3aGlsZSBtb3JlIHNpbWlsYXIgc2FtcGxlcyBhcmUgY2xvc2VyIHRvIHdoaXRlLiBOZXh0LCBsZXQncyBhZGQgc29tZSBhbm5vdGF0aW9uIGRhdGEuCgpgYGB7ciBEaXN0YW5jZUhlYXRtYXBBbm5vdGF0ZWR9CmFubm90YXRpb25fdGJsID0gc2FtcGxlc2hlZXRfdGJsICU+JQogICAgZHBseXI6OnNlbGVjdChzYW1wbGUsIGNvbmRpdGlvbikgJT4lCiAgICB0aWJibGU6OmNvbHVtbl90b19yb3duYW1lcyh2YXIgPSAnc2FtcGxlJykKCmRpc3RfaGVhdG1hcCA9IHBoZWF0bWFwKAogICAgbWF0ID0gZGlzdF9tYXQsCiAgICBjb2xvciA9IGNvbG9ycywKICAgIGNsdXN0ZXJfcm93cyA9IFRSVUUsCiAgICBjbHVzdGVyX2NvbHMgPSBUUlVFLAogICAgc2hvd19yb3duYW1lcyA9IFRSVUUsCiAgICBzaG93X2NvbG5hbWVzID0gVFJVRSwKICAgIGFubm90YXRpb25fY29sID0gYW5ub3RhdGlvbl90YmwKKQpkaXN0X2hlYXRtYXAKYGBgCgpBbmQgbm93IHdlIGhhdmUgb3VyIGNvbmRpdGlvbnMgYXMgYSBjb2xvcmVkIGFubm90YXRpb24gYmFyIGFsb25nIHRoZSBjb2x1bW5zLgoKIyBTb3VyY2VzCgoqIEhCQyBRQyB0dXRvcmlhbDogaHR0cHM6Ly9oYmN0cmFpbmluZy5naXRodWIuaW8vREdFX3dvcmtzaG9wL2xlc3NvbnMvMDNfREdFX1FDX2FuYWx5c2lzLmh0bWwKKiBEZXRhaWxlZCBIZWF0bWFwIHR1dG9yaWFsIGZyb20gR2FsYXh5OiBodHRwczovL3RyYWluaW5nLmdhbGF4eXByb2plY3Qub3JnL3RyYWluaW5nLW1hdGVyaWFsL3RvcGljcy90cmFuc2NyaXB0b21pY3MvdHV0b3JpYWxzL3JuYS1zZXEtdml6LXdpdGgtaGVhdG1hcDIvdHV0b3JpYWwuaHRtbAoKLS0tCgojIFNlc3Npb24gSW5mbwpgYGB7ciBTZXNzaW9uSW5mb30Kc2Vzc2lvbkluZm8oKQpgYGAKCi0tLQoKVGhlc2UgbWF0ZXJpYWxzIGhhdmUgYmVlbiBhZGFwdGVkIGFuZCBleHRlbmRlZCBmcm9tIG1hdGVyaWFscyBsaXN0ZWQgYWJvdmUuIFRoZXNlIGFyZSBvcGVuIGFjY2VzcyBtYXRlcmlhbHMgZGlzdHJpYnV0ZWQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBbQ3JlYXRpdmUgQ29tbW9ucyBBdHRyaWJ1dGlvbiBsaWNlbnNlIChDQyBCWSA0LjApXShodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9saWNlbnNlcy9ieS80LjAvKSwgd2hpY2ggcGVybWl0cyB1bnJlc3RyaWN0ZWQgdXNlLCBkaXN0cmlidXRpb24sIGFuZCByZXByb2R1Y3Rpb24gaW4gYW55IG1lZGl1bSwgcHJvdmlkZWQgdGhlIG9yaWdpbmFsIGF1dGhvciBhbmQgc291cmNlIGFyZSBjcmVkaXRlZC4KCjxici8+Cjxici8+Cjxoci8+CnwgW1ByZXZpb3VzIGxlc3Nvbl0oTW9kdWxlMTJfREVBbm5vdGF0aW9ucy5SbWQuaHRtbCkgfCBbVG9wIG9mIHRoaXMgbGVzc29uXSgjdG9wKSB8IFtUbyB3cmFwLXVwXShNb2R1bGU5OV9XcmFwX3VwLmh0bWwpIHwKfCA6LS0tIHwgOi0tLS06IHwgLS0tOiB8</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("R_bonus_content.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

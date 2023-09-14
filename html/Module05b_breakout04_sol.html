@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="UM Bioinformatics Core" />
+
+
+<title>Day 2 - Breakout 04</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link rel="shortcut icon" href="favicon-16x16.png" />
+<!--
+Favicon from
+https://twemoji.twitter.com/
+https://favicon.io/emoji-favicons/dna/
+-->
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">RNA-Seq Demystified</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="Module00_Introduction.html">Intro</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sequence QC
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module01_Warming_Up.html">Warming up</a>
+    </li>
+    <li>
+      <a href="Module02a_QC.html">Quality Control</a>
+    </li>
+    <li>
+      <a href="Module02b_Cutadapt_MoreQC.html">Cutadapt/MoreQC</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Alignment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module03_Reference_Genomes.html">Reference Genomes</a>
+    </li>
+    <li>
+      <a href="Module04_Alignment.html">Alignment/Quantification (STAR/RSEM)</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Quantification
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module05a_MultiQC_and_Count_Matrix.html">Count matrix / Alignment QC</a>
+    </li>
+    <li>
+      <a href="Module05b_Additional_Details.html">Optional: Additional details</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Groups/Model
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module06_DEAnalysisSetup.html">Introduction to DESeq2</a>
+    </li>
+    <li>
+      <a href="Module07_DESeq2Init.html">DESeq2 Initialization</a>
+    </li>
+    <li>
+      <a href="Module08_DESeq2DE.html">Count Normalizations and DESeq2 model fitting</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Expression plots
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module09_SampleQCViz.html">Sample Visualizations for QC</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Diff Expression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module10_DEComparisons.html">Comparisons</a>
+    </li>
+    <li>
+      <a href="Module11_DEVisualizations.html">DE Visiualization and Annotation</a>
+    </li>
+    <li>
+      <a href="Module11X_BonusContent.html">Bonus content</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="Module99_Wrap_up.html">Wrap up</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Day 2 - Breakout 04</h1>
+<h4 class="author">UM Bioinformatics Core</h4>
+
+</div>
+
+
+<style type="text/css">
+body{ /* Normal  */
+      font-size: 14pt;
+  }
+pre {
+  font-size: 12pt
+}
+</style>
+<p><br></p>
+<div id="conda-create-exercise-breakout" class="section level2">
+<h2>Conda Create Exercise (breakout)</h2>
+<p><br></p>
+<p><strong>15 Minutes</strong></p>
+<p><br></p>
+<p>We’ve covered the basics of Conda, including how to create
+environments, as well as activate and deactivate them. We’ll use those
+same ideas in this exercise to create a conda environment with all of
+the software that we’ve used so far.</p>
+<p><br></p>
+<p>In this exercise, we’ll use a special tool that enhances Conda,
+called Mamba. It is used for environment creation, so you will use it in
+place of <code>conda create</code> in this exercise.</p>
+<p><br></p>
+<div id="instructions" class="section level3">
+<h3>Instructions:</h3>
+<p><br></p>
+<ul>
+<li>One group member should share their screen in the breakout room. If
+nobody volunteers, a helper may randomly select someone.</li>
+<li>The group members should discuss the exercise and work together to
+find a solution.</li>
+<li>When a solution is found <strong>DO NOT</strong> have all users
+create the environment. Instead, choose only a few learners in each
+group to complete this exercise. We do not want to overwhelm the AWS
+instance.</li>
+</ul>
+<p><br></p>
+<ul>
+<li>Use <code>mamba</code> to create an environment with all of the
+software that we used today:
+<ul>
+<li>cutadapt</li>
+<li>fastqc</li>
+<li>multiqc</li>
+<li>star</li>
+<li>rsem</li>
+</ul></li>
+<li>Use two channels when building the environment:
+<ul>
+<li><code>conda-forge</code></li>
+<li><code>bioconda</code></li>
+</ul></li>
+</ul>
+<p><br></p>
+<blockquote>
+<p>Hint: The tool <code>mamba</code> is a drop-in replacement for
+<code>conda create</code> and similar commands. It is powerful and fast,
+which allows us to easily replicate our whole environment from today.
+<code>conda create</code> can be very slow or uncooperative when
+creating environments with certain software combinations, and
+<code>mamba</code> helps us get around that in this case. The command is
+exactly the same as a <code>conda create</code> command, e.g.:</p>
+<pre><code>mamba create -n &lt;env-name&gt; -c &lt;channel&gt; &lt;package1&gt; ...</code></pre>
+</blockquote>
+<p><br></p>
+</div>
+<div id="solution---conda-create-exercise" class="section level3">
+<h3>Solution - Conda Create Exercise</h3>
+<p><br></p>
+<pre><code># Create a conda environment with Cutadapt, FastQC, MultiQC, STAR, and RSEM.
+mamba create -n RSD_environment -c conda-forge -c bioconda cutadapt fastqc multiqc star rsem
+# Activate the environment and use which to check for software presence
+conda activate RSD_environment
+which cutadapt
+which fastqc
+which multiqc
+which STAR
+which rsem-calculate-expression
+# Deactivate the environment
+deactivate</code></pre>
+<p><br></p>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRGF5IDIgLSBCcmVha291dCAwNCIKYXV0aG9yOiAiVU0gQmlvaW5mb3JtYXRpY3MgQ29yZSIKb3V0cHV0OgogICAgICAgIGh0bWxfZG9jdW1lbnQ6CiAgICAgICAgICAgIGluY2x1ZGVzOgogICAgICAgICAgICAgICAgaW5faGVhZGVyOiBoZWFkZXIuaHRtbAogICAgICAgICAgICB0aGVtZTogcGFwZXIKICAgICAgICAgICAgZmlnX2NhcHRpb246IHRydWUKICAgICAgICAgICAgbWFya2Rvd246IEdGTQogICAgICAgICAgICBjb2RlX2Rvd25sb2FkOiB0cnVlCi0tLQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPgpib2R5eyAvKiBOb3JtYWwgICovCiAgICAgIGZvbnQtc2l6ZTogMTRwdDsKICB9CnByZSB7CiAgZm9udC1zaXplOiAxMnB0Cn0KPC9zdHlsZT4KCjxicj4KCiMjIENvbmRhIENyZWF0ZSBFeGVyY2lzZSAoYnJlYWtvdXQpCgo8YnI+CgoqKjE1IE1pbnV0ZXMqKgoKPGJyPgoKV2UndmUgY292ZXJlZCB0aGUgYmFzaWNzIG9mIENvbmRhLCBpbmNsdWRpbmcgaG93IHRvIGNyZWF0ZSBlbnZpcm9ubWVudHMsIGFzIHdlbGwgYXMgYWN0aXZhdGUgYW5kIGRlYWN0aXZhdGUgdGhlbS4gV2UnbGwgdXNlIHRob3NlIHNhbWUgaWRlYXMgaW4gdGhpcyBleGVyY2lzZSB0byBjcmVhdGUgYSBjb25kYSBlbnZpcm9ubWVudCB3aXRoIGFsbCBvZiB0aGUgc29mdHdhcmUgdGhhdCB3ZSd2ZSB1c2VkIHNvIGZhci4KCjxicj4KCkluIHRoaXMgZXhlcmNpc2UsIHdlJ2xsIHVzZSBhIHNwZWNpYWwgdG9vbCB0aGF0IGVuaGFuY2VzIENvbmRhLCBjYWxsZWQgTWFtYmEuIEl0IGlzIHVzZWQgZm9yIGVudmlyb25tZW50IGNyZWF0aW9uLCBzbyB5b3Ugd2lsbCB1c2UgaXQgaW4gcGxhY2Ugb2YgYGNvbmRhIGNyZWF0ZWAgaW4gdGhpcyBleGVyY2lzZS4KCjxicj4KCiMjIyBJbnN0cnVjdGlvbnM6Cgo8YnI+CgotIE9uZSBncm91cCBtZW1iZXIgc2hvdWxkIHNoYXJlIHRoZWlyIHNjcmVlbiBpbiB0aGUgYnJlYWtvdXQgcm9vbS4gSWYgbm9ib2R5IHZvbHVudGVlcnMsIGEgaGVscGVyIG1heSByYW5kb21seSBzZWxlY3Qgc29tZW9uZS4KLSBUaGUgZ3JvdXAgbWVtYmVycyBzaG91bGQgZGlzY3VzcyB0aGUgZXhlcmNpc2UgYW5kIHdvcmsgdG9nZXRoZXIgdG8gZmluZCBhIHNvbHV0aW9uLgotIFdoZW4gYSBzb2x1dGlvbiBpcyBmb3VuZCAqKkRPIE5PVCoqIGhhdmUgYWxsIHVzZXJzIGNyZWF0ZSB0aGUgZW52aXJvbm1lbnQuIEluc3RlYWQsIGNob29zZSBvbmx5IGEgZmV3IGxlYXJuZXJzIGluIGVhY2ggZ3JvdXAgdG8gY29tcGxldGUgdGhpcyBleGVyY2lzZS4gV2UgZG8gbm90IHdhbnQgdG8gb3ZlcndoZWxtIHRoZSBBV1MgaW5zdGFuY2UuCgo8YnI+CgotIFVzZSBgbWFtYmFgIHRvIGNyZWF0ZSBhbiBlbnZpcm9ubWVudCB3aXRoIGFsbCBvZiB0aGUgc29mdHdhcmUgdGhhdCB3ZSB1c2VkIHRvZGF5OgogICAgLSBjdXRhZGFwdAogICAgLSBmYXN0cWMKICAgIC0gbXVsdGlxYwogICAgLSBzdGFyCiAgICAtIHJzZW0KLSBVc2UgdHdvIGNoYW5uZWxzIHdoZW4gYnVpbGRpbmcgdGhlIGVudmlyb25tZW50OgogICAgLSBgY29uZGEtZm9yZ2VgCiAgICAtIGBiaW9jb25kYWAKCjxicj4KCj4gSGludDogVGhlIHRvb2wgYG1hbWJhYCBpcyBhIGRyb3AtaW4gcmVwbGFjZW1lbnQgZm9yIGBjb25kYSBjcmVhdGVgIGFuZCBzaW1pbGFyIGNvbW1hbmRzLgo+IEl0IGlzIHBvd2VyZnVsIGFuZCBmYXN0LCB3aGljaCBhbGxvd3MgdXMgdG8gZWFzaWx5IHJlcGxpY2F0ZSBvdXIgd2hvbGUgZW52aXJvbm1lbnQgZnJvbSB0b2RheS4KPiBgY29uZGEgY3JlYXRlYCBjYW4gYmUgdmVyeSBzbG93IG9yIHVuY29vcGVyYXRpdmUgd2hlbiBjcmVhdGluZyBlbnZpcm9ubWVudHMgd2l0aCBjZXJ0YWluCj4gc29mdHdhcmUgY29tYmluYXRpb25zLCBhbmQgYG1hbWJhYCBoZWxwcyB1cyBnZXQgYXJvdW5kIHRoYXQgaW4gdGhpcyBjYXNlLgo+IFRoZSBjb21tYW5kIGlzIGV4YWN0bHkgdGhlIHNhbWUgYXMgYSBgY29uZGEgY3JlYXRlYCBjb21tYW5kLCBlLmcuOgo+Cj4gfn5+Cj4gbWFtYmEgY3JlYXRlIC1uIDxlbnYtbmFtZT4gLWMgPGNoYW5uZWw+IDxwYWNrYWdlMT4gLi4uCj4gfn5+Cgo8YnI+CgojIyMgU29sdXRpb24gLSBDb25kYSBDcmVhdGUgRXhlcmNpc2UKCjxicj4KCmBgYAojIENyZWF0ZSBhIGNvbmRhIGVudmlyb25tZW50IHdpdGggQ3V0YWRhcHQsIEZhc3RRQywgTXVsdGlRQywgU1RBUiwgYW5kIFJTRU0uCm1hbWJhIGNyZWF0ZSAtbiBSU0RfZW52aXJvbm1lbnQgLWMgY29uZGEtZm9yZ2UgLWMgYmlvY29uZGEgY3V0YWRhcHQgZmFzdHFjIG11bHRpcWMgc3RhciByc2VtCiMgQWN0aXZhdGUgdGhlIGVudmlyb25tZW50IGFuZCB1c2Ugd2hpY2ggdG8gY2hlY2sgZm9yIHNvZnR3YXJlIHByZXNlbmNlCmNvbmRhIGFjdGl2YXRlIFJTRF9lbnZpcm9ubWVudAp3aGljaCBjdXRhZGFwdAp3aGljaCBmYXN0cWMKd2hpY2ggbXVsdGlxYwp3aGljaCBTVEFSCndoaWNoIHJzZW0tY2FsY3VsYXRlLWV4cHJlc3Npb24KIyBEZWFjdGl2YXRlIHRoZSBlbnZpcm9ubWVudApkZWFjdGl2YXRlCmBgYAoKPGJyPgo=</div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Module05b_breakout04_sol.md");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

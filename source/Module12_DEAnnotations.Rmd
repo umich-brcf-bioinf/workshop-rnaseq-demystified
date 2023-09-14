@@ -1,0 +1,236 @@
+---
+title: "Module 12: DE Annotations & Downsteam applications"
+author: "UM Bioinformatics Core"
+date: "`r Sys.Date()`"
+output:
+        html_document:
+            includes:
+                in_header: header.html
+            theme: paper
+            toc: true
+            toc_depth: 4
+            toc_float: true
+            number_sections: false
+            fig_caption: true
+            markdown: GFM
+            code_download: true
+---
+
+<style type="text/css">
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+</style>
+
+```{r, include = FALSE}
+source("../bin/chunk-options.R")
+knitr_fig_path("11-")
+```
+
+> # Objectives {.unlisted .unnumbered}
+> * Understand advantages of using gene ids when analyzing RNA-seq data.
+> * Given a list of ENSEMBL gene ids, add gene symbols and Entrez accessions.
+> * Generate common visualizations for differential expression comparisons
+> * Understand choosing thresholds for calling differentially expressed genes
+> * Discuss options for functional enrichments
+
+```{r Modules, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+library(DESeq2)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(matrixStats)
+library(ggrepel)
+library(pheatmap)
+library(RColorBrewer)
+# load("rdata/RunningData.RData")
+```
+
+# Differential Expression Workflow {.unlisted .unnumbered}
+
+Here we will generate summary figures for our results and annotate our DE tables.
+
+![](./images/wayfinder/wayfinder-DEVisualizations.png){width=75%}
+
+---
+
+# Adding genome annotations
+
+Since, gene symbols can change over time or be ambiguous we use, and recommend, using the EMSEMBL reference genome and ENSEMBL IDs for alignments and we've been working with tables and data where all genes are labeled only by their long ENSEMBL ID. However, this can make it difficult to quickly look for genes of interest.
+
+Luckily, Bioconductor provides many tools and resources to facilitate access to [genomic annotation resources](http://bioconductor.org/packages/devel/workflows/vignettes/annotation/inst/doc/Annotation_Resources.html).
+
+To start, we will first load the [biomaRt library](https://bioconductor.org/packages/3.14/bioc/html/biomaRt.html) and choose what reference we want to access. For a more detailed walk through of using biomaRt, [this training module](https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2019/RNAseq/html/05_Annotation_and_Visualisation.html) might be useful, including what to do when annotations are not 1:1 mappings.
+
+We'll start by loading the `biomaRt` library and calling the `useEnsembl()` function to select the database we'll use to extract the information we need. This will download the mapping of ENSEMBL IDs to gene symbols, enabling us to eventually add the gene symbol column we want.
+
+```{r Pullmart, warning=FALSE}
+library('biomaRt')
+ensembl = useEnsembl(dataset = 'mmusculus_gene_ensembl', biomart='ensembl')
+```
+
+**Note** *- this process takes some time and will take up a larger amount of working memory so proceed with caution if you try to run these commands on a laptop with less than 4G of memory*
+
+To identify possible **filters** to restrict our data, we can use the `listFilters` function. To identify the **attributes** we want to retrive, we can use the `listAttributes` function. The best approach is to use [list or search functions](https://bioconductor.org/packages/release/bioc/vignettes/biomaRt/inst/doc/accessing_ensembl.html#how-to-build-a-biomart-query) to help narrow down the available options.
+
+```{r AddAnnotations2, warning=FALSE, eval=FALSE}
+head(listFilters(mart = ensembl), n = 20)
+head(listAttributes(ensembl), n = 30)
+```
+
+We can access additional genomic annotations using the [`bioMart` package](https://bioconductor.org/packages/release/bioc/html/biomaRt.html). To identify  we'll structure our 'query' or search of the bioMart resources to use the [ENSEMBL id](https://m.ensembl.org/info/genome/genebuild/gene_names.html) from our alignment to add the gene symbols and gene description for each gene.
+
+```{r AddAnotation3, warning=FALSE}
+id_mapping = getBM(attributes=c('ensembl_gene_id', 'external_gene_name'),
+      filters = 'ensembl_gene_id',
+      values = row.names(assay(dds_fitted)),
+      mart = ensembl)
+# will take some time to run
+
+# Preview the result
+head(id_mapping)
+```
+
+Now that we have the ENSEMBL information and a gene symbol to match to our results, we can proceed in the smaller groups. As with the previous exercise, we have broken it into small steps with hints as needed.
+
+**Note**: For additional information regarding bioMart, please consult the [ENSEMBL bioMart vignette](https://bioconductor.org/packages/release/bioc/vignettes/biomaRt/inst/doc/accessing_ensembl.html) or the broader [Bioconductor Annotation Resources vignette ](http://bioconductor.org/packages/devel/workflows/vignettes/annotation/inst/doc/Annotation_Resources.html).
+
+Look at the two data frames that are going to be needed: `id_mapping` and `results_minus_vs_plus`.
+
+```{r preview_tables}
+head(id_mapping)
+head(results_minus_vs_plus)
+```
+
+We want to match the `id` column of `results_minus_vs_plus` to the `ensembl_gene_id` column of `id_mapping`, and once that match is found, we want to extract the `external_gene_name` column of `id_mapping` to get the gene symbol. Next, look at the documentation for `dplyr::left_join()` and merge the `id_mapping` table into the `results_minus_vs_plus` table on the columns `ensembl_gene_id` and `external_gene_name`.
+
+```{r left_join}
+results_minus_vs_plus_annotated = as_tibble(results_minus_vs_plus, rownames = "id") %>%
+    left_join(id_mapping, by = c('id' = 'ensembl_gene_id'))
+head(results_minus_vs_plus_annotated)
+```
+
+We can use some of the `tidyverse` functions we've encountered previously to rename the `external_gene_name` column to `symbol` and to move it into the second column position? Hint: Because of the order of the packages we may have loaded, we'll use `dplyr::rename()` and `dplyr::select()` instead of just the `select()` function. We can discuss this in a moment.
+
+```{r rename_rearrange}
+results_minus_vs_plus_annotated = results_minus_vs_plus_annotated %>%
+    dplyr::rename('symbol' = 'external_gene_name') %>%
+    dplyr::select(id, symbol, everything())
+results_minus_vs_plus_annotated
+```
+
+And now we have our differential expression results annotated with gene symbols, which can help in the interpretation of the results, and can be used in downstream analysis such as functional analysis.
+
+# Outputting results to file
+
+A key aspect of our analysis is preserving the relevant datasets for both our records and for downstream applications, such as functional enrichments.
+
+## DE results table
+
+We'll write out our DE results, now that we've added information to the table to help us or our collaborators interpret the results.
+
+```{r DEResultsOuput, eval = FALSE}
+write.csv(results_minus_vs_plus,
+          row.names = FALSE,
+          na = ".",
+          file="outputs/tables/DE_results_minus_vs_plus.csv")
+```
+
+
+## R session data
+
+In addition to the individual RObj(s) we saved earlier, we can capture a snapshot our entire session using the `save.image` function. This can be loaded in the same manner as an individual Robj.
+
+First, we'll save our session info so we can reference the packages and versions used to generate these data.
+
+```{r}
+session_summary <- sessionInfo()
+```
+
+```{r }
+save.image(file = "outputs/Robjs/DE_iron.RData")
+```
+
+
+# Summary
+
+In this section, we:
+
+* Generated a volcano plot for our differential expression results
+* Summarized our differential expression results
+* Discussed choosing thresholds
+* Annotated our tables of results to map gene IDs to gene symbols
+* Saved our results to file
+
+
+# Overall takeaways
+
+We've run through most of the building blocks needed to run a differential expression analysis and hopefully built up a better understanding of how differential expression comparisons work, particularly how experimental design can impact our results.
+
+What to consider moving forward:
+
+* How can I control for technical variation in my experimental design?
+* How much variation is expected with a treatment group?
+* What is my RNA quality, and how can that be optimized?
+* Are there quality concerns for my sequencing data?
+* What comparisons are relevant to my biological question?
+* Are there covariates that should be considered?
+* What will a differential expression analysis tell me?
+
+
+**Let's pause here for general questions**
+
+---
+
+# But how do we make sense of large numbers of DE genes?
+
+A way to determine possible [broader biological interpretations](https://www.ebi.ac.uk/training-beta/online/courses/functional-genomics-ii-common-technologies-and-data-analysis-methods/biological-interpretation-of-gene-expression-data-2/) from the observed DE results, is functional enrichments. There are many options, such as some included in this [discussion thread](https://www.researchgate.net/post/How_can_I_analyze_a_set_of_DEGs_differentially_expressed_genes_to_obtain_information_from_them). Other common functional enrichments approaches are gene set enrichment analysis, aka [GSEA](http://software.broadinstitute.org/gsea/index.jsp), Database for Annotation, Visualization and Integrated Discovery, aka [DAVID](https://david.ncifcrf.gov/), [Ingenity](https://digitalinsights.qiagen.com/), and [iPathway Guide](https://advaitabio.com/ipathwayguide/)
+
+The University of Michigan has license and support for additional tools, such as Cytoscape, so we recommend reaching out to staff with [Taubman Library](https://www.lib.umich.edu/locations-and-hours/taubman-health-sciences-library/research-and-clinical-support) to learn more about resources that might be application toyour research.
+
+---
+
+# Sources
+
+* HBC DGE training module, part 1: https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html
+* HBC DGE training module, part 2: https://hbctraining.github.io/DGE_workshop/lessons/05_DGE_DESeq2_analysis2.html
+* DESeq2 vignette: http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#differential-expression-analysis
+* Bioconductor Genomic Annotation resources: http://bioconductor.org/packages/devel/workflows/vignettes/annotation/inst/doc/Annotation_Resources.html
+* BioMart vignette: https://bioconductor.org/packages/release/bioc/vignettes/biomaRt/inst/doc/accessing_ensembl.html
+
+# Additional Resources
+* MIDAS Reproduciblity Hub: https://midas.umich.edu/reproducibility-overview/
+* ARC resources: https://arc-ts.umich.edu/
+* Gene Set Enrichment Resources from Bioconductor: https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html
+* Using HTSeq data with DESeq2: https://angus.readthedocs.io/en/2019/diff-ex-and-viz.html
+* Detailed RNA-seq analysis paper: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6096346/
+* Overview of RNA-seq analysis considerations: https://academic-oup-com.proxy.lib.umich.edu/bfg/article/14/2/130/257370
+* Alternative overview of DESeq2, including visualizations and functional enrichments: http://dputhier.github.io/jgb71e-polytech-bioinfo-app/practical/rna-seq_R/rnaseq_diff_Snf2.html
+
+---
+
+```{r WriteOut.RData, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+# Hidden code block to write out data for knitting
+# save.image(file = "rdata/RunningData_Full.RData")
+```
+
+# Session Info
+```{r SessionInfo}
+sessionInfo()
+```
+
+---
+
+These materials have been adapted and extended from materials listed above. These are open access materials distributed under the terms of the [Creative Commons Attribution license (CC BY 4.0)](http://creativecommons.org/licenses/by/4.0/), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.
+
+<br/>
+<br/>
+<hr/>
+| [Previous lesson](Module11_DEVisualizations.html) | [Top of this lesson](#top) | [Next lesson](R_bonus_content.html) |
+| :--- | :----: | ---: |

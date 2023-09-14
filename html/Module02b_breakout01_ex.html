@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="UM Bioinformatics Core" />
+
+
+<title>Exercise 01</title>
+
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link rel="shortcut icon" href="favicon-16x16.png" />
+<!--
+Favicon from
+https://twemoji.twitter.com/
+https://favicon.io/emoji-favicons/dna/
+-->
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">RNA-Seq Demystified</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="Module00_Introduction.html">Intro</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sequence QC
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module01_Warming_Up.html">Warming up</a>
+    </li>
+    <li>
+      <a href="Module02a_Sequence_QC.html">Sequence QC</a>
+    </li>
+    <li>
+      <a href="Module02b_Trimming.html">Trimming</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Alignment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module03a_Reference_Genomes.html">Reference Genomes</a>
+    </li>
+    <li>
+      <a href="Module03b_Alignment.html">Alignment</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Quantification
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module04_Alignment_QC_and_Quantification.html">Alignment QC and Quantification</a>
+    </li>
+    <li>
+      <a href="Module05_Additional_Details.html">Optional: Additional details</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Groups/Model
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module06_DEAnalysisSetup.html">DE Introduction</a>
+    </li>
+    <li>
+      <a href="Module07_DESeq2Init.html">DE Initialization</a>
+    </li>
+    <li>
+      <a href="Module08_DESeq2DE.html">DE Normalization and Modeling</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Expression plots
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module09_SampleQCViz.html">Sample QC</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Diff Expression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module10_DEComparisons.html">DE Testing</a>
+    </li>
+    <li>
+      <a href="Module11_DEVisualizations.html">DE Visualization</a>
+    </li>
+    <li>
+      <a href="Module12_DEAnnotations.html">DE Annotation</a>
+    </li>
+    <li>
+      <a href="R_bonus_content.html">Bonus content</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="Module99_Wrap_up.html">Wrap up</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Exercise 01</h1>
+<h4 class="author">UM Bioinformatics Core</h4>
+
+</div>
+
+
+<style type="text/css">
+body{ /* Normal  */
+      font-size: 14pt;
+  }
+pre {
+  font-size: 12pt
+}
+</style>
+<p><br></p>
+<div id="cutadapt-all-samples-exercise" class="section level2">
+<h2>Cutadapt All Samples Exercise</h2>
+<p><br></p>
+<p><strong>15 Minutes</strong></p>
+<p><br></p>
+<p>Now that we’ve learned the basics of running Cutadapt, we need to trim all the rest of our samples. If you remember from the Computational Foundations course, we learned about using bash variables. Let’s try an exercise where we use a bash variable to trim each one of our FASTQ files.</p>
+<p><br></p>
+<div id="instructions" class="section level3">
+<h3>Instructions:</h3>
+<p><br></p>
+<ul>
+<li>Work independently in the main room, posting any questions that arise to slack.</li>
+<li>Recommendations for writing your own code:
+<ul>
+<li>Read function documentation</li>
+<li>Test out ideas - it’s okay to make mistakes and generate errors</li>
+<li>Use a search engine to look up errors or recommended solutions using keywords</li>
+</ul></li>
+<li>We’ll review possible solutions after time is up as a group.</li>
+</ul>
+<p><br></p>
+<ul>
+<li>Review Cutadapt’s help page and choose the proper arguments for our Cutadapt command(s).</li>
+<li>Use a bash variable along with Cutadapt to trim all remaining FASTQ files.</li>
+<li>Confirm that we have all of our expected output files.</li>
+</ul>
+<p><br></p>
+<blockquote>
+<p>Hint: Using a bash variable allows us to quickly change some arguments in a repeated command, e.g. :</p>
+<pre><code>noun=&quot;World&quot;
+echo &quot;Hello, $noun!&quot;
+noun=&quot;Class&quot;
+echo &quot;Hello, $noun!&quot;</code></pre>
+</blockquote>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRXhlcmNpc2UgMDEiCmF1dGhvcjogIlVNIEJpb2luZm9ybWF0aWNzIENvcmUiCm91dHB1dDoKICAgICAgICBodG1sX2RvY3VtZW50OgogICAgICAgICAgICBpbmNsdWRlczoKICAgICAgICAgICAgICAgIGluX2hlYWRlcjogaGVhZGVyLmh0bWwKICAgICAgICAgICAgdGhlbWU6IHBhcGVyCiAgICAgICAgICAgIGZpZ19jYXB0aW9uOiB0cnVlCiAgICAgICAgICAgIG1hcmtkb3duOiBHRk0KICAgICAgICAgICAgY29kZV9kb3dubG9hZDogdHJ1ZQotLS0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KYm9keXsgLyogTm9ybWFsICAqLwogICAgICBmb250LXNpemU6IDE0cHQ7CiAgfQpwcmUgewogIGZvbnQtc2l6ZTogMTJwdAp9Cjwvc3R5bGU+Cgo8YnI+CgojIyBDdXRhZGFwdCBBbGwgU2FtcGxlcyBFeGVyY2lzZQoKPGJyPgoKKioxNSBNaW51dGVzKioKCjxicj4KCk5vdyB0aGF0IHdlJ3ZlIGxlYXJuZWQgdGhlIGJhc2ljcyBvZiBydW5uaW5nIEN1dGFkYXB0LCB3ZSBuZWVkIHRvIHRyaW0gYWxsIHRoZSByZXN0IG9mIG91ciBzYW1wbGVzLiBJZiB5b3UgcmVtZW1iZXIgZnJvbSB0aGUgQ29tcHV0YXRpb25hbCBGb3VuZGF0aW9ucyBjb3Vyc2UsIHdlIGxlYXJuZWQgYWJvdXQgdXNpbmcgYmFzaCB2YXJpYWJsZXMuIExldCdzIHRyeSBhbiBleGVyY2lzZSB3aGVyZSB3ZSB1c2UgYSBiYXNoIHZhcmlhYmxlIHRvIHRyaW0gZWFjaCBvbmUgb2Ygb3VyIEZBU1RRIGZpbGVzLgoKPGJyPgoKIyMjIEluc3RydWN0aW9uczoKCjxicj4KCi0gV29yayBpbmRlcGVuZGVudGx5IGluIHRoZSBtYWluIHJvb20sIHBvc3RpbmcgYW55IHF1ZXN0aW9ucyB0aGF0IGFyaXNlIHRvIHNsYWNrLgotIFJlY29tbWVuZGF0aW9ucyBmb3Igd3JpdGluZyB5b3VyIG93biBjb2RlOgogIC0gUmVhZCBmdW5jdGlvbiBkb2N1bWVudGF0aW9uCiAgLSBUZXN0IG91dCBpZGVhcyAtIGl0J3Mgb2theSB0byBtYWtlIG1pc3Rha2VzIGFuZCBnZW5lcmF0ZSBlcnJvcnMKICAtIFVzZSBhIHNlYXJjaCBlbmdpbmUgdG8gbG9vayB1cCBlcnJvcnMgb3IgcmVjb21tZW5kZWQgc29sdXRpb25zIHVzaW5nIGtleXdvcmRzCi0gV2UnbGwgcmV2aWV3IHBvc3NpYmxlIHNvbHV0aW9ucyBhZnRlciB0aW1lIGlzIHVwIGFzIGEgZ3JvdXAuCgo8YnI+CgotIFJldmlldyBDdXRhZGFwdCdzIGhlbHAgcGFnZSBhbmQgY2hvb3NlIHRoZSBwcm9wZXIgYXJndW1lbnRzIGZvciBvdXIgQ3V0YWRhcHQgY29tbWFuZChzKS4KLSBVc2UgYSBiYXNoIHZhcmlhYmxlIGFsb25nIHdpdGggQ3V0YWRhcHQgdG8gdHJpbSBhbGwgcmVtYWluaW5nIEZBU1RRIGZpbGVzLgotIENvbmZpcm0gdGhhdCB3ZSBoYXZlIGFsbCBvZiBvdXIgZXhwZWN0ZWQgb3V0cHV0IGZpbGVzLgoKPGJyPgoKPiBIaW50OiBVc2luZyBhIGJhc2ggdmFyaWFibGUgYWxsb3dzIHVzIHRvIHF1aWNrbHkgY2hhbmdlIHNvbWUgYXJndW1lbnRzIGluIGEgcmVwZWF0ZWQgY29tbWFuZCwgZS5nLiA6Cj4KPiB+fn4KPiBub3VuPSJXb3JsZCIKPiBlY2hvICJIZWxsbywgJG5vdW4hIgo+IG5vdW49IkNsYXNzIgo+IGVjaG8gIkhlbGxvLCAkbm91biEiCj4gfn5+Cg==</div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Module02b_breakout01_ex.md");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

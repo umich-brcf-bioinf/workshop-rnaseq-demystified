@@ -1,0 +1,206 @@
+---
+title: "R Bonus Content"
+author: "UM Bioinformatics Core"
+date: "`r Sys.Date()`"
+output:
+        html_document:
+            includes:
+                in_header: header.html
+            theme: paper
+            toc: true
+            toc_depth: 4
+            toc_float: true
+            number_sections: false
+            fig_caption: true
+            markdown: GFM
+            code_download: true
+---
+
+<style type="text/css">
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+</style>
+
+```{r, include = FALSE}
+source("../bin/chunk-options.R")
+knitr_fig_path("R_bonus_content")
+```
+
+```{r Modules, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+library(DESeq2)
+library(tidyverse)
+library(ggrepel)
+library(pheatmap)
+library(RColorBrewer)
+```
+
+> # Objectives {.unlisted .unnumbered}
+> * Additional visualizations for gene/sample level QC assessment
+
+# Count boxplots
+
+To evaluate the difference between the count distributions before and after normalization, let's extract the raw counts and the rlog normalized counts, and coerce them to `tibble`s.
+
+```{r RawCountsSetup}
+raw_counts = as_tibble(counts(dds), rownames = 'id')
+norm_counts = as_tibble(assay(rld), rownames = 'id')
+
+raw_counts
+norm_counts
+```
+
+Next, this is the **perfect** opportunity to use `tidyr::pivot_longer()` because we want to use `ggplot()` for the bar plots, but the data is currently in the wide form, not the tidy form!
+
+```{r PivotLonger}
+tidy_raw = tidyr::pivot_longer(raw_counts, -id, names_to = 'sample', values_to = 'counts')
+tidy_norm = tidyr::pivot_longer(norm_counts, -id, names_to = 'sample', values_to = 'counts')
+```
+
+We should also join in the sample metadata so that we can color on the sample groups.
+
+```{r JoinMetadata}
+samplesheet_tbl = as_tibble(colData(dds), rownames = 'sample')
+
+tidy_raw = tidy_raw %>% left_join(samplesheet_tbl, by = 'sample')
+tidy_norm = tidy_norm %>% left_join(samplesheet_tbl, by = 'sample')
+```
+
+```{r RawBoxplot}
+raw_boxplot = ggplot(tidy_raw, aes(x = sample, y = log2(counts), fill = condition)) +
+    geom_boxplot(notch = TRUE) +
+    labs(
+        title = 'Raw Counts',
+        x = 'Sample',
+        y = 'log2 Counts') +
+    theme_bw() + theme(axis.text.x = element_text(angle = 90))
+raw_boxplot
+```
+
+> # Question {.unlisted .unnumbered}
+> Why did we get that warning about non-finite values?
+
+```{r NormBoxplot}
+norm_boxplot = ggplot(tidy_norm, aes(x = sample, y = counts, fill = condition)) +
+    geom_boxplot(notch = TRUE) +
+    labs(
+        title = 'rlog Normalized Counts',
+        x = 'Sample',
+        y = 'rlog Counts') +
+    theme_bw() + theme(axis.text.x = element_text(angle = 90))
+norm_boxplot
+```
+
+Observe that the normalized plots truly do appear normalized; their means are more uniform. Let's go ahead and save these plots in our `outputs/figures` folder.
+
+```{r BoxplotsRawSave, eval = FALSE}
+ggsave(filename = 'outputs/figures/Boxplot_raw_condition.pdf', plot = raw_boxplot, height = 6, width = 6)
+ggsave(filename = 'outputs/figures/Boxplot_rlog_condition.pdf', plot = norm_boxplot, height = 6, width = 6)
+```
+
+# Heatmaps
+
+Let's create a heatmap based on the distance between pair-wise sample expression profiles. This is another vantage point of how similar and dissimilar the samples are from one another. To get started, we actually want a plain matrix, with out a column for the gene IDs, as we did for the boxplot.
+
+```{r NormCounts}
+norm_mat = assay(rld)
+head(norm_mat)
+```
+
+Next, we'll use the `dist()` function on the transpose of `norm_mat` to compute the distance. We will use the default Euclidean distance.
+
+```{r DistanceMat}
+dist_mat = dist(t(norm_mat), upper = TRUE)
+```
+
+Next, we'll plot a very simple `pheatmap()` using this matrix. But let's check the class of `dist_mat` first, because the input to `pheatmap()` needs to be a `matrix`.
+
+```{r DistanceHeatmap}
+class(dist_mat)
+
+# Have to coerce it
+dist_mat = as.matrix(dist_mat)
+
+dist_heatmap = pheatmap(
+    mat = dist_mat,
+    cluster_rows = TRUE,
+    cluster_cols = TRUE,
+    show_rownames = TRUE,
+    show_colnames = TRUE
+)
+dist_heatmap
+```
+
+This is nice, but there are a few tweaks we might consider:
+
+1. The color scale used by default is divergent, but our distances are values in [0, Inf), so a linear color scale would be more appropriate here.
+2. We might like for the sample metadata to be included so that we can easily tell if the samples cluster by their `condition`.
+
+To accomplish the first change, we'll use the `colorRampPalette()` function from the `RColorBrewer` package. This is **the** package to use for creating color scales of all varieties. We highly recommend exploring the package website and documentation.
+
+```{r ChooseColors}
+colors = colorRampPalette(brewer.pal(9, 'Blues'))(50)
+```
+
+Now let's use that in the `pheatmap()` call using the `color` parameter:
+
+```{r DistanceHeatmaColors}
+dist_heatmap = pheatmap(
+    mat = dist_mat,
+    color = colors,
+    cluster_rows = TRUE,
+    cluster_cols = TRUE,
+    show_rownames = TRUE,
+    show_colnames = TRUE
+)
+dist_heatmap
+```
+
+This is a lot more reasonable. More distant samples are a deeper blue, while more similar samples are closer to white. Next, let's add some annotation data.
+
+```{r DistanceHeatmapAnnotated}
+annotation_tbl = samplesheet_tbl %>%
+    dplyr::select(sample, condition) %>%
+    tibble::column_to_rownames(var = 'sample')
+
+dist_heatmap = pheatmap(
+    mat = dist_mat,
+    color = colors,
+    cluster_rows = TRUE,
+    cluster_cols = TRUE,
+    show_rownames = TRUE,
+    show_colnames = TRUE,
+    annotation_col = annotation_tbl
+)
+dist_heatmap
+```
+
+And now we have our conditions as a colored annotation bar along the columns.
+
+# Sources
+
+* HBC QC tutorial: https://hbctraining.github.io/DGE_workshop/lessons/03_DGE_QC_analysis.html
+* Detailed Heatmap tutorial from Galaxy: https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/rna-seq-viz-with-heatmap2/tutorial.html
+
+---
+
+# Session Info
+```{r SessionInfo}
+sessionInfo()
+```
+
+---
+
+These materials have been adapted and extended from materials listed above. These are open access materials distributed under the terms of the [Creative Commons Attribution license (CC BY 4.0)](http://creativecommons.org/licenses/by/4.0/), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.
+
+<br/>
+<br/>
+<hr/>
+| [Previous lesson](Module12_DEAnnotations.Rmd.html) | [Top of this lesson](#top) | [To wrap-up](Module99_Wrap_up.html) |
+| :--- | :----: | ---: |

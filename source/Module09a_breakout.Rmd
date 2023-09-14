@@ -1,0 +1,287 @@
+---
+title: "Independent Exercise - Customize a PCA plot"
+author: "UM Bioinformatics Core"
+date: "`r Sys.Date()`"
+output:
+        html_document:
+            includes:
+                in_header: header.html
+            theme: paper
+            toc: true
+            toc_depth: 4
+            toc_float: true
+            number_sections: false
+            fig_caption: true
+            markdown: GFM
+            code_download: true
+---
+
+<style type="text/css">
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+</style>
+
+```{r, include = FALSE}
+source("../bin/chunk-options.R")
+knitr_fig_path("09a-")
+```
+
+```{r Modules, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+library(DESeq2)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(matrixStats)
+library(ggrepel)
+library(pheatmap)
+library(RColorBrewer)
+# load("rdata/RunningData.RData")
+```
+
+Estimated time: **15 Minutes**
+
+
+# Motivation
+
+Customizing plots can help us see patterns in the data or make the claim(s) based on the data represented clearer.
+
+# Instructions
+
+- Work independently in the main room, posting any questions that arise to slack.
+- Recommendations for writing your own code:
+  - Read function documentation
+  - Test out ideas - it's okay to make mistakes and generate errors
+  - Use a search engine to look up errors or recommended solutions using keywords
+- We'll review possible solutions after time is up as a group.
+
+# Exercise
+
+Try doing the following to the `pca_plot`, starting with the "most popular" request and moving on to other customizations if you have time:
+
+> * Add a title and subtitle to the plot
+> * Update the color palette to be color-blind friendly
+> * Add labels to show which samples correspond to which points
+> * Use shape instead of color to indicate groups on the PCA plot.
+> * _Challenge_: Change the legend title to "Iron Status". 
+
+# Example
+
+Here is a copy of the code we just tested together to 1) pull the underlying data from the PCA function and 2) change the theme of our PCA plot to black and white.
+
+```{r test_PCA}
+pcaData <- plotPCA(rld, intgroup=c("condition"), returnData=TRUE)
+percentVar <- round(100 * attr(pcaData, "percentVar")) # store PC axes (% variance)
+
+# create custom plot object
+PCACustom <- ggplot(pcaData, aes(PC1, PC2, color=condition)) +
+  geom_point(size=3) +
+  coord_fixed() +
+  theme_bw()
+
+# add percentVar labels to *displayed plot*
+PCACustom + 
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance"))
+
+# add percentVar labels to *stored plot object*
+PCACustom2 <- PCACustom + 
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance"))
+```
+
+# Details & finding help
+
+## Add a title and subtitle to the ggplot plot
+
+  * Hint: use the `labs()` function or search for [examples](https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/)
+  * Remember that unless a change to a plot is _assigned to an object_, although the change will be displayed it will not stored for later reference or output to file
+  
+  
+<details>
+<summary>Possible solution</summary>
+
+Example of possible :
+
+```{r, eval= FALSE}
+?labs
+PCACustom2 + 
+  labs(title = "Iron Supplemented Mice", subtitle = "PCA of top 500 genes")
+
+PCACustom3 <- PCACustom2 + 
+  labs(title = "Iron Supplemented Mice", subtitle = "PCA of top 500 genes")
+```
+
+</details>
+<br>
+
+
+## Add labels to show which samples correspond to which points
+
+  * Hint: use the `geom_label()` or `geom_label_repel()` functions and the `name` column in our `pcaData` object
+  * See [example in this support post](https://support.bioconductor.org/p/90791/) and/or [apply more general recommendations from this R graph gallery](https://r-graph-gallery.com/275-add-text-labels-with-ggplot2.html)
+
+<details>
+<summary>Possible solution</summary>
+
+Example of possible solution:
+
+```{r, eval= FALSE}
+?geom_label_repel
+
+# display
+PCACustom2 + 
+  geom_text_repel(aes(label = name), 
+                  point.padding = 0.5, 
+                  box.padding = 0.5)
+
+# save to new object
+PCACustom4 <- PCACustom2 + 
+  geom_text_repel(aes(label = name), 
+                  point.padding = 0.5, 
+                  box.padding = 0.5)
+  
+```
+
+</details>
+<br>
+
+## Make our color palette more color-blind friendly (with `RColorBrewer`)
+  * Use either the `scale_colour_brewer` function to [change the color mappings in our plot](https://statisticsglobe.com/scale-colour-fill-brewer-rcolorbrewer-package-r) OR `scale_colour_manual` function to [completely customize color choices](http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette)
+  * Pre-designed [color-blind friendly palettes are available](http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette)
+   * When considering color choices, be aware of the [prevalence and types of color-blindness](https://medium.com/version-1/simulating-visualisations-in-r-for-colour-blindness-2faddde63695) and how to choose more [easily distinguishable colors](http://bconnelly.net/posts/creating_colorblind-friendly_figures/)
+  * For publication or presentations, we can also check the final figures for sufficient contrasts with a [color-blindness simulator tool](https://www.color-blindness.com/coblis-color-blindness-simulator/). 
+  
+<details>
+<summary>Possible solution</summary>
+
+Example of possible solution:
+
+```{r, eval= FALSE}
+# look at pre-made color palettes from RColorBrewer
+display.brewer.all(colorblindFriendly = TRUE)
+# use RColorBrewer palette
+PCACustom2 + 
+  scale_colour_brewer(palette = "Set2")
+
+# OR
+# customize using manual color palette
+# The R Cookbook palette with grey:
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# To use for line and point colors, add manual color scaling with custom palette
+PCACustom2 + 
+  scale_colour_manual(values=cbPalette[2:3])
+
+PCACustom5 <- PCACustom2 + 
+  scale_colour_manual(values=cbPalette[2:3])
+  
+```
+
+</details>
+<br>
+  
+## Use shape instead of color to indicate groups on the PCA plot. 
+
+  * Hint: since color and shape are both mapping aspects, so we'll need to re-specify shape instead of color instead of adding an additional layers like the other prompts 
+  * The [documentation page for `geom_point`](https://ggplot2.tidyverse.org/reference/geom_point.html) and [R graphics cookbooks](https://r-graphics.org/recipe-scatter-shapes) includes some examples of changing the shapes of the plotted points
+  * [These R graph gallery examples](https://r-graph-gallery.com/274-map-a-variable-to-ggplot2-scatterplot.html) could also be helpful
+
+<details>
+<summary>Possible solution</summary>
+
+Example of possible solution:
+
+```{r, eval= FALSE}
+# generate new aesthetic mapping (with default shapes selected)
+ggplot(pcaData, aes(PC1, PC2, shape=condition)) +
+  geom_point(size=3) +
+  coord_fixed() +
+  theme_bw() + 
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance"))
+
+
+# generate new aesthetic mapping (with manually selected shapes)
+ggplot(pcaData, aes(PC1, PC2, shape=condition)) +
+  geom_point(size=3) +
+  scale_shape_manual(values = c(1, 4)) +
+  coord_fixed() +
+  theme_bw() + 
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance"))
+
+# create custom plot object with manual shapes
+PCACustom6 <- ggplot(pcaData, aes(PC1, PC2, shape=condition)) +
+  geom_point(size=3) +
+  scale_shape_manual(values = c(1, 4)) +
+  coord_fixed() +
+  theme_bw() + 
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance"))
+
+```
+</details>
+<br>
+
+## _Challenge_: Change the legend title to "Iron Status"
+
+  * Hint, you can do this with the `labs()` function too, using the corresponding aesthetic mapping (e.g. "color").
+  * [This help thread with examples](https://stackoverflow.com/questions/14622421/how-to-change-legend-title-in-ggplot) may also be useful
+
+<details>
+<summary>Possible solution</summary>
+
+Example of possible solution:
+
+```{r, eval= FALSE}
+#  customize label for colour mapping
+PCACustom2 + 
+  guides(colour=guide_legend(title="Iron supplementation status")) 
+
+# alternatively specify label for aesthetic mapping
+PCACustom2 + 
+  labs(colour="Iron supplementation status")
+
+# store custom plot as new object
+PCACustom7 <- PCACustom2 + 
+  labs(colour="Iron supplementation status")
+  
+```
+</details>
+<br>
+
+# Saving the result
+
+If time permits, consider how you might save your favorite new PCA plot (with an informative file name). Hint: Consider how we saved our initial PCA plot in the previous module with `ggsave()`.
+
+<details>
+<summary>Solution</summary>
+
+Here are examples of some possible approaches:
+
+```{r save_custom_pca, eval = FALSE}
+pdf(file = file.path('outputs', 'figures', 'PCA_rlog_Titled.pdf'), width = 6, height = 6)
+PCACustom3
+dev.off()
+
+ggsave(
+    filename = file.path('outputs', 'figures', 'PCA_rlog_Titled.pdf'),
+    plot = PCACustom3,
+    width = 6, height = 6, units = 'in')
+```
+
+</details>
+<br>
+
+
+```{r WriteOut.RData, eval=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+#Hidden code block to write out data for knitting
+# save.image(file = "rdata/RunningData.RData")
+```

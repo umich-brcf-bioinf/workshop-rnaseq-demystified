@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="UM Bioinformatics Core" />
+
+<meta name="date" content="2023-08-07" />
+
+<title>Module 10: DE Testing</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link rel="shortcut icon" href="favicon-16x16.png" />
+<!--
+Favicon from
+https://twemoji.twitter.com/
+https://favicon.io/emoji-favicons/dna/
+-->
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">RNA-Seq Demystified</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="Module00_Introduction.html">Intro</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sequence QC
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module01_Warming_Up.html">Warming up</a>
+    </li>
+    <li>
+      <a href="Module02a_Sequence_QC.html">Sequence QC</a>
+    </li>
+    <li>
+      <a href="Module02b_Trimming.html">Trimming</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Alignment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module03a_Reference_Genomes.html">Reference Genomes</a>
+    </li>
+    <li>
+      <a href="Module03b_Alignment.html">Alignment</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Quantification
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module04_Alignment_QC_and_Quantification.html">Alignment QC and Quantification</a>
+    </li>
+    <li>
+      <a href="Module05_Additional_Details.html">Optional: Additional details</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Groups/Model
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module06_DEAnalysisSetup.html">DE Introduction</a>
+    </li>
+    <li>
+      <a href="Module07_DESeq2Init.html">DE Initialization</a>
+    </li>
+    <li>
+      <a href="Module08_DESeq2DE.html">DE Normalization and Modeling</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Expression plots
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module09_SampleQCViz.html">Sample QC</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Diff Expression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module10_DEComparisons.html">DE Testing</a>
+    </li>
+    <li>
+      <a href="Module11_DEVisualizations.html">DE Visualization</a>
+    </li>
+    <li>
+      <a href="Module12_DEAnnotations.html">DE Annotation</a>
+    </li>
+    <li>
+      <a href="R_bonus_content.html">Bonus content</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="Module99_Wrap_up.html">Wrap up</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Module 10: DE Testing</h1>
+<h4 class="author">UM Bioinformatics Core</h4>
+<h4 class="date">2023-08-07</h4>
+
+</div>
+
+
+<style type="text/css">
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+</style>
+<blockquote>
+<h1 id="objectives" class="unlisted unnumbered">Objectives</h1>
+<ul>
+<li>Generate tables of DE results</li>
+<li>Understand what a p-value represents.</li>
+<li>Understand multiple hypothesis correction application and
+importance</li>
+</ul>
+</blockquote>
+<div id="differential-expression-workflow"
+class="section level1 unlisted unnumbered">
+<h1 class="unlisted unnumbered">Differential Expression Workflow</h1>
+<p>Now we test for differential expression between our groups of
+interest and return a table of results.</p>
+<p><img src="images/wayfinder/wayfinder-DEComparisons.png"
+style="width:75.0%" /></p>
+<hr />
+</div>
+<div id="testing-for-de" class="section level1">
+<h1>Testing for DE</h1>
+<p>Before showing the code for generating differential expression
+results, let’s walk through some toy data and discuss our intuition, its
+limitations, and what we can do to formalize our thought around
+determining if a gene is differentially expressed.</p>
+<p>Let’s start by looking at expression boxplots for a few “genes” where
+we’ve made up the data. In each plot, we are comparing the expression
+levels (on the y-axis) for samples (each point) representing a WT (red)
+and KO (teal) condition. The boxplot shows the 25% - 75% distribution,
+along with outliers, with a bar representing the median value, and a
+black-crossed-point representing the mean.</p>
+<p>For the first example, we ask: Does the KO affect the expression of
+the gene?</p>
+<p><img src="images/Module10_stat_plot_Gene_3.png"
+style="width:75.0%" /></p>
+<p>It seems pretty clear that there is a large difference between the
+means of the two groups, and within-group spread is quite low. So the
+answer to the question is likely “Yes”.</p>
+<p>Consider a second example:</p>
+<p><img src="images/Module10_stat_plot_Gene_1.png"
+style="width:75.0%" /></p>
+<p>Here there isn’t a large difference between the means of the two
+groups, and there is quite a bit of spread within-group. The answer here
+is likely “No”.</p>
+<p>Finally, consider a third example:</p>
+<p><img src="images/Module10_stat_plot_Gene_2.png"
+style="width:75.0%" /></p>
+<p>The means are not so close to each other in this example, though
+there is still quite a bit of spread. This is example is perhaps less
+clear.</p>
+<p>Looking at all three of the hypothetical genes together, we see them
+in relation to one another and how they span the range from No, to
+Maybe?, to Definitely.</p>
+<p><img src="images/Module10_stat_plot.png" /></p>
+<p>Now, consider needing to make this decision for 20,000 genes. Even if
+all the genes had clear separation, that would take a lot of time.
+However, it’s reasonable to expect to see a lot of genes with more
+ambiguous expression like Gene 2.</p>
+<p><strong>We need a formal, reproducible, way to make this
+decision!</strong></p>
+<p>Thankfully statistics provides the formality we want, but for any
+statistical test we need to clearly state what we are testing. When
+testing for differential expression we assume that for any for any
+particular gene, there is no difference in expression between
+conditions. Statisticians would call this the “null hypothesis”.</p>
+<p>For each gene, DESeq2 computes a “Wald statistic” which is a single
+number encapsulating the difference in the means and the spread of the
+groups. However, this number alone doesn’t tell us how to decide if a
+gene is differentially expressed. We need a <strong>second</strong>
+number to give us an idea of how extreme that Wald statistic is among
+the distribution of Wald statistics, this is the
+<strong>“p-value”</strong> which along with choosing a threshold will
+inform us if we can <strong>reject the null hypothesis</strong> and
+classify a gene as differentially expressed.</p>
+<p>Imagine shuffling the group labels and recomputing the Wald statistic
+over and over again. You’d get a distribution of statistics that would
+look similar to a normal curve. The p-value essentially tells you how
+likely you are to have seen the statistic you see by chance. So when we
+set a p-value = 0.05 as a threshold, we’re saying, “there is a 5% chance
+I’d see something this extreme when there was actually no effect”. So
+the evidence is <strong>strong</strong>, but not
+<strong>ironclad</strong>.</p>
+</div>
+<div id="generating-de-results" class="section level1">
+<h1>Generating DE Results</h1>
+<p>We can check what comparisons were automatically generated during
+fitting using the <code>resultsNames()</code> function. Note that the
+results are stored based on the levels we set in the sample sheet and
+that the convention is to always have “case” first versus “control”
+second.</p>
+<pre class="r"><code>resultsNames(dds_fitted)</code></pre>
+<pre><code>[1] &quot;Intercept&quot;               &quot;condition_minus_vs_plus&quot;</code></pre>
+<p>There is only the one comparison in the results, so we will refer to
+it in the <code>name</code> parameter of the <code>results()</code>
+function, and assign the result as an object.</p>
+<pre class="r"><code>results_minus_vs_plus = results(dds_fitted, name = &#39;condition_minus_vs_plus&#39;)
+head(results_minus_vs_plus)</code></pre>
+<pre><code>log2 fold change (MLE): condition minus vs plus 
+Wald test p-value: condition minus vs plus 
+DataFrame with 6 rows and 6 columns
+                      baseMean log2FoldChange     lfcSE      stat    pvalue
+                     &lt;numeric&gt;      &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
+ENSMUSG00000000001  1489.83039       0.297760  0.210310  1.415815  0.156830
+ENSMUSG00000000028  1748.93544       0.226421  0.176795  1.280695  0.200301
+ENSMUSG00000000031  2151.87715       0.457635  0.764579  0.598545  0.549476
+ENSMUSG00000000037    24.91672       0.579130  0.561259  1.031840  0.302147
+ENSMUSG00000000049     7.78377      -0.899483  1.553063 -0.579167  0.562476
+ENSMUSG00000000056 19653.54030      -0.174048  0.203529 -0.855151  0.392468
+                        padj
+                   &lt;numeric&gt;
+ENSMUSG00000000001  0.868573
+ENSMUSG00000000028  0.902900
+ENSMUSG00000000031  0.995391
+ENSMUSG00000000037  0.950613
+ENSMUSG00000000049  0.998043
+ENSMUSG00000000056  0.982479</code></pre>
+<p>If we look at the results table, we see that the row names are gene
+identifiers (in this case ENSEMBL IDs because that’s what the GTF we
+used in the call to RSEM+STAR) and then we see the following
+columns:</p>
+<ol style="list-style-type: decimal">
+<li><code>baseMean</code> is the average of the normalized count values,
+divided by size factors and taken over all samples, and can be
+interpreted as the relative expression level of that gene across all
+samples.</li>
+<li><code>log2FoldChange</code> is the log2 transformed ratio of the
+expression of the numerator group (first group) over the denominator
+group (second group after “vs”). Note that in our comparison, the
+<code>log2FoldChange</code> column compares the expression of
+<code>minus</code> over the denominator group, <code>plus</code>. If the
+value is positive, that means the expression of that gene is greater
+across the <code>minus</code> samples than across the <code>plus</code>
+samples. If the value is negative, that means the expression of that
+gene is greater across the <code>minus</code> samples.</li>
+<li><code>lfcSE</code> is the standard error for the log2 fold change
+estimate.</li>
+</ol>
+<blockquote>
+<h1 id="note-results-defaults" class="unlisted unnumbered">Note:
+<code>results()</code> defaults</h1>
+<p>If no arguments are passed to <code>results()</code>, then the log2
+fold changes and Wald test p-value will be for the <strong>last
+variable</strong> in the design formula, and if this is a factor, the
+comparison will be the <strong>last level</strong> over the
+<strong>reference level</strong>. If you specify <code>name</code>, as
+we did above, then the behavior is given by the name used from
+<code>resultsNames()</code>.</p>
+</blockquote>
+<p>There are multiple ways to specify the test to be done using the
+<code>results()</code> function. It is especially helpful to know this
+when fitting more complex models and testing more complex contrasts. To
+demonstrate this, consider this description from the help for
+<code>results()</code>:</p>
+<blockquote>
+<p><code>contrast</code>: a character vector with exactly three
+elements: the name of a factor in the design formula, the name of the
+numerator level for the fold change, and the name of the denominator
+level for the fold change</p>
+</blockquote>
+<p>So an alternative way to test the same contrast as above
+(i.e. <code>plus</code> / <code>minus</code>) is:</p>
+<pre class="r"><code>alt_results_minus_vs_plus = results(dds_fitted, contrast = c(&#39;condition&#39;, &#39;minus&#39;, &#39;plus&#39;))
+head(alt_results_minus_vs_plus)</code></pre>
+<pre><code>log2 fold change (MLE): condition minus vs plus 
+Wald test p-value: condition minus vs plus 
+DataFrame with 6 rows and 6 columns
+                      baseMean log2FoldChange     lfcSE      stat    pvalue
+                     &lt;numeric&gt;      &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
+ENSMUSG00000000001  1489.83039       0.297760  0.210310  1.415815  0.156830
+ENSMUSG00000000028  1748.93544       0.226421  0.176795  1.280695  0.200301
+ENSMUSG00000000031  2151.87715       0.457635  0.764579  0.598545  0.549476
+ENSMUSG00000000037    24.91672       0.579130  0.561259  1.031840  0.302147
+ENSMUSG00000000049     7.78377      -0.899483  1.553063 -0.579167  0.562476
+ENSMUSG00000000056 19653.54030      -0.174048  0.203529 -0.855151  0.392468
+                        padj
+                   &lt;numeric&gt;
+ENSMUSG00000000001  0.868573
+ENSMUSG00000000028  0.902900
+ENSMUSG00000000031  0.995391
+ENSMUSG00000000037  0.950613
+ENSMUSG00000000049  0.998043
+ENSMUSG00000000056  0.982479</code></pre>
+<p>This way of calling <code>results()</code> is especially helpful when
+the levels of the column of interest contain more than two levels
+because you can specify exactly which levels to test with little
+confusion.</p>
+<p>If we continue to look at the results table, after the
+<code>lfcSE</code> column we see:</p>
+<ol start="4" style="list-style-type: decimal">
+<li><code>stat</code> is the calculated Wald statistic for that
+gene.</li>
+<li><code>pvalue</code> is the <em>nominal</em> significance that we
+described earlier.</li>
+<li><code>padj</code> is the <em>adjusted p-value</em> (also known as a
+“q-value”) and is what we use for determining significantly differently
+expressed genes.</li>
+</ol>
+<blockquote>
+<h1 id="question" class="unlisted unnumbered">Question</h1>
+<p>Why should we use values from <code>padj</code> instead of the
+<code>pvalue</code>? Post in the Slack thread.</p>
+</blockquote>
+<p><br></p>
+<div id="multiple-hypothesis-testing-and-fdr-correction"
+class="section level3">
+<h3>Multiple hypothesis testing and FDR correction</h3>
+<p><br> <img src="images/significant_xkcd.png" style="width:75.0%" />
+&lt;br</p>
+<p>Each p-value reported in the table is the result of a single test for
+a single gene. As stated earlier - with a significance cut-off of
+p-value &lt; 0.05, we’re expecting a 5% chance it is a false positive.
+The more genes we test, the greater chance we have of seeing a
+significant results by chance. <strong>So if we are testing 20,000 genes
+for differential expression, we would expect to see ~1,000 significant
+genes (5%) just by chance.</strong></p>
+<p>To address this <a
+href="https://multithreaded.stitchfix.com/blog/2015/10/15/multiple-hypothesis-testing/">multiple
+hypothesis testing</a> can be performed. While there are a few
+approaches, the default method in DESeq2 is the False Discovery Rate
+(FDR) (<a
+href="https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1995.tb02031.x">Benjamini
+and Hochberg (1995)</a>).</p>
+<p>The default FDR rate cutoff for our analyses is 0.05, meaning the
+proportion of false positives amongst our <em>differentially expressed
+genes</em> is controlled to 5%. So if we call 500 genes as
+differentially expressed with this FDR cutoff, we expect only 25 of them
+to be false positives. DESeq2 vignette’s includes a <a
+href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#independent-filtering-and-multiple-testing">further
+discussion of filtering and multiple testing correction</a>.</p>
+<blockquote>
+<h1 id="note-on-padj-values-set-to-na" class="unlisted unnumbered">Note
+on <code>padj</code> values set to NA</h1>
+<p>As discussed in the <a
+href="https://hbctraining.github.io/DGE_workshop/lessons/05_DGE_DESeq2_analysis2.html">HBC
+tutorial</a> as well as the <a
+href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#i-want-to-benchmark-deseq2-comparing-to-other-de-tools.">DESeq2
+vignette</a>, DESeq2 reduces the number of genes that will be tested by
+removing genes with low number of counts and outlier samples.</p>
+<ul>
+<li>If within a row, all samples have zero counts, the baseMean column
+will be zero, and the log2 fold change estimates, p-value and adjusted
+p-value will all be set to NA.</li>
+<li>If a row contains a sample with an extreme count outlier then the
+p-value and adjusted p-value will be set to NA. These outlier counts are
+detected by <a
+href="https://en.wikipedia.org/wiki/Cook%27s_distance">Cook’s
+distance</a>.</li>
+<li>If a row is filtered by automatic independent filtering, e.g. for
+having a low mean normalized count, then only the adjusted p-value will
+be set to NA.</li>
+</ul>
+</blockquote>
+<p>Now that we’ve generated our differential comparisons and have an
+understanding of our results, including multiple hypothesis correction,
+we can proceed with generating summary figures and tables.</p>
+<hr />
+</div>
+</div>
+<div id="summary" class="section level1">
+<h1>Summary</h1>
+<p>In this section, we:</p>
+<ul>
+<li>Performed statistical tests for comparisons of interest</li>
+<li>Generated tables of differential expression results - i.e. fold
+changes and adjusted pvalues for each gene in dataset</li>
+<li>Discussed importance and application of multiple hypothesis
+correction</li>
+</ul>
+<p>Now that we’ve generated our differential comparisons and have an
+understanding of our results, including multiple hypothesis correction,
+we can proceed with generating summary figures and tables for our
+differential expression analysis.</p>
+<hr />
+</div>
+<div id="sources" class="section level1">
+<h1>Sources</h1>
+<ul>
+<li>HBC DGE training module, part 1: <a
+href="https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html"
+class="uri">https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html</a></li>
+<li>HBC DGE training module, part 2: <a
+href="https://hbctraining.github.io/DGE_workshop/lessons/05_DGE_DESeq2_analysis2.html"
+class="uri">https://hbctraining.github.io/DGE_workshop/lessons/05_DGE_DESeq2_analysis2.html</a></li>
+<li>DESeq2 vignette: <a
+href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#differential-expression-analysis"
+class="uri">http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#differential-expression-analysis</a></li>
+</ul>
+<hr />
+<p>These materials have been adapted and extended from materials listed
+above. These are open access materials distributed under the terms of
+the <a href="http://creativecommons.org/licenses/by/4.0/">Creative
+Commons Attribution license (CC BY 4.0)</a>, which permits unrestricted
+use, distribution, and reproduction in any medium, provided the original
+author and source are credited.</p>
+<br/> <br/>
+<hr/>
+<table style="width:100%;">
+<colgroup>
+<col width="28%" />
+<col width="42%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"><a href="Module09_SampleQCViz.html">Previous
+lesson</a></th>
+<th align="center"><a href="#top">Top of this lesson</a></th>
+<th align="right"><a href="Module11_DEVisualizations.html">Next
+lesson</a></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiTW9kdWxlIDEwOiBERSBUZXN0aW5nIgphdXRob3I6ICJVTSBCaW9pbmZvcm1hdGljcyBDb3JlIgpkYXRlOiAiYHIgU3lzLkRhdGUoKWAiCm91dHB1dDoKICAgICAgICBodG1sX2RvY3VtZW50OgogICAgICAgICAgICBpbmNsdWRlczoKICAgICAgICAgICAgICAgIGluX2hlYWRlcjogaGVhZGVyLmh0bWwKICAgICAgICAgICAgdGhlbWU6IHBhcGVyCiAgICAgICAgICAgIHRvYzogdHJ1ZQogICAgICAgICAgICB0b2NfZGVwdGg6IDQKICAgICAgICAgICAgdG9jX2Zsb2F0OiB0cnVlCiAgICAgICAgICAgIG51bWJlcl9zZWN0aW9uczogZmFsc2UKICAgICAgICAgICAgZmlnX2NhcHRpb246IHRydWUKICAgICAgICAgICAgbWFya2Rvd246IEdGTQogICAgICAgICAgICBjb2RlX2Rvd25sb2FkOiB0cnVlCi0tLQoKPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KYm9keSwgdGQgewogICBmb250LXNpemU6IDE4cHg7Cn0KY29kZS5yewogIGZvbnQtc2l6ZTogMTJweDsKfQpwcmUgewogIGZvbnQtc2l6ZTogMTJweAp9Cjwvc3R5bGU+CgpgYGB7ciwgaW5jbHVkZSA9IEZBTFNFfQpzb3VyY2UoIi4uL2Jpbi9jaHVuay1vcHRpb25zLlIiKQprbml0cl9maWdfcGF0aCgiMTAtIikKYGBgCgo+ICMgT2JqZWN0aXZlcyB7LnVubGlzdGVkIC51bm51bWJlcmVkfQo+ICogR2VuZXJhdGUgdGFibGVzIG9mIERFIHJlc3VsdHMKPiAqIFVuZGVyc3RhbmQgd2hhdCBhIHAtdmFsdWUgcmVwcmVzZW50cy4KPiAqIFVuZGVyc3RhbmQgbXVsdGlwbGUgaHlwb3RoZXNpcyBjb3JyZWN0aW9uIGFwcGxpY2F0aW9uIGFuZCBpbXBvcnRhbmNlCgoKYGBge3IgTW9kdWxlcywgZXZhbD1UUlVFLCBlY2hvPUZBTFNFLCBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFfQpsaWJyYXJ5KERFU2VxMikKbGlicmFyeSh0aWR5cikKbGlicmFyeShkcGx5cikKIyBsb2FkKCJyZGF0YS9SdW5uaW5nRGF0YS5SRGF0YSIpCmBgYAoKIyBEaWZmZXJlbnRpYWwgRXhwcmVzc2lvbiBXb3JrZmxvdyB7LnVubGlzdGVkIC51bm51bWJlcmVkfQoKTm93IHdlIHRlc3QgZm9yIGRpZmZlcmVudGlhbCBleHByZXNzaW9uIGJldHdlZW4gb3VyIGdyb3VwcyBvZiBpbnRlcmVzdCBhbmQgcmV0dXJuIGEgdGFibGUgb2YgcmVzdWx0cy4KCiFbXSguL2ltYWdlcy93YXlmaW5kZXIvd2F5ZmluZGVyLURFQ29tcGFyaXNvbnMucG5nKXt3aWR0aD03NSV9CgotLS0KCiMgVGVzdGluZyBmb3IgREUKCkJlZm9yZSBzaG93aW5nIHRoZSBjb2RlIGZvciBnZW5lcmF0aW5nIGRpZmZlcmVudGlhbCBleHByZXNzaW9uIHJlc3VsdHMsIGxldCdzIHdhbGsgdGhyb3VnaCBzb21lIHRveSBkYXRhIGFuZCBkaXNjdXNzIG91ciBpbnR1aXRpb24sIGl0cyBsaW1pdGF0aW9ucywgYW5kIHdoYXQgd2UgY2FuIGRvIHRvIGZvcm1hbGl6ZSBvdXIgdGhvdWdodCBhcm91bmQgZGV0ZXJtaW5pbmcgaWYgYSBnZW5lIGlzIGRpZmZlcmVudGlhbGx5IGV4cHJlc3NlZC4KCkxldCdzIHN0YXJ0IGJ5IGxvb2tpbmcgYXQgZXhwcmVzc2lvbiBib3hwbG90cyBmb3IgYSBmZXcgImdlbmVzIiB3aGVyZSB3ZSd2ZSBtYWRlIHVwIHRoZSBkYXRhLiBJbiBlYWNoIHBsb3QsIHdlIGFyZSBjb21wYXJpbmcgdGhlIGV4cHJlc3Npb24gbGV2ZWxzIChvbiB0aGUgeS1heGlzKSBmb3Igc2FtcGxlcyAoZWFjaCBwb2ludCkgcmVwcmVzZW50aW5nIGEgV1QgKHJlZCkgYW5kIEtPICh0ZWFsKSBjb25kaXRpb24uIFRoZSBib3hwbG90IHNob3dzIHRoZSAyNSUgLSA3NSUgZGlzdHJpYnV0aW9uLCBhbG9uZyB3aXRoIG91dGxpZXJzLCB3aXRoIGEgYmFyIHJlcHJlc2VudGluZyB0aGUgbWVkaWFuIHZhbHVlLCBhbmQgYSBibGFjay1jcm9zc2VkLXBvaW50IHJlcHJlc2VudGluZyB0aGUgbWVhbi4KCkZvciB0aGUgZmlyc3QgZXhhbXBsZSwgd2UgYXNrOiBEb2VzIHRoZSBLTyBhZmZlY3QgdGhlIGV4cHJlc3Npb24gb2YgdGhlIGdlbmU/CgohW10oLi9pbWFnZXMvTW9kdWxlMTBfc3RhdF9wbG90X0dlbmVfMy5wbmcpe3dpZHRoPTc1JX0KCkl0IHNlZW1zIHByZXR0eSBjbGVhciB0aGF0IHRoZXJlIGlzIGEgbGFyZ2UgZGlmZmVyZW5jZSBiZXR3ZWVuIHRoZSBtZWFucyBvZiB0aGUgdHdvIGdyb3VwcywgYW5kIHdpdGhpbi1ncm91cCBzcHJlYWQgaXMgcXVpdGUgbG93LiBTbyB0aGUgYW5zd2VyIHRvIHRoZSBxdWVzdGlvbiBpcyBsaWtlbHkgIlllcyIuCgpDb25zaWRlciBhIHNlY29uZCBleGFtcGxlOgoKIVtdKC4vaW1hZ2VzL01vZHVsZTEwX3N0YXRfcGxvdF9HZW5lXzEucG5nKXt3aWR0aD03NSV9CgpIZXJlIHRoZXJlIGlzbid0IGEgbGFyZ2UgZGlmZmVyZW5jZSBiZXR3ZWVuIHRoZSBtZWFucyBvZiB0aGUgdHdvIGdyb3VwcywgYW5kIHRoZXJlIGlzIHF1aXRlIGEgYml0IG9mIHNwcmVhZCB3aXRoaW4tZ3JvdXAuIFRoZSBhbnN3ZXIgaGVyZSBpcyBsaWtlbHkgIk5vIi4KCkZpbmFsbHksIGNvbnNpZGVyIGEgdGhpcmQgZXhhbXBsZToKCiFbXSguL2ltYWdlcy9Nb2R1bGUxMF9zdGF0X3Bsb3RfR2VuZV8yLnBuZyl7d2lkdGg9NzUlfQoKVGhlIG1lYW5zIGFyZSBub3Qgc28gY2xvc2UgdG8gZWFjaCBvdGhlciBpbiB0aGlzIGV4YW1wbGUsIHRob3VnaCB0aGVyZSBpcyBzdGlsbCBxdWl0ZSBhIGJpdCBvZiBzcHJlYWQuIFRoaXMgaXMgZXhhbXBsZSBpcyBwZXJoYXBzIGxlc3MgY2xlYXIuCgpMb29raW5nIGF0IGFsbCB0aHJlZSBvZiB0aGUgaHlwb3RoZXRpY2FsIGdlbmVzIHRvZ2V0aGVyLCB3ZSBzZWUgdGhlbSBpbiByZWxhdGlvbiB0byBvbmUgYW5vdGhlciBhbmQgaG93IHRoZXkgc3BhbiB0aGUgcmFuZ2UgZnJvbSBObywgdG8gTWF5YmU/LCB0byBEZWZpbml0ZWx5LgoKIVtdKC4vaW1hZ2VzL01vZHVsZTEwX3N0YXRfcGxvdC5wbmcpCgpOb3csIGNvbnNpZGVyIG5lZWRpbmcgdG8gbWFrZSB0aGlzIGRlY2lzaW9uIGZvciAyMCwwMDAgZ2VuZXMuIEV2ZW4gaWYgYWxsIHRoZSBnZW5lcyBoYWQgY2xlYXIgc2VwYXJhdGlvbiwgdGhhdCB3b3VsZCB0YWtlIGEgbG90IG9mIHRpbWUuIEhvd2V2ZXIsIGl0J3MgcmVhc29uYWJsZSB0byBleHBlY3QgdG8gc2VlIGEgbG90IG9mIGdlbmVzIHdpdGggbW9yZSBhbWJpZ3VvdXMgZXhwcmVzc2lvbiBsaWtlIEdlbmUgMi4KCioqV2UgbmVlZCBhIGZvcm1hbCwgcmVwcm9kdWNpYmxlLCB3YXkgdG8gbWFrZSB0aGlzIGRlY2lzaW9uISoqCgpUaGFua2Z1bGx5IHN0YXRpc3RpY3MgcHJvdmlkZXMgdGhlIGZvcm1hbGl0eSB3ZSB3YW50LCBidXQgZm9yIGFueSBzdGF0aXN0aWNhbCB0ZXN0IHdlIG5lZWQgdG8gY2xlYXJseSBzdGF0ZSB3aGF0IHdlIGFyZSB0ZXN0aW5nLiAgV2hlbiB0ZXN0aW5nIGZvciBkaWZmZXJlbnRpYWwgZXhwcmVzc2lvbiB3ZSBhc3N1bWUgdGhhdCBmb3IgYW55IGZvciBhbnkgcGFydGljdWxhciBnZW5lLCB0aGVyZSBpcyBubyBkaWZmZXJlbmNlIGluIGV4cHJlc3Npb24gYmV0d2VlbiBjb25kaXRpb25zLiBTdGF0aXN0aWNpYW5zIHdvdWxkIGNhbGwgdGhpcyB0aGUgIm51bGwgaHlwb3RoZXNpcyIuCgpGb3IgZWFjaCBnZW5lLCBERVNlcTIgY29tcHV0ZXMgYSAiV2FsZCBzdGF0aXN0aWMiIHdoaWNoIGlzIGEgc2luZ2xlIG51bWJlciBlbmNhcHN1bGF0aW5nIHRoZSBkaWZmZXJlbmNlIGluIHRoZSBtZWFucyBhbmQgdGhlIHNwcmVhZCBvZiB0aGUgZ3JvdXBzLiBIb3dldmVyLCB0aGlzIG51bWJlciBhbG9uZSBkb2Vzbid0IHRlbGwgdXMgaG93IHRvIGRlY2lkZSBpZiBhIGdlbmUgaXMgZGlmZmVyZW50aWFsbHkgZXhwcmVzc2VkLiBXZSBuZWVkIGEgKipzZWNvbmQqKiBudW1iZXIgdG8gZ2l2ZSB1cyBhbiBpZGVhIG9mIGhvdyBleHRyZW1lIHRoYXQgV2FsZCBzdGF0aXN0aWMgaXMgYW1vbmcgdGhlIGRpc3RyaWJ1dGlvbiBvZiBXYWxkIHN0YXRpc3RpY3MsIHRoaXMgaXMgdGhlICoqInAtdmFsdWUiKiogd2hpY2ggYWxvbmcgd2l0aCBjaG9vc2luZyBhIHRocmVzaG9sZCB3aWxsIGluZm9ybSB1cyBpZiB3ZSBjYW4gKipyZWplY3QgdGhlIG51bGwgaHlwb3RoZXNpcyoqIGFuZCBjbGFzc2lmeSBhIGdlbmUgYXMgZGlmZmVyZW50aWFsbHkgZXhwcmVzc2VkLgoKSW1hZ2luZSBzaHVmZmxpbmcgdGhlIGdyb3VwIGxhYmVscyBhbmQgcmVjb21wdXRpbmcgdGhlIFdhbGQgc3RhdGlzdGljIG92ZXIgYW5kIG92ZXIgYWdhaW4uIFlvdSdkIGdldCBhIGRpc3RyaWJ1dGlvbiBvZiBzdGF0aXN0aWNzIHRoYXQgd291bGQgbG9vayBzaW1pbGFyIHRvIGEgbm9ybWFsIGN1cnZlLiBUaGUgcC12YWx1ZSBlc3NlbnRpYWxseSB0ZWxscyB5b3UgaG93IGxpa2VseSB5b3UgYXJlIHRvIGhhdmUgc2VlbiB0aGUgc3RhdGlzdGljIHlvdSBzZWUgYnkgY2hhbmNlLiBTbyB3aGVuIHdlIHNldCBhIHAtdmFsdWUgPSAwLjA1IGFzIGEgdGhyZXNob2xkLCB3ZSdyZSBzYXlpbmcsICJ0aGVyZSBpcyBhIDUlIGNoYW5jZSBJJ2Qgc2VlIHNvbWV0aGluZyB0aGlzIGV4dHJlbWUgd2hlbiB0aGVyZSB3YXMgYWN0dWFsbHkgbm8gZWZmZWN0Ii4gU28gdGhlIGV2aWRlbmNlIGlzICoqc3Ryb25nKiosIGJ1dCBub3QgKippcm9uY2xhZCoqLgoKIyBHZW5lcmF0aW5nIERFIFJlc3VsdHMKCldlIGNhbiBjaGVjayB3aGF0IGNvbXBhcmlzb25zIHdlcmUgYXV0b21hdGljYWxseSBnZW5lcmF0ZWQgZHVyaW5nIGZpdHRpbmcgdXNpbmcgdGhlIGByZXN1bHRzTmFtZXMoKWAgZnVuY3Rpb24uIE5vdGUgdGhhdCAgdGhlIHJlc3VsdHMgYXJlIHN0b3JlZCBiYXNlZCBvbiB0aGUgbGV2ZWxzIHdlIHNldCBpbiB0aGUgc2FtcGxlIHNoZWV0IGFuZCB0aGF0IHRoZSBjb252ZW50aW9uIGlzIHRvIGFsd2F5cyBoYXZlICJjYXNlIiBmaXJzdCB2ZXJzdXMgImNvbnRyb2wiIHNlY29uZC4KYGBge3IgUmVzdWx0czF9CnJlc3VsdHNOYW1lcyhkZHNfZml0dGVkKQpgYGAKClRoZXJlIGlzIG9ubHkgdGhlIG9uZSBjb21wYXJpc29uIGluIHRoZSByZXN1bHRzLCBzbyB3ZSB3aWxsIHJlZmVyIHRvIGl0IGluIHRoZSBgbmFtZWAgcGFyYW1ldGVyIG9mIHRoZSBgcmVzdWx0cygpYCBmdW5jdGlvbiwgYW5kIGFzc2lnbiB0aGUgcmVzdWx0IGFzIGFuIG9iamVjdC4KCmBgYHtyIFNldHNSZXN1bHR9CnJlc3VsdHNfbWludXNfdnNfcGx1cyA9IHJlc3VsdHMoZGRzX2ZpdHRlZCwgbmFtZSA9ICdjb25kaXRpb25fbWludXNfdnNfcGx1cycpCmhlYWQocmVzdWx0c19taW51c192c19wbHVzKQpgYGAKCklmIHdlIGxvb2sgYXQgdGhlIHJlc3VsdHMgdGFibGUsIHdlIHNlZSB0aGF0IHRoZSByb3cgbmFtZXMgYXJlIGdlbmUgaWRlbnRpZmllcnMgKGluIHRoaXMgY2FzZSBFTlNFTUJMIElEcyBiZWNhdXNlIHRoYXQncyB3aGF0IHRoZSBHVEYgd2UgdXNlZCBpbiB0aGUgY2FsbCB0byBSU0VNK1NUQVIpIGFuZCB0aGVuIHdlIHNlZSB0aGUgZm9sbG93aW5nIGNvbHVtbnM6CgoxLiBgYmFzZU1lYW5gIGlzIHRoZSBhdmVyYWdlIG9mIHRoZSBub3JtYWxpemVkIGNvdW50IHZhbHVlcywgZGl2aWRlZCBieSBzaXplIGZhY3RvcnMgYW5kIHRha2VuIG92ZXIgYWxsIHNhbXBsZXMsIGFuZCBjYW4gYmUgaW50ZXJwcmV0ZWQgYXMgdGhlIHJlbGF0aXZlIGV4cHJlc3Npb24gbGV2ZWwgb2YgdGhhdCBnZW5lIGFjcm9zcyBhbGwgc2FtcGxlcy4KMi4gYGxvZzJGb2xkQ2hhbmdlYCBpcyB0aGUgbG9nMiB0cmFuc2Zvcm1lZCByYXRpbyBvZiB0aGUgZXhwcmVzc2lvbiBvZiB0aGUgbnVtZXJhdG9yIGdyb3VwIChmaXJzdCBncm91cCkgb3ZlciB0aGUgZGVub21pbmF0b3IgZ3JvdXAgKHNlY29uZCBncm91cCBhZnRlciAidnMiKS4gTm90ZSB0aGF0IGluIG91ciBjb21wYXJpc29uLCB0aGUgYGxvZzJGb2xkQ2hhbmdlYCBjb2x1bW4gY29tcGFyZXMgdGhlIGV4cHJlc3Npb24gb2YgYG1pbnVzYCBvdmVyIHRoZSBkZW5vbWluYXRvciBncm91cCwgYHBsdXNgLiBJZiB0aGUgdmFsdWUgaXMgcG9zaXRpdmUsIHRoYXQgbWVhbnMgdGhlIGV4cHJlc3Npb24gb2YgdGhhdCBnZW5lIGlzIGdyZWF0ZXIgYWNyb3NzIHRoZSBgbWludXNgIHNhbXBsZXMgdGhhbiBhY3Jvc3MgdGhlIGBwbHVzYCBzYW1wbGVzLiBJZiB0aGUgdmFsdWUgaXMgbmVnYXRpdmUsIHRoYXQgbWVhbnMgdGhlIGV4cHJlc3Npb24gb2YgdGhhdCBnZW5lIGlzIGdyZWF0ZXIgYWNyb3NzIHRoZSBgbWludXNgIHNhbXBsZXMuCjMuIGBsZmNTRWAgaXMgdGhlIHN0YW5kYXJkIGVycm9yIGZvciB0aGUgbG9nMiBmb2xkIGNoYW5nZSBlc3RpbWF0ZS4KCj4gIyBOb3RlOiBgcmVzdWx0cygpYCBkZWZhdWx0cyB7LnVubGlzdGVkIC51bm51bWJlcmVkfQo+IElmIG5vIGFyZ3VtZW50cyBhcmUgcGFzc2VkIHRvIGByZXN1bHRzKClgLCB0aGVuIHRoZSBsb2cyIGZvbGQgY2hhbmdlcyBhbmQgV2FsZCB0ZXN0IHAtdmFsdWUgd2lsbCBiZSBmb3IgdGhlICoqbGFzdCB2YXJpYWJsZSoqIGluIHRoZSBkZXNpZ24gZm9ybXVsYSwgYW5kIGlmIHRoaXMgaXMgYSBmYWN0b3IsIHRoZSBjb21wYXJpc29uIHdpbGwgYmUgdGhlICoqbGFzdCBsZXZlbCoqIG92ZXIgdGhlICoqcmVmZXJlbmNlIGxldmVsKiouIElmIHlvdSBzcGVjaWZ5IGBuYW1lYCwgYXMgd2UgZGlkIGFib3ZlLCB0aGVuIHRoZSBiZWhhdmlvciBpcyBnaXZlbiBieSB0aGUgbmFtZSB1c2VkIGZyb20gYHJlc3VsdHNOYW1lcygpYC4KClRoZXJlIGFyZSBtdWx0aXBsZSB3YXlzIHRvIHNwZWNpZnkgdGhlIHRlc3QgdG8gYmUgZG9uZSB1c2luZyB0aGUgYHJlc3VsdHMoKWAgZnVuY3Rpb24uIEl0IGlzIGVzcGVjaWFsbHkgaGVscGZ1bCB0byBrbm93IHRoaXMgd2hlbiBmaXR0aW5nIG1vcmUgY29tcGxleCBtb2RlbHMgYW5kIHRlc3RpbmcgbW9yZSBjb21wbGV4IGNvbnRyYXN0cy4gVG8gZGVtb25zdHJhdGUgdGhpcywgY29uc2lkZXIgdGhpcyBkZXNjcmlwdGlvbiBmcm9tIHRoZSBoZWxwIGZvciBgcmVzdWx0cygpYDoKCj4gYGNvbnRyYXN0YDogYSBjaGFyYWN0ZXIgdmVjdG9yIHdpdGggZXhhY3RseSB0aHJlZSBlbGVtZW50czogdGhlIG5hbWUgb2YgYSBmYWN0b3IgaW4gdGhlIGRlc2lnbiBmb3JtdWxhLCB0aGUgbmFtZSBvZiB0aGUgbnVtZXJhdG9yIGxldmVsIGZvciB0aGUgZm9sZCBjaGFuZ2UsIGFuZCB0aGUgbmFtZSBvZiB0aGUgZGVub21pbmF0b3IgbGV2ZWwgZm9yIHRoZSBmb2xkIGNoYW5nZQoKU28gYW4gYWx0ZXJuYXRpdmUgd2F5IHRvIHRlc3QgdGhlIHNhbWUgY29udHJhc3QgYXMgYWJvdmUgKGkuZS4gYHBsdXNgIC8gYG1pbnVzYCkgaXM6CgpgYGB7ciBTZXRzUmVzdWx0c0FsdH0KYWx0X3Jlc3VsdHNfbWludXNfdnNfcGx1cyA9IHJlc3VsdHMoZGRzX2ZpdHRlZCwgY29udHJhc3QgPSBjKCdjb25kaXRpb24nLCAnbWludXMnLCAncGx1cycpKQpoZWFkKGFsdF9yZXN1bHRzX21pbnVzX3ZzX3BsdXMpCmBgYAoKVGhpcyB3YXkgb2YgY2FsbGluZyBgcmVzdWx0cygpYCBpcyBlc3BlY2lhbGx5IGhlbHBmdWwgd2hlbiB0aGUgbGV2ZWxzIG9mIHRoZSBjb2x1bW4gb2YgaW50ZXJlc3QgY29udGFpbiBtb3JlIHRoYW4gdHdvIGxldmVscyBiZWNhdXNlIHlvdSBjYW4gc3BlY2lmeSBleGFjdGx5IHdoaWNoIGxldmVscyB0byB0ZXN0IHdpdGggbGl0dGxlIGNvbmZ1c2lvbi4KCklmIHdlIGNvbnRpbnVlIHRvIGxvb2sgYXQgdGhlIHJlc3VsdHMgdGFibGUsIGFmdGVyIHRoZSBgbGZjU0VgIGNvbHVtbiB3ZSBzZWU6Cgo0LiBgc3RhdGAgaXMgdGhlIGNhbGN1bGF0ZWQgV2FsZCBzdGF0aXN0aWMgZm9yIHRoYXQgZ2VuZS4KNS4gYHB2YWx1ZWAgaXMgdGhlICpub21pbmFsKiBzaWduaWZpY2FuY2UgdGhhdCB3ZSBkZXNjcmliZWQgZWFybGllci4KNi4gYHBhZGpgIGlzIHRoZSAqYWRqdXN0ZWQgcC12YWx1ZSogKGFsc28ga25vd24gYXMgYSAicS12YWx1ZSIpIGFuZCBpcyB3aGF0IHdlIHVzZSBmb3IgZGV0ZXJtaW5pbmcgc2lnbmlmaWNhbnRseSBkaWZmZXJlbnRseSBleHByZXNzZWQgZ2VuZXMuCgoKPiAjIFF1ZXN0aW9uIHsudW5saXN0ZWQgLnVubnVtYmVyZWR9Cj4gV2h5IHNob3VsZCB3ZSB1c2UgdmFsdWVzIGZyb20gYHBhZGpgIGluc3RlYWQgb2YgdGhlIGBwdmFsdWVgPyBQb3N0IGluIHRoZSBTbGFjayB0aHJlYWQuCgo8YnI+CgojIyMgTXVsdGlwbGUgaHlwb3RoZXNpcyB0ZXN0aW5nIGFuZCBGRFIgY29ycmVjdGlvbgoKPGJyPgohW10oLi9pbWFnZXMvc2lnbmlmaWNhbnRfeGtjZC5wbmcpe3dpZHRoPTc1JX0KPGJyCgpFYWNoIHAtdmFsdWUgcmVwb3J0ZWQgaW4gdGhlIHRhYmxlIGlzIHRoZSByZXN1bHQgb2YgYSBzaW5nbGUgdGVzdCBmb3IgYSBzaW5nbGUgZ2VuZS4gQXMgc3RhdGVkIGVhcmxpZXIgLSB3aXRoIGEgc2lnbmlmaWNhbmNlIGN1dC1vZmYgb2YgcC12YWx1ZSA8IDAuMDUsIHdlJ3JlIGV4cGVjdGluZyBhIDUlIGNoYW5jZSBpdCBpcyBhIGZhbHNlIHBvc2l0aXZlLiBUaGUgbW9yZSBnZW5lcyB3ZSB0ZXN0LCB0aGUgZ3JlYXRlciBjaGFuY2Ugd2UgaGF2ZSBvZiBzZWVpbmcgYSBzaWduaWZpY2FudCByZXN1bHRzIGJ5IGNoYW5jZS4gKipTbyBpZiB3ZSBhcmUgdGVzdGluZyAyMCwwMDAgZ2VuZXMgZm9yIGRpZmZlcmVudGlhbCBleHByZXNzaW9uLCB3ZSB3b3VsZCBleHBlY3QgdG8gc2VlIH4xLDAwMCBzaWduaWZpY2FudCBnZW5lcyAoNSUpIGp1c3QgYnkgY2hhbmNlLioqCgpUbyBhZGRyZXNzIHRoaXMgW211bHRpcGxlIGh5cG90aGVzaXMgdGVzdGluZ10oaHR0cHM6Ly9tdWx0aXRocmVhZGVkLnN0aXRjaGZpeC5jb20vYmxvZy8yMDE1LzEwLzE1L211bHRpcGxlLWh5cG90aGVzaXMtdGVzdGluZy8pIGNhbiBiZSBwZXJmb3JtZWQuIFdoaWxlIHRoZXJlIGFyZSBhIGZldyBhcHByb2FjaGVzLCB0aGUgZGVmYXVsdCBtZXRob2QgaW4gREVTZXEyIGlzIHRoZSBGYWxzZSBEaXNjb3ZlcnkgUmF0ZSAoRkRSKSAoW0JlbmphbWluaSBhbmQgSG9jaGJlcmcgKDE5OTUpXShodHRwczovL3Jzcy5vbmxpbmVsaWJyYXJ5LndpbGV5LmNvbS9kb2kvMTAuMTExMS9qLjI1MTctNjE2MS4xOTk1LnRiMDIwMzEueCkpLgoKVGhlIGRlZmF1bHQgRkRSIHJhdGUgY3V0b2ZmIGZvciBvdXIgYW5hbHlzZXMgaXMgMC4wNSwgbWVhbmluZyB0aGUgcHJvcG9ydGlvbiBvZiBmYWxzZSBwb3NpdGl2ZXMgYW1vbmdzdCBvdXIgKmRpZmZlcmVudGlhbGx5IGV4cHJlc3NlZCBnZW5lcyogaXMgY29udHJvbGxlZCB0byA1JS4gU28gaWYgd2UgY2FsbCA1MDAgZ2VuZXMgYXMgZGlmZmVyZW50aWFsbHkgZXhwcmVzc2VkIHdpdGggdGhpcyBGRFIgY3V0b2ZmLCB3ZSBleHBlY3Qgb25seSAyNSBvZiB0aGVtIHRvIGJlIGZhbHNlIHBvc2l0aXZlcy4gREVTZXEyIHZpZ25ldHRlJ3MgaW5jbHVkZXMgYSBbZnVydGhlciBkaXNjdXNzaW9uIG9mIGZpbHRlcmluZyBhbmQgbXVsdGlwbGUgdGVzdGluZyBjb3JyZWN0aW9uXShodHRwOi8vYmlvY29uZHVjdG9yLm9yZy9wYWNrYWdlcy9kZXZlbC9iaW9jL3ZpZ25ldHRlcy9ERVNlcTIvaW5zdC9kb2MvREVTZXEyLmh0bWwjaW5kZXBlbmRlbnQtZmlsdGVyaW5nLWFuZC1tdWx0aXBsZS10ZXN0aW5nKS4KCj4gIyBOb3RlIG9uIGBwYWRqYCB2YWx1ZXMgc2V0IHRvIE5BIHsudW5saXN0ZWQgLnVubnVtYmVyZWR9Cj4KPiBBcyBkaXNjdXNzZWQgaW4gdGhlIFtIQkMgdHV0b3JpYWxdKGh0dHBzOi8vaGJjdHJhaW5pbmcuZ2l0aHViLmlvL0RHRV93b3Jrc2hvcC9sZXNzb25zLzA1X0RHRV9ERVNlcTJfYW5hbHlzaXMyLmh0bWwpIGFzIHdlbGwgYXMgdGhlIFtERVNlcTIgdmlnbmV0dGVdKGh0dHA6Ly9iaW9jb25kdWN0b3Iub3JnL3BhY2thZ2VzL2RldmVsL2Jpb2MvdmlnbmV0dGVzL0RFU2VxMi9pbnN0L2RvYy9ERVNlcTIuaHRtbCNpLXdhbnQtdG8tYmVuY2htYXJrLWRlc2VxMi1jb21wYXJpbmctdG8tb3RoZXItZGUtdG9vbHMuKSwgREVTZXEyIHJlZHVjZXMgdGhlIG51bWJlciBvZiBnZW5lcyB0aGF0IHdpbGwgYmUgdGVzdGVkIGJ5IHJlbW92aW5nIGdlbmVzIHdpdGggbG93IG51bWJlciBvZiBjb3VudHMgYW5kIG91dGxpZXIgc2FtcGxlcy4KPgo+ICogSWYgd2l0aGluIGEgcm93LCBhbGwgc2FtcGxlcyBoYXZlIHplcm8gY291bnRzLCB0aGUgYmFzZU1lYW4gY29sdW1uIHdpbGwgYmUgemVybywgYW5kIHRoZSBsb2cyIGZvbGQgY2hhbmdlIGVzdGltYXRlcywgcC12YWx1ZSBhbmQgYWRqdXN0ZWQgcC12YWx1ZSB3aWxsIGFsbCBiZSBzZXQgdG8gTkEuCj4gKiBJZiBhIHJvdyBjb250YWlucyBhIHNhbXBsZSB3aXRoIGFuIGV4dHJlbWUgY291bnQgb3V0bGllciB0aGVuIHRoZSBwLXZhbHVlIGFuZCBhZGp1c3RlZCBwLXZhbHVlIHdpbGwgYmUgc2V0IHRvIE5BLiBUaGVzZSBvdXRsaWVyIGNvdW50cyBhcmUgZGV0ZWN0ZWQgYnkgW0Nvb2vigJlzIGRpc3RhbmNlXShodHRwczovL2VuLndpa2lwZWRpYS5vcmcvd2lraS9Db29rJTI3c19kaXN0YW5jZSkuCj4gKiBJZiBhIHJvdyBpcyBmaWx0ZXJlZCBieSBhdXRvbWF0aWMgaW5kZXBlbmRlbnQgZmlsdGVyaW5nLCBlLmcuIGZvciBoYXZpbmcgYSBsb3cgbWVhbiBub3JtYWxpemVkIGNvdW50LCB0aGVuIG9ubHkgdGhlIGFkanVzdGVkIHAtdmFsdWUgd2lsbCBiZSBzZXQgdG8gTkEuCgpOb3cgdGhhdCB3ZSd2ZSBnZW5lcmF0ZWQgb3VyIGRpZmZlcmVudGlhbCBjb21wYXJpc29ucyBhbmQgaGF2ZSBhbiB1bmRlcnN0YW5kaW5nIG9mIG91ciByZXN1bHRzLCBpbmNsdWRpbmcgbXVsdGlwbGUgaHlwb3RoZXNpcyBjb3JyZWN0aW9uLCB3ZSBjYW4gcHJvY2VlZCB3aXRoIGdlbmVyYXRpbmcgc3VtbWFyeSBmaWd1cmVzIGFuZCB0YWJsZXMuCgotLS0KCiMgU3VtbWFyeQoKSW4gdGhpcyBzZWN0aW9uLCB3ZToKCiogUGVyZm9ybWVkIHN0YXRpc3RpY2FsIHRlc3RzIGZvciBjb21wYXJpc29ucyBvZiBpbnRlcmVzdAoqIEdlbmVyYXRlZCB0YWJsZXMgb2YgZGlmZmVyZW50aWFsIGV4cHJlc3Npb24gcmVzdWx0cyAtIGkuZS4gZm9sZCBjaGFuZ2VzIGFuZCBhZGp1c3RlZCBwdmFsdWVzIGZvciBlYWNoIGdlbmUgaW4gZGF0YXNldAoqIERpc2N1c3NlZCBpbXBvcnRhbmNlIGFuZCBhcHBsaWNhdGlvbiBvZiBtdWx0aXBsZSBoeXBvdGhlc2lzIGNvcnJlY3Rpb24KCk5vdyB0aGF0IHdlJ3ZlIGdlbmVyYXRlZCBvdXIgZGlmZmVyZW50aWFsIGNvbXBhcmlzb25zIGFuZCBoYXZlIGFuIHVuZGVyc3RhbmRpbmcgb2Ygb3VyIHJlc3VsdHMsIGluY2x1ZGluZyBtdWx0aXBsZSBoeXBvdGhlc2lzIGNvcnJlY3Rpb24sIHdlIGNhbiBwcm9jZWVkIHdpdGggZ2VuZXJhdGluZyBzdW1tYXJ5IGZpZ3VyZXMgYW5kIHRhYmxlcyBmb3Igb3VyIGRpZmZlcmVudGlhbCBleHByZXNzaW9uIGFuYWx5c2lzLgoKLS0tCgojIFNvdXJjZXMKCiogSEJDIERHRSB0cmFpbmluZyBtb2R1bGUsIHBhcnQgMTogaHR0cHM6Ly9oYmN0cmFpbmluZy5naXRodWIuaW8vREdFX3dvcmtzaG9wL2xlc3NvbnMvMDRfREdFX0RFU2VxMl9hbmFseXNpcy5odG1sCiogSEJDIERHRSB0cmFpbmluZyBtb2R1bGUsIHBhcnQgMjogaHR0cHM6Ly9oYmN0cmFpbmluZy5naXRodWIuaW8vREdFX3dvcmtzaG9wL2xlc3NvbnMvMDVfREdFX0RFU2VxMl9hbmFseXNpczIuaHRtbAoqIERFU2VxMiB2aWduZXR0ZTogaHR0cDovL2Jpb2NvbmR1Y3Rvci5vcmcvcGFja2FnZXMvZGV2ZWwvYmlvYy92aWduZXR0ZXMvREVTZXEyL2luc3QvZG9jL0RFU2VxMi5odG1sI2RpZmZlcmVudGlhbC1leHByZXNzaW9uLWFuYWx5c2lzCgoKCmBgYHtyIFdyaXRlT3V0LlJEYXRhLCBldmFsPVRSVUUsIGVjaG89RkFMU0UsIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9CiMgSGlkZGVuIGNvZGUgYmxvY2sgdG8gd3JpdGUgb3V0IGRhdGEgZm9yIGtuaXR0aW5nCiMgc2F2ZS5pbWFnZShmaWxlID0gInJkYXRhL1J1bm5pbmdEYXRhLlJEYXRhIikKYGBgCgotLS0KClRoZXNlIG1hdGVyaWFscyBoYXZlIGJlZW4gYWRhcHRlZCBhbmQgZXh0ZW5kZWQgZnJvbSBtYXRlcmlhbHMgbGlzdGVkIGFib3ZlLiBUaGVzZSBhcmUgb3BlbiBhY2Nlc3MgbWF0ZXJpYWxzIGRpc3RyaWJ1dGVkIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgW0NyZWF0aXZlIENvbW1vbnMgQXR0cmlidXRpb24gbGljZW5zZSAoQ0MgQlkgNC4wKV0oaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbGljZW5zZXMvYnkvNC4wLyksIHdoaWNoIHBlcm1pdHMgdW5yZXN0cmljdGVkIHVzZSwgZGlzdHJpYnV0aW9uLCBhbmQgcmVwcm9kdWN0aW9uIGluIGFueSBtZWRpdW0sIHByb3ZpZGVkIHRoZSBvcmlnaW5hbCBhdXRob3IgYW5kIHNvdXJjZSBhcmUgY3JlZGl0ZWQuCgo8YnIvPgo8YnIvPgo8aHIvPgp8IFtQcmV2aW91cyBsZXNzb25dKE1vZHVsZTA5X1NhbXBsZVFDVml6Lmh0bWwpIHwgW1RvcCBvZiB0aGlzIGxlc3Nvbl0oI3RvcCkgfCBbTmV4dCBsZXNzb25dKE1vZHVsZTExX0RFVmlzdWFsaXphdGlvbnMuaHRtbCkgfAp8IDotLS0gfCA6LS0tLTogfCAtLS06IHwK</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Module10_DEComparisons.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

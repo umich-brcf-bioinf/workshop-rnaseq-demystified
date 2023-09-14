@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="UM Bioinformatics Core" />
+
+<meta name="date" content="2023-08-07" />
+
+<title>Independent Exercise - Customize a PCA plot</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link rel="shortcut icon" href="favicon-16x16.png" />
+<!--
+Favicon from
+https://twemoji.twitter.com/
+https://favicon.io/emoji-favicons/dna/
+-->
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">RNA-Seq Demystified</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="Module00_Introduction.html">Intro</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sequence QC
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module01_Warming_Up.html">Warming up</a>
+    </li>
+    <li>
+      <a href="Module02a_Sequence_QC.html">Sequence QC</a>
+    </li>
+    <li>
+      <a href="Module02b_Trimming.html">Trimming</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Alignment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module03a_Reference_Genomes.html">Reference Genomes</a>
+    </li>
+    <li>
+      <a href="Module03b_Alignment.html">Alignment</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Quantification
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module04_Alignment_QC_and_Quantification.html">Alignment QC and Quantification</a>
+    </li>
+    <li>
+      <a href="Module05_Additional_Details.html">Optional: Additional details</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Groups/Model
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module06_DEAnalysisSetup.html">DE Introduction</a>
+    </li>
+    <li>
+      <a href="Module07_DESeq2Init.html">DE Initialization</a>
+    </li>
+    <li>
+      <a href="Module08_DESeq2DE.html">DE Normalization and Modeling</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Expression plots
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module09_SampleQCViz.html">Sample QC</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Diff Expression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module10_DEComparisons.html">DE Testing</a>
+    </li>
+    <li>
+      <a href="Module11_DEVisualizations.html">DE Visualization</a>
+    </li>
+    <li>
+      <a href="Module12_DEAnnotations.html">DE Annotation</a>
+    </li>
+    <li>
+      <a href="R_bonus_content.html">Bonus content</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="Module99_Wrap_up.html">Wrap up</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Independent Exercise - Customize a PCA
+plot</h1>
+<h4 class="author">UM Bioinformatics Core</h4>
+<h4 class="date">2023-08-07</h4>
+
+</div>
+
+
+<style type="text/css">
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+</style>
+<p>Estimated time: <strong>15 Minutes</strong></p>
+<div id="motivation" class="section level1">
+<h1>Motivation</h1>
+<p>Customizing plots can help us see patterns in the data or make the
+claim(s) based on the data represented clearer.</p>
+</div>
+<div id="instructions" class="section level1">
+<h1>Instructions</h1>
+<ul>
+<li>Work independently in the main room, posting any questions that
+arise to slack.</li>
+<li>Recommendations for writing your own code:
+<ul>
+<li>Read function documentation</li>
+<li>Test out ideas - it’s okay to make mistakes and generate errors</li>
+<li>Use a search engine to look up errors or recommended solutions using
+keywords</li>
+</ul></li>
+<li>We’ll review possible solutions after time is up as a group.</li>
+</ul>
+</div>
+<div id="exercise" class="section level1">
+<h1>Exercise</h1>
+<p>Try doing the following to the <code>pca_plot</code>, starting with
+the “most popular” request and moving on to other customizations if you
+have time:</p>
+<blockquote>
+<ul>
+<li>Add a title and subtitle to the plot</li>
+<li>Update the color palette to be color-blind friendly</li>
+<li>Add labels to show which samples correspond to which points</li>
+<li>Use shape instead of color to indicate groups on the PCA plot.</li>
+<li><em>Challenge</em>: Change the legend title to “Iron Status”.</li>
+</ul>
+</blockquote>
+</div>
+<div id="example" class="section level1">
+<h1>Example</h1>
+<p>Here is a copy of the code we just tested together to 1) pull the
+underlying data from the PCA function and 2) change the theme of our PCA
+plot to black and white.</p>
+<pre class="r"><code>pcaData &lt;- plotPCA(rld, intgroup=c(&quot;condition&quot;), returnData=TRUE)
+percentVar &lt;- round(100 * attr(pcaData, &quot;percentVar&quot;)) # store PC axes (% variance)
+
+# create custom plot object
+PCACustom &lt;- ggplot(pcaData, aes(PC1, PC2, color=condition)) +
+  geom_point(size=3) +
+  coord_fixed() +
+  theme_bw()
+
+# add percentVar labels to *displayed plot*
+PCACustom + 
+  xlab(paste0(&quot;PC1: &quot;,percentVar[1],&quot;% variance&quot;)) +
+  ylab(paste0(&quot;PC2: &quot;,percentVar[2],&quot;% variance&quot;))</code></pre>
+<p><img src="fig/09a-test_PCA-1.png" width="816" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># add percentVar labels to *stored plot object*
+PCACustom2 &lt;- PCACustom + 
+  xlab(paste0(&quot;PC1: &quot;,percentVar[1],&quot;% variance&quot;)) +
+  ylab(paste0(&quot;PC2: &quot;,percentVar[2],&quot;% variance&quot;))</code></pre>
+</div>
+<div id="details-finding-help" class="section level1">
+<h1>Details &amp; finding help</h1>
+<div id="add-a-title-and-subtitle-to-the-ggplot-plot"
+class="section level2">
+<h2>Add a title and subtitle to the ggplot plot</h2>
+<ul>
+<li>Hint: use the <code>labs()</code> function or search for <a
+href="https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/">examples</a></li>
+<li>Remember that unless a change to a plot is <em>assigned to an
+object</em>, although the change will be displayed it will not stored
+for later reference or output to file</li>
+</ul>
+<details>
+<summary>
+Possible solution
+</summary>
+<p>Example of possible :</p>
+<pre class="r"><code>?labs
+PCACustom2 + 
+  labs(title = &quot;Iron Supplemented Mice&quot;, subtitle = &quot;PCA of top 500 genes&quot;)
+
+PCACustom3 &lt;- PCACustom2 + 
+  labs(title = &quot;Iron Supplemented Mice&quot;, subtitle = &quot;PCA of top 500 genes&quot;)</code></pre>
+</details>
+<p><br></p>
+</div>
+<div id="add-labels-to-show-which-samples-correspond-to-which-points"
+class="section level2">
+<h2>Add labels to show which samples correspond to which points</h2>
+<ul>
+<li>Hint: use the <code>geom_label()</code> or
+<code>geom_label_repel()</code> functions and the <code>name</code>
+column in our <code>pcaData</code> object</li>
+<li>See <a href="https://support.bioconductor.org/p/90791/">example in
+this support post</a> and/or <a
+href="https://r-graph-gallery.com/275-add-text-labels-with-ggplot2.html">apply
+more general recommendations from this R graph gallery</a></li>
+</ul>
+<details>
+<summary>
+Possible solution
+</summary>
+<p>Example of possible solution:</p>
+<pre class="r"><code>?geom_label_repel
+
+# display
+PCACustom2 + 
+  geom_text_repel(aes(label = name), 
+                  point.padding = 0.5, 
+                  box.padding = 0.5)
+
+# save to new object
+PCACustom4 &lt;- PCACustom2 + 
+  geom_text_repel(aes(label = name), 
+                  point.padding = 0.5, 
+                  box.padding = 0.5)</code></pre>
+</details>
+<p><br></p>
+</div>
+<div
+id="make-our-color-palette-more-color-blind-friendly-with-rcolorbrewer"
+class="section level2">
+<h2>Make our color palette more color-blind friendly (with
+<code>RColorBrewer</code>)</h2>
+<ul>
+<li>Use either the <code>scale_colour_brewer</code> function to <a
+href="https://statisticsglobe.com/scale-colour-fill-brewer-rcolorbrewer-package-r">change
+the color mappings in our plot</a> OR <code>scale_colour_manual</code>
+function to <a
+href="http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette">completely
+customize color choices</a></li>
+<li>Pre-designed <a
+href="http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette">color-blind
+friendly palettes are available</a></li>
+<li>When considering color choices, be aware of the <a
+href="https://medium.com/version-1/simulating-visualisations-in-r-for-colour-blindness-2faddde63695">prevalence
+and types of color-blindness</a> and how to choose more <a
+href="http://bconnelly.net/posts/creating_colorblind-friendly_figures/">easily
+distinguishable colors</a></li>
+<li>For publication or presentations, we can also check the final
+figures for sufficient contrasts with a <a
+href="https://www.color-blindness.com/coblis-color-blindness-simulator/">color-blindness
+simulator tool</a>.</li>
+</ul>
+<details>
+<summary>
+Possible solution
+</summary>
+<p>Example of possible solution:</p>
+<pre class="r"><code># look at pre-made color palettes from RColorBrewer
+display.brewer.all(colorblindFriendly = TRUE)
+# use RColorBrewer palette
+PCACustom2 + 
+  scale_colour_brewer(palette = &quot;Set2&quot;)
+
+# OR
+# customize using manual color palette
+# The R Cookbook palette with grey:
+cbPalette &lt;- c(&quot;#999999&quot;, &quot;#E69F00&quot;, &quot;#56B4E9&quot;, &quot;#009E73&quot;, &quot;#F0E442&quot;, &quot;#0072B2&quot;, &quot;#D55E00&quot;, &quot;#CC79A7&quot;)
+
+# To use for line and point colors, add manual color scaling with custom palette
+PCACustom2 + 
+  scale_colour_manual(values=cbPalette[2:3])
+
+PCACustom5 &lt;- PCACustom2 + 
+  scale_colour_manual(values=cbPalette[2:3])</code></pre>
+</details>
+<p><br></p>
+</div>
+<div id="use-shape-instead-of-color-to-indicate-groups-on-the-pca-plot."
+class="section level2">
+<h2>Use shape instead of color to indicate groups on the PCA plot.</h2>
+<ul>
+<li>Hint: since color and shape are both mapping aspects, so we’ll need
+to re-specify shape instead of color instead of adding an additional
+layers like the other prompts</li>
+<li>The <a
+href="https://ggplot2.tidyverse.org/reference/geom_point.html">documentation
+page for <code>geom_point</code></a> and <a
+href="https://r-graphics.org/recipe-scatter-shapes">R graphics
+cookbooks</a> includes some examples of changing the shapes of the
+plotted points</li>
+<li><a
+href="https://r-graph-gallery.com/274-map-a-variable-to-ggplot2-scatterplot.html">These
+R graph gallery examples</a> could also be helpful</li>
+</ul>
+<details>
+<summary>
+Possible solution
+</summary>
+<p>Example of possible solution:</p>
+<pre class="r"><code># generate new aesthetic mapping (with default shapes selected)
+ggplot(pcaData, aes(PC1, PC2, shape=condition)) +
+  geom_point(size=3) +
+  coord_fixed() +
+  theme_bw() + 
+  xlab(paste0(&quot;PC1: &quot;,percentVar[1],&quot;% variance&quot;)) +
+  ylab(paste0(&quot;PC2: &quot;,percentVar[2],&quot;% variance&quot;))
+
+
+# generate new aesthetic mapping (with manually selected shapes)
+ggplot(pcaData, aes(PC1, PC2, shape=condition)) +
+  geom_point(size=3) +
+  scale_shape_manual(values = c(1, 4)) +
+  coord_fixed() +
+  theme_bw() + 
+  xlab(paste0(&quot;PC1: &quot;,percentVar[1],&quot;% variance&quot;)) +
+  ylab(paste0(&quot;PC2: &quot;,percentVar[2],&quot;% variance&quot;))
+
+# create custom plot object with manual shapes
+PCACustom6 &lt;- ggplot(pcaData, aes(PC1, PC2, shape=condition)) +
+  geom_point(size=3) +
+  scale_shape_manual(values = c(1, 4)) +
+  coord_fixed() +
+  theme_bw() + 
+  xlab(paste0(&quot;PC1: &quot;,percentVar[1],&quot;% variance&quot;)) +
+  ylab(paste0(&quot;PC2: &quot;,percentVar[2],&quot;% variance&quot;))</code></pre>
+</details>
+<p><br></p>
+</div>
+<div id="challenge-change-the-legend-title-to-iron-status"
+class="section level2">
+<h2><em>Challenge</em>: Change the legend title to “Iron Status”</h2>
+<ul>
+<li>Hint, you can do this with the <code>labs()</code> function too,
+using the corresponding aesthetic mapping (e.g. “color”).</li>
+<li><a
+href="https://stackoverflow.com/questions/14622421/how-to-change-legend-title-in-ggplot">This
+help thread with examples</a> may also be useful</li>
+</ul>
+<details>
+<summary>
+Possible solution
+</summary>
+<p>Example of possible solution:</p>
+<pre class="r"><code>#  customize label for colour mapping
+PCACustom2 + 
+  guides(colour=guide_legend(title=&quot;Iron supplementation status&quot;)) 
+
+# alternatively specify label for aesthetic mapping
+PCACustom2 + 
+  labs(colour=&quot;Iron supplementation status&quot;)
+
+# store custom plot as new object
+PCACustom7 &lt;- PCACustom2 + 
+  labs(colour=&quot;Iron supplementation status&quot;)</code></pre>
+</details>
+<p><br></p>
+</div>
+</div>
+<div id="saving-the-result" class="section level1">
+<h1>Saving the result</h1>
+<p>If time permits, consider how you might save your favorite new PCA
+plot (with an informative file name). Hint: Consider how we saved our
+initial PCA plot in the previous module with <code>ggsave()</code>.</p>
+<details>
+<summary>
+Solution
+</summary>
+<p>Here are examples of some possible approaches:</p>
+<pre class="r"><code>pdf(file = file.path(&#39;outputs&#39;, &#39;figures&#39;, &#39;PCA_rlog_Titled.pdf&#39;), width = 6, height = 6)
+PCACustom3
+dev.off()
+
+ggsave(
+    filename = file.path(&#39;outputs&#39;, &#39;figures&#39;, &#39;PCA_rlog_Titled.pdf&#39;),
+    plot = PCACustom3,
+    width = 6, height = 6, units = &#39;in&#39;)</code></pre>
+</details>
+<p><br></p>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiSW5kZXBlbmRlbnQgRXhlcmNpc2UgLSBDdXN0b21pemUgYSBQQ0EgcGxvdCIKYXV0aG9yOiAiVU0gQmlvaW5mb3JtYXRpY3MgQ29yZSIKZGF0ZTogImByIFN5cy5EYXRlKClgIgpvdXRwdXQ6CiAgICAgICAgaHRtbF9kb2N1bWVudDoKICAgICAgICAgICAgaW5jbHVkZXM6CiAgICAgICAgICAgICAgICBpbl9oZWFkZXI6IGhlYWRlci5odG1sCiAgICAgICAgICAgIHRoZW1lOiBwYXBlcgogICAgICAgICAgICB0b2M6IHRydWUKICAgICAgICAgICAgdG9jX2RlcHRoOiA0CiAgICAgICAgICAgIHRvY19mbG9hdDogdHJ1ZQogICAgICAgICAgICBudW1iZXJfc2VjdGlvbnM6IGZhbHNlCiAgICAgICAgICAgIGZpZ19jYXB0aW9uOiB0cnVlCiAgICAgICAgICAgIG1hcmtkb3duOiBHRk0KICAgICAgICAgICAgY29kZV9kb3dubG9hZDogdHJ1ZQotLS0KCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+CmJvZHksIHRkIHsKICAgZm9udC1zaXplOiAxOHB4Owp9CmNvZGUucnsKICBmb250LXNpemU6IDEycHg7Cn0KcHJlIHsKICBmb250LXNpemU6IDEycHgKfQo8L3N0eWxlPgoKYGBge3IsIGluY2x1ZGUgPSBGQUxTRX0Kc291cmNlKCIuLi9iaW4vY2h1bmstb3B0aW9ucy5SIikKa25pdHJfZmlnX3BhdGgoIjA5YS0iKQpgYGAKCmBgYHtyIE1vZHVsZXMsIGV2YWw9VFJVRSwgZWNobz1GQUxTRSwgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0KbGlicmFyeShERVNlcTIpCmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeSh0aWR5cikKbGlicmFyeShkcGx5cikKbGlicmFyeShtYXRyaXhTdGF0cykKbGlicmFyeShnZ3JlcGVsKQpsaWJyYXJ5KHBoZWF0bWFwKQpsaWJyYXJ5KFJDb2xvckJyZXdlcikKIyBsb2FkKCJyZGF0YS9SdW5uaW5nRGF0YS5SRGF0YSIpCmBgYAoKRXN0aW1hdGVkIHRpbWU6ICoqMTUgTWludXRlcyoqCgoKIyBNb3RpdmF0aW9uCgpDdXN0b21pemluZyBwbG90cyBjYW4gaGVscCB1cyBzZWUgcGF0dGVybnMgaW4gdGhlIGRhdGEgb3IgbWFrZSB0aGUgY2xhaW0ocykgYmFzZWQgb24gdGhlIGRhdGEgcmVwcmVzZW50ZWQgY2xlYXJlci4KCiMgSW5zdHJ1Y3Rpb25zCgotIFdvcmsgaW5kZXBlbmRlbnRseSBpbiB0aGUgbWFpbiByb29tLCBwb3N0aW5nIGFueSBxdWVzdGlvbnMgdGhhdCBhcmlzZSB0byBzbGFjay4KLSBSZWNvbW1lbmRhdGlvbnMgZm9yIHdyaXRpbmcgeW91ciBvd24gY29kZToKICAtIFJlYWQgZnVuY3Rpb24gZG9jdW1lbnRhdGlvbgogIC0gVGVzdCBvdXQgaWRlYXMgLSBpdCdzIG9rYXkgdG8gbWFrZSBtaXN0YWtlcyBhbmQgZ2VuZXJhdGUgZXJyb3JzCiAgLSBVc2UgYSBzZWFyY2ggZW5naW5lIHRvIGxvb2sgdXAgZXJyb3JzIG9yIHJlY29tbWVuZGVkIHNvbHV0aW9ucyB1c2luZyBrZXl3b3JkcwotIFdlJ2xsIHJldmlldyBwb3NzaWJsZSBzb2x1dGlvbnMgYWZ0ZXIgdGltZSBpcyB1cCBhcyBhIGdyb3VwLgoKIyBFeGVyY2lzZQoKVHJ5IGRvaW5nIHRoZSBmb2xsb3dpbmcgdG8gdGhlIGBwY2FfcGxvdGAsIHN0YXJ0aW5nIHdpdGggdGhlICJtb3N0IHBvcHVsYXIiIHJlcXVlc3QgYW5kIG1vdmluZyBvbiB0byBvdGhlciBjdXN0b21pemF0aW9ucyBpZiB5b3UgaGF2ZSB0aW1lOgoKPiAqIEFkZCBhIHRpdGxlIGFuZCBzdWJ0aXRsZSB0byB0aGUgcGxvdAo+ICogVXBkYXRlIHRoZSBjb2xvciBwYWxldHRlIHRvIGJlIGNvbG9yLWJsaW5kIGZyaWVuZGx5Cj4gKiBBZGQgbGFiZWxzIHRvIHNob3cgd2hpY2ggc2FtcGxlcyBjb3JyZXNwb25kIHRvIHdoaWNoIHBvaW50cwo+ICogVXNlIHNoYXBlIGluc3RlYWQgb2YgY29sb3IgdG8gaW5kaWNhdGUgZ3JvdXBzIG9uIHRoZSBQQ0EgcGxvdC4KPiAqIF9DaGFsbGVuZ2VfOiBDaGFuZ2UgdGhlIGxlZ2VuZCB0aXRsZSB0byAiSXJvbiBTdGF0dXMiLiAKCiMgRXhhbXBsZQoKSGVyZSBpcyBhIGNvcHkgb2YgdGhlIGNvZGUgd2UganVzdCB0ZXN0ZWQgdG9nZXRoZXIgdG8gMSkgcHVsbCB0aGUgdW5kZXJseWluZyBkYXRhIGZyb20gdGhlIFBDQSBmdW5jdGlvbiBhbmQgMikgY2hhbmdlIHRoZSB0aGVtZSBvZiBvdXIgUENBIHBsb3QgdG8gYmxhY2sgYW5kIHdoaXRlLgoKYGBge3IgdGVzdF9QQ0F9CnBjYURhdGEgPC0gcGxvdFBDQShybGQsIGludGdyb3VwPWMoImNvbmRpdGlvbiIpLCByZXR1cm5EYXRhPVRSVUUpCnBlcmNlbnRWYXIgPC0gcm91bmQoMTAwICogYXR0cihwY2FEYXRhLCAicGVyY2VudFZhciIpKSAjIHN0b3JlIFBDIGF4ZXMgKCUgdmFyaWFuY2UpCgojIGNyZWF0ZSBjdXN0b20gcGxvdCBvYmplY3QKUENBQ3VzdG9tIDwtIGdncGxvdChwY2FEYXRhLCBhZXMoUEMxLCBQQzIsIGNvbG9yPWNvbmRpdGlvbikpICsKICBnZW9tX3BvaW50KHNpemU9MykgKwogIGNvb3JkX2ZpeGVkKCkgKwogIHRoZW1lX2J3KCkKCiMgYWRkIHBlcmNlbnRWYXIgbGFiZWxzIHRvICpkaXNwbGF5ZWQgcGxvdCoKUENBQ3VzdG9tICsgCiAgeGxhYihwYXN0ZTAoIlBDMTogIixwZXJjZW50VmFyWzFdLCIlIHZhcmlhbmNlIikpICsKICB5bGFiKHBhc3RlMCgiUEMyOiAiLHBlcmNlbnRWYXJbMl0sIiUgdmFyaWFuY2UiKSkKCiMgYWRkIHBlcmNlbnRWYXIgbGFiZWxzIHRvICpzdG9yZWQgcGxvdCBvYmplY3QqClBDQUN1c3RvbTIgPC0gUENBQ3VzdG9tICsgCiAgeGxhYihwYXN0ZTAoIlBDMTogIixwZXJjZW50VmFyWzFdLCIlIHZhcmlhbmNlIikpICsKICB5bGFiKHBhc3RlMCgiUEMyOiAiLHBlcmNlbnRWYXJbMl0sIiUgdmFyaWFuY2UiKSkKYGBgCgojIERldGFpbHMgJiBmaW5kaW5nIGhlbHAKCiMjIEFkZCBhIHRpdGxlIGFuZCBzdWJ0aXRsZSB0byB0aGUgZ2dwbG90IHBsb3QKCiAgKiBIaW50OiB1c2UgdGhlIGBsYWJzKClgIGZ1bmN0aW9uIG9yIHNlYXJjaCBmb3IgW2V4YW1wbGVzXShodHRwczovL3d3dy5kYXRhbm92aWEuY29tL2VuL2Jsb2cvZ2dwbG90LXRpdGxlLXN1YnRpdGxlLWFuZC1jYXB0aW9uLykKICAqIFJlbWVtYmVyIHRoYXQgdW5sZXNzIGEgY2hhbmdlIHRvIGEgcGxvdCBpcyBfYXNzaWduZWQgdG8gYW4gb2JqZWN0XywgYWx0aG91Z2ggdGhlIGNoYW5nZSB3aWxsIGJlIGRpc3BsYXllZCBpdCB3aWxsIG5vdCBzdG9yZWQgZm9yIGxhdGVyIHJlZmVyZW5jZSBvciBvdXRwdXQgdG8gZmlsZQogIAogIAo8ZGV0YWlscz4KPHN1bW1hcnk+UG9zc2libGUgc29sdXRpb248L3N1bW1hcnk+CgpFeGFtcGxlIG9mIHBvc3NpYmxlIDoKCmBgYHtyLCBldmFsPSBGQUxTRX0KP2xhYnMKUENBQ3VzdG9tMiArIAogIGxhYnModGl0bGUgPSAiSXJvbiBTdXBwbGVtZW50ZWQgTWljZSIsIHN1YnRpdGxlID0gIlBDQSBvZiB0b3AgNTAwIGdlbmVzIikKClBDQUN1c3RvbTMgPC0gUENBQ3VzdG9tMiArIAogIGxhYnModGl0bGUgPSAiSXJvbiBTdXBwbGVtZW50ZWQgTWljZSIsIHN1YnRpdGxlID0gIlBDQSBvZiB0b3AgNTAwIGdlbmVzIikKYGBgCgo8L2RldGFpbHM+Cjxicj4KCgojIyBBZGQgbGFiZWxzIHRvIHNob3cgd2hpY2ggc2FtcGxlcyBjb3JyZXNwb25kIHRvIHdoaWNoIHBvaW50cwoKICAqIEhpbnQ6IHVzZSB0aGUgYGdlb21fbGFiZWwoKWAgb3IgYGdlb21fbGFiZWxfcmVwZWwoKWAgZnVuY3Rpb25zIGFuZCB0aGUgYG5hbWVgIGNvbHVtbiBpbiBvdXIgYHBjYURhdGFgIG9iamVjdAogICogU2VlIFtleGFtcGxlIGluIHRoaXMgc3VwcG9ydCBwb3N0XShodHRwczovL3N1cHBvcnQuYmlvY29uZHVjdG9yLm9yZy9wLzkwNzkxLykgYW5kL29yIFthcHBseSBtb3JlIGdlbmVyYWwgcmVjb21tZW5kYXRpb25zIGZyb20gdGhpcyBSIGdyYXBoIGdhbGxlcnldKGh0dHBzOi8vci1ncmFwaC1nYWxsZXJ5LmNvbS8yNzUtYWRkLXRleHQtbGFiZWxzLXdpdGgtZ2dwbG90Mi5odG1sKQoKPGRldGFpbHM+CjxzdW1tYXJ5PlBvc3NpYmxlIHNvbHV0aW9uPC9zdW1tYXJ5PgoKRXhhbXBsZSBvZiBwb3NzaWJsZSBzb2x1dGlvbjoKCmBgYHtyLCBldmFsPSBGQUxTRX0KP2dlb21fbGFiZWxfcmVwZWwKCiMgZGlzcGxheQpQQ0FDdXN0b20yICsgCiAgZ2VvbV90ZXh0X3JlcGVsKGFlcyhsYWJlbCA9IG5hbWUpLCAKICAgICAgICAgICAgICAgICAgcG9pbnQucGFkZGluZyA9IDAuNSwgCiAgICAgICAgICAgICAgICAgIGJveC5wYWRkaW5nID0gMC41KQoKIyBzYXZlIHRvIG5ldyBvYmplY3QKUENBQ3VzdG9tNCA8LSBQQ0FDdXN0b20yICsgCiAgZ2VvbV90ZXh0X3JlcGVsKGFlcyhsYWJlbCA9IG5hbWUpLCAKICAgICAgICAgICAgICAgICAgcG9pbnQucGFkZGluZyA9IDAuNSwgCiAgICAgICAgICAgICAgICAgIGJveC5wYWRkaW5nID0gMC41KQogIApgYGAKCjwvZGV0YWlscz4KPGJyPgoKIyMgTWFrZSBvdXIgY29sb3IgcGFsZXR0ZSBtb3JlIGNvbG9yLWJsaW5kIGZyaWVuZGx5ICh3aXRoIGBSQ29sb3JCcmV3ZXJgKQogICogVXNlIGVpdGhlciB0aGUgYHNjYWxlX2NvbG91cl9icmV3ZXJgIGZ1bmN0aW9uIHRvIFtjaGFuZ2UgdGhlIGNvbG9yIG1hcHBpbmdzIGluIG91ciBwbG90XShodHRwczovL3N0YXRpc3RpY3NnbG9iZS5jb20vc2NhbGUtY29sb3VyLWZpbGwtYnJld2VyLXJjb2xvcmJyZXdlci1wYWNrYWdlLXIpIE9SIGBzY2FsZV9jb2xvdXJfbWFudWFsYCBmdW5jdGlvbiB0byBbY29tcGxldGVseSBjdXN0b21pemUgY29sb3IgY2hvaWNlc10oaHR0cDovL3d3dy5jb29rYm9vay1yLmNvbS9HcmFwaHMvQ29sb3JzXyhnZ3Bsb3QyKS8jYS1jb2xvcmJsaW5kLWZyaWVuZGx5LXBhbGV0dGUpCiAgKiBQcmUtZGVzaWduZWQgW2NvbG9yLWJsaW5kIGZyaWVuZGx5IHBhbGV0dGVzIGFyZSBhdmFpbGFibGVdKGh0dHA6Ly93d3cuY29va2Jvb2stci5jb20vR3JhcGhzL0NvbG9yc18oZ2dwbG90MikvI2EtY29sb3JibGluZC1mcmllbmRseS1wYWxldHRlKQogICAqIFdoZW4gY29uc2lkZXJpbmcgY29sb3IgY2hvaWNlcywgYmUgYXdhcmUgb2YgdGhlIFtwcmV2YWxlbmNlIGFuZCB0eXBlcyBvZiBjb2xvci1ibGluZG5lc3NdKGh0dHBzOi8vbWVkaXVtLmNvbS92ZXJzaW9uLTEvc2ltdWxhdGluZy12aXN1YWxpc2F0aW9ucy1pbi1yLWZvci1jb2xvdXItYmxpbmRuZXNzLTJmYWRkZGU2MzY5NSkgYW5kIGhvdyB0byBjaG9vc2UgbW9yZSBbZWFzaWx5IGRpc3Rpbmd1aXNoYWJsZSBjb2xvcnNdKGh0dHA6Ly9iY29ubmVsbHkubmV0L3Bvc3RzL2NyZWF0aW5nX2NvbG9yYmxpbmQtZnJpZW5kbHlfZmlndXJlcy8pCiAgKiBGb3IgcHVibGljYXRpb24gb3IgcHJlc2VudGF0aW9ucywgd2UgY2FuIGFsc28gY2hlY2sgdGhlIGZpbmFsIGZpZ3VyZXMgZm9yIHN1ZmZpY2llbnQgY29udHJhc3RzIHdpdGggYSBbY29sb3ItYmxpbmRuZXNzIHNpbXVsYXRvciB0b29sXShodHRwczovL3d3dy5jb2xvci1ibGluZG5lc3MuY29tL2NvYmxpcy1jb2xvci1ibGluZG5lc3Mtc2ltdWxhdG9yLykuIAogIAo8ZGV0YWlscz4KPHN1bW1hcnk+UG9zc2libGUgc29sdXRpb248L3N1bW1hcnk+CgpFeGFtcGxlIG9mIHBvc3NpYmxlIHNvbHV0aW9uOgoKYGBge3IsIGV2YWw9IEZBTFNFfQojIGxvb2sgYXQgcHJlLW1hZGUgY29sb3IgcGFsZXR0ZXMgZnJvbSBSQ29sb3JCcmV3ZXIKZGlzcGxheS5icmV3ZXIuYWxsKGNvbG9yYmxpbmRGcmllbmRseSA9IFRSVUUpCiMgdXNlIFJDb2xvckJyZXdlciBwYWxldHRlClBDQUN1c3RvbTIgKyAKICBzY2FsZV9jb2xvdXJfYnJld2VyKHBhbGV0dGUgPSAiU2V0MiIpCgojIE9SCiMgY3VzdG9taXplIHVzaW5nIG1hbnVhbCBjb2xvciBwYWxldHRlCiMgVGhlIFIgQ29va2Jvb2sgcGFsZXR0ZSB3aXRoIGdyZXk6CmNiUGFsZXR0ZSA8LSBjKCIjOTk5OTk5IiwgIiNFNjlGMDAiLCAiIzU2QjRFOSIsICIjMDA5RTczIiwgIiNGMEU0NDIiLCAiIzAwNzJCMiIsICIjRDU1RTAwIiwgIiNDQzc5QTciKQoKIyBUbyB1c2UgZm9yIGxpbmUgYW5kIHBvaW50IGNvbG9ycywgYWRkIG1hbnVhbCBjb2xvciBzY2FsaW5nIHdpdGggY3VzdG9tIHBhbGV0dGUKUENBQ3VzdG9tMiArIAogIHNjYWxlX2NvbG91cl9tYW51YWwodmFsdWVzPWNiUGFsZXR0ZVsyOjNdKQoKUENBQ3VzdG9tNSA8LSBQQ0FDdXN0b20yICsgCiAgc2NhbGVfY29sb3VyX21hbnVhbCh2YWx1ZXM9Y2JQYWxldHRlWzI6M10pCiAgCmBgYAoKPC9kZXRhaWxzPgo8YnI+CiAgCiMjIFVzZSBzaGFwZSBpbnN0ZWFkIG9mIGNvbG9yIHRvIGluZGljYXRlIGdyb3VwcyBvbiB0aGUgUENBIHBsb3QuIAoKICAqIEhpbnQ6IHNpbmNlIGNvbG9yIGFuZCBzaGFwZSBhcmUgYm90aCBtYXBwaW5nIGFzcGVjdHMsIHNvIHdlJ2xsIG5lZWQgdG8gcmUtc3BlY2lmeSBzaGFwZSBpbnN0ZWFkIG9mIGNvbG9yIGluc3RlYWQgb2YgYWRkaW5nIGFuIGFkZGl0aW9uYWwgbGF5ZXJzIGxpa2UgdGhlIG90aGVyIHByb21wdHMgCiAgKiBUaGUgW2RvY3VtZW50YXRpb24gcGFnZSBmb3IgYGdlb21fcG9pbnRgXShodHRwczovL2dncGxvdDIudGlkeXZlcnNlLm9yZy9yZWZlcmVuY2UvZ2VvbV9wb2ludC5odG1sKSBhbmQgW1IgZ3JhcGhpY3MgY29va2Jvb2tzXShodHRwczovL3ItZ3JhcGhpY3Mub3JnL3JlY2lwZS1zY2F0dGVyLXNoYXBlcykgaW5jbHVkZXMgc29tZSBleGFtcGxlcyBvZiBjaGFuZ2luZyB0aGUgc2hhcGVzIG9mIHRoZSBwbG90dGVkIHBvaW50cwogICogW1RoZXNlIFIgZ3JhcGggZ2FsbGVyeSBleGFtcGxlc10oaHR0cHM6Ly9yLWdyYXBoLWdhbGxlcnkuY29tLzI3NC1tYXAtYS12YXJpYWJsZS10by1nZ3Bsb3QyLXNjYXR0ZXJwbG90Lmh0bWwpIGNvdWxkIGFsc28gYmUgaGVscGZ1bAoKPGRldGFpbHM+CjxzdW1tYXJ5PlBvc3NpYmxlIHNvbHV0aW9uPC9zdW1tYXJ5PgoKRXhhbXBsZSBvZiBwb3NzaWJsZSBzb2x1dGlvbjoKCmBgYHtyLCBldmFsPSBGQUxTRX0KIyBnZW5lcmF0ZSBuZXcgYWVzdGhldGljIG1hcHBpbmcgKHdpdGggZGVmYXVsdCBzaGFwZXMgc2VsZWN0ZWQpCmdncGxvdChwY2FEYXRhLCBhZXMoUEMxLCBQQzIsIHNoYXBlPWNvbmRpdGlvbikpICsKICBnZW9tX3BvaW50KHNpemU9MykgKwogIGNvb3JkX2ZpeGVkKCkgKwogIHRoZW1lX2J3KCkgKyAKICB4bGFiKHBhc3RlMCgiUEMxOiAiLHBlcmNlbnRWYXJbMV0sIiUgdmFyaWFuY2UiKSkgKwogIHlsYWIocGFzdGUwKCJQQzI6ICIscGVyY2VudFZhclsyXSwiJSB2YXJpYW5jZSIpKQoKCiMgZ2VuZXJhdGUgbmV3IGFlc3RoZXRpYyBtYXBwaW5nICh3aXRoIG1hbnVhbGx5IHNlbGVjdGVkIHNoYXBlcykKZ2dwbG90KHBjYURhdGEsIGFlcyhQQzEsIFBDMiwgc2hhcGU9Y29uZGl0aW9uKSkgKwogIGdlb21fcG9pbnQoc2l6ZT0zKSArCiAgc2NhbGVfc2hhcGVfbWFudWFsKHZhbHVlcyA9IGMoMSwgNCkpICsKICBjb29yZF9maXhlZCgpICsKICB0aGVtZV9idygpICsgCiAgeGxhYihwYXN0ZTAoIlBDMTogIixwZXJjZW50VmFyWzFdLCIlIHZhcmlhbmNlIikpICsKICB5bGFiKHBhc3RlMCgiUEMyOiAiLHBlcmNlbnRWYXJbMl0sIiUgdmFyaWFuY2UiKSkKCiMgY3JlYXRlIGN1c3RvbSBwbG90IG9iamVjdCB3aXRoIG1hbnVhbCBzaGFwZXMKUENBQ3VzdG9tNiA8LSBnZ3Bsb3QocGNhRGF0YSwgYWVzKFBDMSwgUEMyLCBzaGFwZT1jb25kaXRpb24pKSArCiAgZ2VvbV9wb2ludChzaXplPTMpICsKICBzY2FsZV9zaGFwZV9tYW51YWwodmFsdWVzID0gYygxLCA0KSkgKwogIGNvb3JkX2ZpeGVkKCkgKwogIHRoZW1lX2J3KCkgKyAKICB4bGFiKHBhc3RlMCgiUEMxOiAiLHBlcmNlbnRWYXJbMV0sIiUgdmFyaWFuY2UiKSkgKwogIHlsYWIocGFzdGUwKCJQQzI6ICIscGVyY2VudFZhclsyXSwiJSB2YXJpYW5jZSIpKQoKYGBgCjwvZGV0YWlscz4KPGJyPgoKIyMgX0NoYWxsZW5nZV86IENoYW5nZSB0aGUgbGVnZW5kIHRpdGxlIHRvICJJcm9uIFN0YXR1cyIKCiAgKiBIaW50LCB5b3UgY2FuIGRvIHRoaXMgd2l0aCB0aGUgYGxhYnMoKWAgZnVuY3Rpb24gdG9vLCB1c2luZyB0aGUgY29ycmVzcG9uZGluZyBhZXN0aGV0aWMgbWFwcGluZyAoZS5nLiAiY29sb3IiKS4KICAqIFtUaGlzIGhlbHAgdGhyZWFkIHdpdGggZXhhbXBsZXNdKGh0dHBzOi8vc3RhY2tvdmVyZmxvdy5jb20vcXVlc3Rpb25zLzE0NjIyNDIxL2hvdy10by1jaGFuZ2UtbGVnZW5kLXRpdGxlLWluLWdncGxvdCkgbWF5IGFsc28gYmUgdXNlZnVsCgo8ZGV0YWlscz4KPHN1bW1hcnk+UG9zc2libGUgc29sdXRpb248L3N1bW1hcnk+CgpFeGFtcGxlIG9mIHBvc3NpYmxlIHNvbHV0aW9uOgoKYGBge3IsIGV2YWw9IEZBTFNFfQojICBjdXN0b21pemUgbGFiZWwgZm9yIGNvbG91ciBtYXBwaW5nClBDQUN1c3RvbTIgKyAKICBndWlkZXMoY29sb3VyPWd1aWRlX2xlZ2VuZCh0aXRsZT0iSXJvbiBzdXBwbGVtZW50YXRpb24gc3RhdHVzIikpIAoKIyBhbHRlcm5hdGl2ZWx5IHNwZWNpZnkgbGFiZWwgZm9yIGFlc3RoZXRpYyBtYXBwaW5nClBDQUN1c3RvbTIgKyAKICBsYWJzKGNvbG91cj0iSXJvbiBzdXBwbGVtZW50YXRpb24gc3RhdHVzIikKCiMgc3RvcmUgY3VzdG9tIHBsb3QgYXMgbmV3IG9iamVjdApQQ0FDdXN0b203IDwtIFBDQUN1c3RvbTIgKyAKICBsYWJzKGNvbG91cj0iSXJvbiBzdXBwbGVtZW50YXRpb24gc3RhdHVzIikKICAKYGBgCjwvZGV0YWlscz4KPGJyPgoKIyBTYXZpbmcgdGhlIHJlc3VsdAoKSWYgdGltZSBwZXJtaXRzLCBjb25zaWRlciBob3cgeW91IG1pZ2h0IHNhdmUgeW91ciBmYXZvcml0ZSBuZXcgUENBIHBsb3QgKHdpdGggYW4gaW5mb3JtYXRpdmUgZmlsZSBuYW1lKS4gSGludDogQ29uc2lkZXIgaG93IHdlIHNhdmVkIG91ciBpbml0aWFsIFBDQSBwbG90IGluIHRoZSBwcmV2aW91cyBtb2R1bGUgd2l0aCBgZ2dzYXZlKClgLgoKPGRldGFpbHM+CjxzdW1tYXJ5PlNvbHV0aW9uPC9zdW1tYXJ5PgoKSGVyZSBhcmUgZXhhbXBsZXMgb2Ygc29tZSBwb3NzaWJsZSBhcHByb2FjaGVzOgoKYGBge3Igc2F2ZV9jdXN0b21fcGNhLCBldmFsID0gRkFMU0V9CnBkZihmaWxlID0gZmlsZS5wYXRoKCdvdXRwdXRzJywgJ2ZpZ3VyZXMnLCAnUENBX3Jsb2dfVGl0bGVkLnBkZicpLCB3aWR0aCA9IDYsIGhlaWdodCA9IDYpClBDQUN1c3RvbTMKZGV2Lm9mZigpCgpnZ3NhdmUoCiAgICBmaWxlbmFtZSA9IGZpbGUucGF0aCgnb3V0cHV0cycsICdmaWd1cmVzJywgJ1BDQV9ybG9nX1RpdGxlZC5wZGYnKSwKICAgIHBsb3QgPSBQQ0FDdXN0b20zLAogICAgd2lkdGggPSA2LCBoZWlnaHQgPSA2LCB1bml0cyA9ICdpbicpCmBgYAoKPC9kZXRhaWxzPgo8YnI+CgoKYGBge3IgV3JpdGVPdXQuUkRhdGEsIGV2YWw9RkFMU0UsIGVjaG89RkFMU0UsIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9CiNIaWRkZW4gY29kZSBibG9jayB0byB3cml0ZSBvdXQgZGF0YSBmb3Iga25pdHRpbmcKIyBzYXZlLmltYWdlKGZpbGUgPSAicmRhdGEvUnVubmluZ0RhdGEuUkRhdGEiKQpgYGAK</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Module09a_breakout.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -21,7 +21,7 @@ body{ /* Normal  */
 1. Watch the <a href="https://forms.gle/zZvHz22oGNEVJ1r39" target="_blank">Intro to RNA-Seq Webinar<a/><br/>
 The hands-on workshop builds on the content of this 1-hour webinar that introduces foundational concepts of RNA-Seq experiments including experimental design, sample preparation, QC, sequencing, and initial interpretation of preliminary results.
 
-2. (optional) If you have not already, we invite you to take the <a href="" target="_blank">Pre-workshop survey</a><br/>
+2. (optional) If you have not already, we invite you to take the <a href="https://forms.gle/zWmRUSULRZt5fXiK7" target="_blank">Pre-workshop survey</a><br/>
 
 3. (optional) Brush up your <a href="https://umich-brcf-bioinf.github.io/workshop-computational-foundations/2023-11-01/html/" target="_blank">Bash/R skills</a>.<br/>
 (Notes from the most recent Bioinformatics Core workshop.)

@@ -44,9 +44,9 @@ connect to enable gene expression analysis from bulk RNA-Seq data.
 
 ## Housekeeping
 
-- Please take our optional <a class="external" href="https://forms.gle/ukp1Z4sxcjuER5dP6" target="_blank">post-workshop survey</a> (5-10 minutes)
+- Please take our optional <a class="external" href="https://forms.gle/rTDtL5ExtvhGryVs6" target="_blank">post-workshop survey</a> (5-10 minutes)
 
-- 8/18 11-12 ET: <a class="external" href="https://forms.gle/BQn58rUUwPTzaivy7" target="_blank">Virtual office hours</a>
+- 11/27 11-12 ET: <a class="external" href="https://forms.gle/Rfx1TQ64gw2TnizB9" target="_blank">Virtual office hours</a>
 
 - We will email you a link to the final session recordings by next week.
 
@@ -118,8 +118,8 @@ for 90 days.
 | ![](images/Module00_headshots/headshot_cgates.jpg) | ![](images/Module00_headshots/headshot_mbradenb.jpg) | ![](images/Module00_headshots/headshot_trsaari.jpg) |
 |:-:|:-:|:-:|:-:|
 | **Chris** | **Marci** | **Travis** |
-![](images/Module00_headshots/headshot_damki.jpg) | ![](images/Module00_headshots/headshot_rcavalca.jpg) | ![](images/Module00_headshots/headshot_mkdohert.jpg) |
-| **Dana** | **Raymond** | **Matt** |
+![](images/Module00_headshots/headshot_damki.jpg) |
+| **Dana** |
 
 <br/>
 

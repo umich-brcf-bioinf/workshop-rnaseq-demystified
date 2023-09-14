@@ -52,8 +52,8 @@ pre {
 | ![](images/Module00_headshots/headshot_cgates.jpg) | ![](images/Module00_headshots/headshot_mbradenb.jpg) | ![](images/Module00_headshots/headshot_trsaari.jpg) |
 |:-:|:-:|:-:|:-:|
 | **Chris** | **Marci** | **Travis** |
-![](images/Module00_headshots/headshot_damki.jpg) | ![](images/Module00_headshots/headshot_rcavalca.jpg) | ![](images/Module00_headshots/headshot_mkdohert.jpg) |
-| **Dana** | **Raymond** | **Matt** |
+![](images/Module00_headshots/headshot_damki.jpg) |
+| **Dana** |
 
 <br/>
 
@@ -141,7 +141,7 @@ breakout room.
 
 ![Posting messages to Slack](images/Module00_slack.png)
 
-  - Slack messages will be posted to the **2023-08-rnaseq-demystified-workshop** channel.  
+  - Slack messages will be posted to the **2023-11-rnaseq-demystified** channel.  
     Click on the channel in the left pane (1) to select this channel.
   - You can type in the **message field** (2); click **send** (3) to
     post your message to everyone.

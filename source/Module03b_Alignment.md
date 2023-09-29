@@ -58,7 +58,7 @@ We should note that the default parameters for STAR are optimized for **mammalia
 
 <center>
 
-![Splice-aware alignmentt](images/splice_aware.png)
+![Splice-aware alignment](images/splice_aware.png)
 
 Credit: https://raw.githubusercontent.com/hbctraining/Intro-to-rnaseq-hpc-O2/master/lectures/Sequence_alignment.pdf
 
@@ -184,7 +184,7 @@ rsem-calculate-expression --star --num-threads 1 --star-gzipped-read-file --star
 
 Before starting our alignment exercise, we should make sure that we are on the same page. Follow the link below:
 
-[Link to alignment exercise](Module03b_breakout02_ex.html)
+[Link to alignment exercise](Module03b_breakout02_sol.html)
 
 <br>
 <br>

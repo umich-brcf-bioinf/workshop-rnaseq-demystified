@@ -14,7 +14,7 @@
 
 <title>Exercise 03 Solution</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -192,8 +192,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -201,16 +201,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -404,57 +397,85 @@ pre {
 }
 </style>
 <p><br></p>
-<div id="transfer-multiqc-report-with-scp-exercise" class="section level2">
+<div id="transfer-multiqc-report-with-scp-exercise"
+class="section level2">
 <h2>Transfer MultiQC Report With <code>scp</code> Exercise</h2>
 <p><br></p>
 <p><strong>15 Minutes</strong></p>
 <p><br></p>
-<p>We just tried two new variations of our MultiQC command, one pointed at the directory of our trimmed FastQC results, and another at the whole project directory. For convenience, we’ve included these reports in the zipped folder you downloaded at the beginning of the class. However, it’s also useful to know how to transfer data to/from a remote instance. We’ll explore how to use <code>scp</code> in this exercise.</p>
+<p>We just learned how to use the MultiQC software to create excellent
+summary reports of our analysis. For convenience, we’ve included this
+report in the zipped folder you downloaded at the beginning of the
+class, so that it’s simple and effortless for us to view the report
+together. However, it’s also useful to know how to transfer data to/from
+a remote instance. We’ll explore how to use <code>scp</code> in this
+exercise.</p>
 <p><br></p>
 <div id="instructions" class="section level3">
 <h3>Instructions:</h3>
 <p><br></p>
 <ul>
-<li>Work independently in the main room, posting any questions that arise to slack.</li>
+<li>Work independently in the main room, posting any questions that
+arise to slack.</li>
 <li>Recommendations for writing your own code:
 <ul>
 <li>Read function documentation</li>
 <li>Test out ideas - it’s okay to make mistakes and generate errors</li>
-<li>Use a search engine to look up errors or recommended solutions using keywords</li>
+<li>Use a search engine to look up errors or recommended solutions using
+keywords</li>
 </ul></li>
 <li>We’ll review possible solutions after time is up as a group.</li>
 </ul>
 <p><br></p>
 <ul>
-<li>Make sure that you are viewing your local terminal. The <code>scp</code> command should be run from your own machine.</li>
-<li>Use <code>scp</code> to transfer the comprehensive multiQC report from the AWS machine to your personal computer.</li>
+<li>Make sure that you are viewing your local terminal. The
+<code>scp</code> command should be run from your own machine.</li>
+<li>Use <code>scp</code> to transfer the comprehensive multiQC report
+from the AWS machine to your personal computer.</li>
 <li>Confirm that you’ve received the report</li>
 </ul>
 <p><br></p>
 <blockquote>
 <p>Hint: The command format is:</p>
 <pre><code>scp source destination</code></pre>
-<p>You will need to provide your ssh login information to complete the transfer</p>
+<p>You will need to provide your ssh login information to complete the
+transfer</p>
 </blockquote>
 <p><br></p>
 </div>
-<div id="solution---transfer-multiqc-report-with-scp-exercise" class="section level3">
-<h3>Solution - Transfer MultiQC Report With <code>scp</code> Exercise</h3>
+<div id="solution---transfer-multiqc-report-with-scp-exercise"
+class="section level3">
+<h3>Solution - Transfer MultiQC Report With <code>scp</code>
+Exercise</h3>
+<p><br></p>
 <blockquote>
-<p>Helper Hint: By default, any multiQC reports will have identical filenames <code>multiqc_report.html</code>. It is helpful to specify a more descriptive destination filename for the transfer below, so that multiple MultiQC reports can be easily differentiated (and don’t overwrite one another).</p>
+<p>Helper Hint: Users must know that they should run <code>scp</code>
+from their <strong>local</strong> computer, not from the AWS
+instance.</p>
 </blockquote>
 <p><br></p>
 <blockquote>
-<p>Helper Hint: Users must know that they should run <code>scp</code> from their <strong>local</strong> computer, not from the AWS instance.</p>
+<p>Helper Hint: It may be useful for them to create a folder to place
+the report into.</p>
 </blockquote>
 <p><br></p>
-<pre><code># Transfer the full report
+<blockquote>
+<p>Helper Hint: By default, any multiQC reports will have identical
+filenames <code>multiqc_report.html</code>. It is helpful to specify a
+more descriptive destination filename for the transfer below, so that
+multiple MultiQC reports can be easily differentiated (and don’t
+overwrite one another).</p>
+</blockquote>
+<p><br></p>
+<pre><code># Create a folder to place our report into
+mkdir ~/rsd-workshop
+# Transfer the full report
 scp &lt;username&gt;@bfx-workshop01.med.umich.edu:~/RSD_Shell/analysis/out_multiqc_all/multiqc_report.html ~/rsd-workshop/multiqc_report_all.html</code></pre>
 <p><br></p>
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRXhlcmNpc2UgMDMgU29sdXRpb24iCmF1dGhvcjogIlVNIEJpb2luZm9ybWF0aWNzIENvcmUiCm91dHB1dDoKICAgICAgICBodG1sX2RvY3VtZW50OgogICAgICAgICAgICBpbmNsdWRlczoKICAgICAgICAgICAgICAgIGluX2hlYWRlcjogaGVhZGVyLmh0bWwKICAgICAgICAgICAgdGhlbWU6IHBhcGVyCiAgICAgICAgICAgIGZpZ19jYXB0aW9uOiB0cnVlCiAgICAgICAgICAgIG1hcmtkb3duOiBHRk0KICAgICAgICAgICAgY29kZV9kb3dubG9hZDogdHJ1ZQotLS0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KYm9keXsgLyogTm9ybWFsICAqLwogICAgICBmb250LXNpemU6IDE0cHQ7CiAgfQpwcmUgewogIGZvbnQtc2l6ZTogMTJwdAp9Cjwvc3R5bGU+Cgo8YnI+CgojIyBUcmFuc2ZlciBNdWx0aVFDIFJlcG9ydCBXaXRoIGBzY3BgIEV4ZXJjaXNlCgo8YnI+CgoqKjE1IE1pbnV0ZXMqKgoKPGJyPgoKV2UganVzdCB0cmllZCB0d28gbmV3IHZhcmlhdGlvbnMgb2Ygb3VyIE11bHRpUUMgY29tbWFuZCwgb25lIHBvaW50ZWQgYXQgdGhlIGRpcmVjdG9yeSBvZiBvdXIgdHJpbW1lZCBGYXN0UUMgcmVzdWx0cywgYW5kIGFub3RoZXIgYXQgdGhlIHdob2xlIHByb2plY3QgZGlyZWN0b3J5LiBGb3IgY29udmVuaWVuY2UsIHdlJ3ZlIGluY2x1ZGVkIHRoZXNlIHJlcG9ydHMgaW4gdGhlIHppcHBlZCBmb2xkZXIgeW91IGRvd25sb2FkZWQgYXQgdGhlIGJlZ2lubmluZyBvZiB0aGUgY2xhc3MuIEhvd2V2ZXIsIGl0J3MgYWxzbyB1c2VmdWwgdG8ga25vdyBob3cgdG8gdHJhbnNmZXIgZGF0YSB0by9mcm9tIGEgcmVtb3RlIGluc3RhbmNlLiBXZSdsbCBleHBsb3JlIGhvdyB0byB1c2UgYHNjcGAgaW4gdGhpcyBleGVyY2lzZS4KCjxicj4KCiMjIyBJbnN0cnVjdGlvbnM6Cgo8YnI+CgotIFdvcmsgaW5kZXBlbmRlbnRseSBpbiB0aGUgbWFpbiByb29tLCBwb3N0aW5nIGFueSBxdWVzdGlvbnMgdGhhdCBhcmlzZSB0byBzbGFjay4KLSBSZWNvbW1lbmRhdGlvbnMgZm9yIHdyaXRpbmcgeW91ciBvd24gY29kZToKICAtIFJlYWQgZnVuY3Rpb24gZG9jdW1lbnRhdGlvbgogIC0gVGVzdCBvdXQgaWRlYXMgLSBpdCdzIG9rYXkgdG8gbWFrZSBtaXN0YWtlcyBhbmQgZ2VuZXJhdGUgZXJyb3JzCiAgLSBVc2UgYSBzZWFyY2ggZW5naW5lIHRvIGxvb2sgdXAgZXJyb3JzIG9yIHJlY29tbWVuZGVkIHNvbHV0aW9ucyB1c2luZyBrZXl3b3JkcwotIFdlJ2xsIHJldmlldyBwb3NzaWJsZSBzb2x1dGlvbnMgYWZ0ZXIgdGltZSBpcyB1cCBhcyBhIGdyb3VwLgoKPGJyPgoKLSBNYWtlIHN1cmUgdGhhdCB5b3UgYXJlIHZpZXdpbmcgeW91ciBsb2NhbCB0ZXJtaW5hbC4gVGhlIGBzY3BgIGNvbW1hbmQgc2hvdWxkIGJlIHJ1biBmcm9tIHlvdXIgb3duIG1hY2hpbmUuCi0gVXNlIGBzY3BgIHRvIHRyYW5zZmVyIHRoZSBjb21wcmVoZW5zaXZlIG11bHRpUUMgcmVwb3J0IGZyb20gdGhlIEFXUyBtYWNoaW5lIHRvIHlvdXIgcGVyc29uYWwgY29tcHV0ZXIuCi0gQ29uZmlybSB0aGF0IHlvdSd2ZSByZWNlaXZlZCB0aGUgcmVwb3J0Cgo8YnI+Cgo+IEhpbnQ6IFRoZSBjb21tYW5kIGZvcm1hdCBpczoKPgo+IH5+fgo+IHNjcCBzb3VyY2UgZGVzdGluYXRpb24KPiB+fn4KPgo+IFlvdSB3aWxsIG5lZWQgdG8gcHJvdmlkZSB5b3VyIHNzaCBsb2dpbiBpbmZvcm1hdGlvbiB0byBjb21wbGV0ZSB0aGUgdHJhbnNmZXIKCjxicj4KCiMjIyBTb2x1dGlvbiAtIFRyYW5zZmVyIE11bHRpUUMgUmVwb3J0IFdpdGggYHNjcGAgRXhlcmNpc2UKCj4gSGVscGVyIEhpbnQ6IEJ5IGRlZmF1bHQsIGFueSBtdWx0aVFDIHJlcG9ydHMgd2lsbCBoYXZlIGlkZW50aWNhbCBmaWxlbmFtZXMgYG11bHRpcWNfcmVwb3J0Lmh0bWxgLiBJdCBpcyBoZWxwZnVsIHRvIHNwZWNpZnkgYSBtb3JlIGRlc2NyaXB0aXZlIGRlc3RpbmF0aW9uIGZpbGVuYW1lIGZvciB0aGUgdHJhbnNmZXIgYmVsb3csIHNvIHRoYXQgbXVsdGlwbGUgTXVsdGlRQyByZXBvcnRzIGNhbiBiZSBlYXNpbHkgZGlmZmVyZW50aWF0ZWQgKGFuZCBkb24ndCBvdmVyd3JpdGUgb25lIGFub3RoZXIpLgoKPGJyPgoKPiBIZWxwZXIgSGludDogVXNlcnMgbXVzdCBrbm93IHRoYXQgdGhleSBzaG91bGQgcnVuIGBzY3BgIGZyb20gdGhlaXIgKipsb2NhbCoqIGNvbXB1dGVyLCBub3QgZnJvbSB0aGUgQVdTIGluc3RhbmNlLgoKPGJyPgoKYGBgCiMgVHJhbnNmZXIgdGhlIGZ1bGwgcmVwb3J0CnNjcCA8dXNlcm5hbWU+QGJmeC13b3Jrc2hvcDAxLm1lZC51bWljaC5lZHU6fi9SU0RfU2hlbGwvYW5hbHlzaXMvb3V0X211bHRpcWNfYWxsL211bHRpcWNfcmVwb3J0Lmh0bWwgfi9yc2Qtd29ya3Nob3AvbXVsdGlxY19yZXBvcnRfYWxsLmh0bWwKYGBgCgo8YnI+Cg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRXhlcmNpc2UgMDMgU29sdXRpb24iCmF1dGhvcjogIlVNIEJpb2luZm9ybWF0aWNzIENvcmUiCm91dHB1dDoKICAgICAgICBodG1sX2RvY3VtZW50OgogICAgICAgICAgICBpbmNsdWRlczoKICAgICAgICAgICAgICAgIGluX2hlYWRlcjogaGVhZGVyLmh0bWwKICAgICAgICAgICAgdGhlbWU6IHBhcGVyCiAgICAgICAgICAgIGZpZ19jYXB0aW9uOiB0cnVlCiAgICAgICAgICAgIG1hcmtkb3duOiBHRk0KICAgICAgICAgICAgY29kZV9kb3dubG9hZDogdHJ1ZQotLS0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KYm9keXsgLyogTm9ybWFsICAqLwogICAgICBmb250LXNpemU6IDE0cHQ7CiAgfQpwcmUgewogIGZvbnQtc2l6ZTogMTJwdAp9Cjwvc3R5bGU+Cgo8YnI+CgojIyBUcmFuc2ZlciBNdWx0aVFDIFJlcG9ydCBXaXRoIGBzY3BgIEV4ZXJjaXNlCgo8YnI+CgoqKjE1IE1pbnV0ZXMqKgoKPGJyPgoKV2UganVzdCBsZWFybmVkIGhvdyB0byB1c2UgdGhlIE11bHRpUUMgc29mdHdhcmUgdG8gY3JlYXRlIGV4Y2VsbGVudCBzdW1tYXJ5IHJlcG9ydHMgb2Ygb3VyIGFuYWx5c2lzLiBGb3IgY29udmVuaWVuY2UsIHdlJ3ZlIGluY2x1ZGVkIHRoaXMgcmVwb3J0IGluIHRoZSB6aXBwZWQgZm9sZGVyIHlvdSBkb3dubG9hZGVkIGF0IHRoZSBiZWdpbm5pbmcgb2YgdGhlIGNsYXNzLCBzbyB0aGF0IGl0J3Mgc2ltcGxlIGFuZCBlZmZvcnRsZXNzIGZvciB1cyB0byB2aWV3IHRoZSByZXBvcnQgdG9nZXRoZXIuIEhvd2V2ZXIsIGl0J3MgYWxzbyB1c2VmdWwgdG8ga25vdyBob3cgdG8gdHJhbnNmZXIgZGF0YSB0by9mcm9tIGEgcmVtb3RlIGluc3RhbmNlLiBXZSdsbCBleHBsb3JlIGhvdyB0byB1c2UgYHNjcGAgaW4gdGhpcyBleGVyY2lzZS4KCjxicj4KCiMjIyBJbnN0cnVjdGlvbnM6Cgo8YnI+CgotIFdvcmsgaW5kZXBlbmRlbnRseSBpbiB0aGUgbWFpbiByb29tLCBwb3N0aW5nIGFueSBxdWVzdGlvbnMgdGhhdCBhcmlzZSB0byBzbGFjay4KLSBSZWNvbW1lbmRhdGlvbnMgZm9yIHdyaXRpbmcgeW91ciBvd24gY29kZToKICAtIFJlYWQgZnVuY3Rpb24gZG9jdW1lbnRhdGlvbgogIC0gVGVzdCBvdXQgaWRlYXMgLSBpdCdzIG9rYXkgdG8gbWFrZSBtaXN0YWtlcyBhbmQgZ2VuZXJhdGUgZXJyb3JzCiAgLSBVc2UgYSBzZWFyY2ggZW5naW5lIHRvIGxvb2sgdXAgZXJyb3JzIG9yIHJlY29tbWVuZGVkIHNvbHV0aW9ucyB1c2luZyBrZXl3b3JkcwotIFdlJ2xsIHJldmlldyBwb3NzaWJsZSBzb2x1dGlvbnMgYWZ0ZXIgdGltZSBpcyB1cCBhcyBhIGdyb3VwLgoKPGJyPgoKLSBNYWtlIHN1cmUgdGhhdCB5b3UgYXJlIHZpZXdpbmcgeW91ciBsb2NhbCB0ZXJtaW5hbC4gVGhlIGBzY3BgIGNvbW1hbmQgc2hvdWxkIGJlIHJ1biBmcm9tIHlvdXIgb3duIG1hY2hpbmUuCi0gVXNlIGBzY3BgIHRvIHRyYW5zZmVyIHRoZSBjb21wcmVoZW5zaXZlIG11bHRpUUMgcmVwb3J0IGZyb20gdGhlIEFXUyBtYWNoaW5lIHRvIHlvdXIgcGVyc29uYWwgY29tcHV0ZXIuCi0gQ29uZmlybSB0aGF0IHlvdSd2ZSByZWNlaXZlZCB0aGUgcmVwb3J0Cgo8YnI+Cgo+IEhpbnQ6IFRoZSBjb21tYW5kIGZvcm1hdCBpczoKPgo+IH5+fgo+IHNjcCBzb3VyY2UgZGVzdGluYXRpb24KPiB+fn4KPgo+IFlvdSB3aWxsIG5lZWQgdG8gcHJvdmlkZSB5b3VyIHNzaCBsb2dpbiBpbmZvcm1hdGlvbiB0byBjb21wbGV0ZSB0aGUgdHJhbnNmZXIKCjxicj4KCiMjIyBTb2x1dGlvbiAtIFRyYW5zZmVyIE11bHRpUUMgUmVwb3J0IFdpdGggYHNjcGAgRXhlcmNpc2UKCjxicj4KCj4gSGVscGVyIEhpbnQ6IFVzZXJzIG11c3Qga25vdyB0aGF0IHRoZXkgc2hvdWxkIHJ1biBgc2NwYCBmcm9tIHRoZWlyICoqbG9jYWwqKiBjb21wdXRlciwgbm90IGZyb20gdGhlIEFXUyBpbnN0YW5jZS4KCjxicj4KCj4gSGVscGVyIEhpbnQ6IEl0IG1heSBiZSB1c2VmdWwgZm9yIHRoZW0gdG8gY3JlYXRlIGEgZm9sZGVyIHRvIHBsYWNlIHRoZSByZXBvcnQgaW50by4KCjxicj4KCj4gSGVscGVyIEhpbnQ6IEJ5IGRlZmF1bHQsIGFueSBtdWx0aVFDIHJlcG9ydHMgd2lsbCBoYXZlIGlkZW50aWNhbCBmaWxlbmFtZXMgYG11bHRpcWNfcmVwb3J0Lmh0bWxgLiBJdCBpcyBoZWxwZnVsIHRvIHNwZWNpZnkgYSBtb3JlIGRlc2NyaXB0aXZlIGRlc3RpbmF0aW9uIGZpbGVuYW1lIGZvciB0aGUgdHJhbnNmZXIgYmVsb3csIHNvIHRoYXQgbXVsdGlwbGUgTXVsdGlRQyByZXBvcnRzIGNhbiBiZSBlYXNpbHkgZGlmZmVyZW50aWF0ZWQgKGFuZCBkb24ndCBvdmVyd3JpdGUgb25lIGFub3RoZXIpLgoKPGJyPgoKCmBgYAojIENyZWF0ZSBhIGZvbGRlciB0byBwbGFjZSBvdXIgcmVwb3J0IGludG8KbWtkaXIgfi9yc2Qtd29ya3Nob3AKIyBUcmFuc2ZlciB0aGUgZnVsbCByZXBvcnQKc2NwIDx1c2VybmFtZT5AYmZ4LXdvcmtzaG9wMDEubWVkLnVtaWNoLmVkdTp+L1JTRF9TaGVsbC9hbmFseXNpcy9vdXRfbXVsdGlxY19hbGwvbXVsdGlxY19yZXBvcnQuaHRtbCB+L3JzZC13b3Jrc2hvcC9tdWx0aXFjX3JlcG9ydF9hbGwuaHRtbApgYGAKCjxicj4K</div>
 
 
 

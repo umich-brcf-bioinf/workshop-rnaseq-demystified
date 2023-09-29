@@ -26,7 +26,7 @@ pre {
 In this module we will learn:
 
 * about the cutadapt software and its uses
-* how to use the cutadapt tool for trimming adapters
+* how to use the cutadapt tool for quality trimming
 * how to trim all of our samples using a bash variable
 * how to further use fastqc to evaluate trimming success
 
@@ -48,7 +48,7 @@ It is used for removing adapter sequences, primers, and poly-A tails, for trimmi
 
 It can operate on both FASTA and FASTQ file formats, and it supports compressed or raw inputs and outputs.
 
-Notably, cutadapt's error-tolerant adapter trimming likely contributed greatly to its early popularity. We will use it to trim the adapters from our reads. Similar to earlier, we'll discuss the details of cutadapt's functionality and input/output files, before proceeding to an exercise where we can try running the software ourselves.
+Notably, cutadapt's error-tolerant adapter trimming likely contributed greatly to its early popularity. We will use it to quality trim our reads. Similar to earlier, we'll discuss the details of cutadapt's functionality and input/output files, before proceeding to an exercise where we can try running the software ourselves.
 
 
 ## Cutadapt details
@@ -62,14 +62,14 @@ Cutadapt's input and output files are simple to understand given its stated purp
     out_trimmed/sample_A_R1.trimmed.fastq.gz
 
 
-As mentioned above, cutadapt has many capabilities. Depending on the parameters given, we can invoke different functionalities. Given our results from the previous QC module, we know that we need to trim adapters from the reads in our fastq files.
+As mentioned above, cutadapt has many capabilities. Depending on the parameters given, we can invoke different functionalities. Given our results from the previous QC module, we know that we need to quality trim the reads in our fastq files.
 
 
 ## Cutadapt Exercise
 
 1. Create a directory for our trimmed reads
 2. View the help page of the cutadapt tool
-3. Construct a cutadapt command to trim the adapters from paired-end reads
+3. Construct a cutadapt command to trim the reads in `sample_A_R1.fastq.gz`
 4. View the output of cutadapt, and verify that it's correct
 
 ```
@@ -78,7 +78,7 @@ mkdir out_trimmed
 # View the help page of Cutadapt
 cutadapt --help
 
-# Construct a cutadapt command to trim adapters from paired-end reads
+# Construct a cutadapt command to trim our reads
 cutadapt -q 30 -m 20 -o out_trimmed/sample_A_R1.trimmed.fastq.gz ../reads/sample_A_R1.fastq.gz
 # View the output of cutadapt, (verify presence of output files and peek into the files)
 ```
@@ -92,12 +92,12 @@ At this point, we've run cutadapt on one of our samples. We could construct a se
 
 Before starting our cutadapt exercise, we should make sure that we are on the same page. Follow the link below:
 
-[Link to Cutadapt exercise](Module02b_breakout01_ex.html)
+[Link to Cutadapt exercise](Module02b_breakout01_sol.html)
 
 <br>
 <br>
 
-Now that we've run cutadapt and trimmed the adapters from our reads, we will quickly re-run FastQC on these trimmed read FASTQs. This will confirm that we've successfully trimmed the adapters, and we'll see that our FASTQ files are ready for sequencing. Since we've discussed the FastQC input/output and functionality in the previous module, we'll go next to an exercise re-running FastQC on the trimmed read data
+Now that we've run cutadapt and trimmed our reads, we will quickly re-run FastQC on these trimmed read FASTQs. This will confirm that we've successfully trimmed the low quality sequence, and we'll see that our FASTQ files are ready for sequencing. Since we've discussed the FastQC input/output and functionality in the previous module, we'll go next to an exercise re-running FastQC on the trimmed read data
 
 ## Re-running FastQC Exercise:
 
@@ -116,7 +116,7 @@ ls -l out_fastqc_trimmed
 
 <br>
 
-Opening the HTML report, we see it is organized by the same modules and each plot has all samples for which FastQC was run. We can see the report confirms that the adapters have been trimmed from our sequence.
+Opening the HTML report, we see it is organized by the same modules and each plot has all samples for which FastQC was run. We can see the report confirms that the low quality bases have been trimmed from our sequence.
 
 <br>
 

@@ -1,5 +1,5 @@
 ---
-title: "R Bonus Content"
+title: "R - Bonus Content"
 author: "UM Bioinformatics Core"
 date: "`r Sys.Date()`"
 output:
@@ -41,8 +41,7 @@ library(pheatmap)
 library(RColorBrewer)
 ```
 
-> # Objectives {.unlisted .unnumbered}
-> * Additional visualizations for gene/sample level QC assessment
+Additional visualizations for gene/sample level QC assessment
 
 # Count boxplots
 

@@ -119,40 +119,36 @@ Example of STAR alignment statistics in MultiQC.
 Source: [MultiQC example report](https://multiqc.info/examples/rna-seq/multiqc_report.html#star)
 
 </center>
+<br>
+<br>
 
-## MultiQC With STAR Exercise:
+## MultiQC Exercise:
 
-1. Note the contents of our analysis directory, including the STAR contents
-2. Construct a MultiQC command and execute it on this directory
-3. View the MultiQC report
+1. Note the contents of our analysis directory, and those of the subdirectories we've created for each task
+2. Construct a MultiQC command and execute it on the entire analysis directory
+3. Verify that the MultiQC report was created
 
 ```
 # Ensure that we're in our analysis directory, note the contents
 cd ~/RSD_Shell/analysis
-ls -l
+tree . | less
 # View MultiQC help page
 multiqc --help
 # Construct a MultiQC command and execute it
-multiqc --outdir out_multiqc_rsem out_rsem/
+multiqc --outdir out_multiqc_all .
 # Verify that the output files are present
+ls -l out_multiqc_all
 ```
 
-We just learned how to view all of our alignment results in one report with the help of MultiQC. MultiQC is also useful because it can utilize multiple separate modules to create summary figures of different steps in our pipeline.
-
-What would happen if we pointed multiQC at our trimmed FastQC directory? What about if we point it to the entire analysis directory? Let's try it out and see:
-
-```
-# A MultiQC command to analyze the trimmed read results
-multiqc --outdir out_multiqc_cutadapt out_fastqc_trimmed/
-# A multiQC command for a report of the entire project
-multiqc --outdir out_multiqc_all  .
-```
+We just learned how to view all of our QC details in one report with the help of MultiQC. MultiQC is extremely helpful, and we'll notice how it will ingest various files from the different steps of our pipeline, and create several modules of summary figures for each of them.
+<br>
+<br>
 
 ## Transfer MultiQC Reports With `scp` Exercise
 
 Before starting our file transfer exercise, we should make sure that we are on the same page. Follow the link below:
 
-[Link to report transfer exercise](Module04_breakout03_ex.html)
+[Link to report transfer exercise](Module04_breakout03_sol.html)
 
 
 <br>

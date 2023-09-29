@@ -194,12 +194,6 @@ Adapter sequence typically is not present in standard RNA-seq libraries. However
 
 This can be dealt with by adding a step to the workflow that trims the reads of adapter content with a tool such as [cutadapt](https://cutadapt.readthedocs.io/en/stable/). We will see this in a later module.
 
-## Examining a FastQC report
-
-From the zipped folder you downloaded earlier, find the FastQC report `sample_A_R1_fastqc.html`.
-
-We'll view this report and try to interpret some of the figures.
-
 ## Acting on QC - Good or Bad Results?
 
 Good QC on raw reads means that RNA quality, library preparation, and sequencing seem fine to proceed with the next steps of analysis. It **does not** mean that you will find differentially expressed genes downstream.
@@ -228,6 +222,12 @@ fastqc -o out_fastqc/ ../reads/*.fastq.gz
 # Watch the output of FastQC
 # View the output of FastQC (the filenames)
 ```
+
+## Examining a FastQC report
+
+From the zipped folder you downloaded earlier, find the FastQC report `sample_A_R1_fastqc.html`.
+
+We'll view this report and try to interpret some of the figures.
 
 <br>
 <br>

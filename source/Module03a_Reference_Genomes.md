@@ -74,17 +74,11 @@ TTTATCTTTAGGCGGTATGCACTTTTAACAGTCACCCCCCAACTAACACA
 
 Well-characterized organisms (e.g. human, mouse, zebrafish) have fairly mature gene models. These are stored in [GTF](https://uswest.ensembl.org/info/website/upload/gff.html) format, which gives location and other information about each gene feature. Below are two examples:
 
-
-    chr1	unknown	exon	11874	12227	.	+	.	gene_id "DDX11L1"; gene_name "DDX11L1"; transcript_id "NR_046018"; tss_id "TSS16932";
-    chr1	unknown	exon	12613	12721	.	+	.	gene_id "DDX11L1"; gene_name "DDX11L1"; transcript_id "NR_046018"; tss_id "TSS16932";
-    chr1	unknown	exon	13221	14409	.	+	.	gene_id "DDX11L1"; gene_name "DDX11L1"; transcript_id "NR_046018"; tss_id "TSS16932";
-    chr1	unknown	exon	14362	14829	.	-	.	gene_id "WASH7P"; gene_name "WASH7P"; transcript_id "NR_024540"; tss_id "TSS8568";
-
-
-    1	havana	gene	11869	14409	.	+	.	gene_id "ENSG00000223972"; gene_version "5"; gene_name "DDX11L1"; gene_source "havana"; gene_biotype "transcribed_unprocessed_pseudogene";
-    1	havana	transcript	11869	14409	.	+	.	gene_id "ENSG00000223972"; gene_version "5"; transcript_id "ENST00000456328"; transcript_version "2"; gene_name "DDX11L1"; gene_source "havana"; gene_biotype "transcribed_unprocessed_pseudogene"; transcript_name "DDX11L1-202"; transcript_source "havana"; transcript_biotype "lncRNA"; tag "basic"; transcript_support_level "1";
-    1	havana	exon	11869	12227	.	+	.	gene_id "ENSG00000223972"; gene_version "5"; transcript_id "ENST00000456328"; transcript_version "2"; exon_number "1"; gene_name "DDX11L1"; gene_source "havana"; gene_biotype "transcribed_unprocessed_pseudogene"; transcript_name "DDX11L1-202"; transcript_source "havana"; transcript_biotype "lncRNA"; exon_id "ENSE00002234944"; exon_version "1"; tag "basic"; transcript_support_level "1";
-
+<br>
+![RefSeq GTF](images/gtf_refseq.png)
+<br><br>
+![ENSEMBL GTF](images/gtf_ensembl.png)
+<br><br>
 
 The GTF format stores specific information in each column:
 

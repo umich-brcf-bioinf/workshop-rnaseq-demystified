@@ -14,7 +14,7 @@
 
 <title>Exercise 04 Solution</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -192,8 +192,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -201,16 +201,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -409,30 +402,41 @@ pre {
 <p><br></p>
 <p><strong>15 Minutes</strong></p>
 <p><br></p>
-<p>We’ve covered the basics of Conda, including how to create environments, as well as activate and deactivate them. We’ll use those same ideas in this exercise to create a conda environment with all of the software that we’ve used so far.</p>
+<p>We’ve covered the basics of Conda, including how to create
+environments, as well as activate and deactivate them. We’ll use those
+same ideas in this exercise to create a conda environment with all of
+the software that we’ve used so far.</p>
 <p><br></p>
-<p>In this exercise, we’ll use a special tool that enhances Conda, called Mamba. It is used for environment creation, so you will use it in place of <code>conda create</code> in this exercise.</p>
+<p>In this exercise, we’ll use a special tool that enhances Conda,
+called Mamba. It is used for environment creation, so you will use it in
+place of <code>conda create</code> in this exercise.</p>
 <p><br></p>
 <div id="instructions" class="section level3">
 <h3>Instructions:</h3>
 <p><br></p>
 <ul>
-<li>Work independently in the main room, posting any questions that arise to slack.</li>
+<li>Work independently in the main room, posting any questions that
+arise to slack.</li>
 <li>Recommendations for writing your own code:
 <ul>
 <li>Read function documentation</li>
 <li>Test out ideas - it’s okay to make mistakes and generate errors</li>
-<li>Use a search engine to look up errors or recommended solutions using keywords</li>
+<li>Use a search engine to look up errors or recommended solutions using
+keywords</li>
 </ul></li>
 <li>We’ll review possible solutions after time is up as a group.</li>
 </ul>
 <p><br></p>
 <ul>
-<li>When a solution is found <strong>DO NOT</strong> have all users create the environment. Instead, choose only a subset of interested learners to complete this exercise. We do not want to overwhelm the AWS instance.</li>
+<li>When a solution is found <strong>DO NOT</strong> have all users
+create the environment. Instead, choose only a subset of interested
+learners to complete this exercise. We do not want to overwhelm the AWS
+instance.</li>
 </ul>
 <p><br></p>
 <ul>
-<li>Use <code>mamba</code> to create an environment with all of the software that we used today:
+<li>Use <code>mamba</code> to create an environment with all of the
+software that we used today:
 <ul>
 <li>cutadapt</li>
 <li>fastqc</li>
@@ -448,7 +452,13 @@ pre {
 </ul>
 <p><br></p>
 <blockquote>
-<p>Hint: The tool <code>mamba</code> is a drop-in replacement for <code>conda create</code> and similar commands. It is powerful and fast, which allows us to easily replicate our whole environment from today. <code>conda create</code> can be very slow or uncooperative when creating environments with certain software combinations, and <code>mamba</code> helps us get around that in this case. The command is exactly the same as a <code>conda create</code> command, e.g.:</p>
+<p>Hint: The tool <code>mamba</code> is a drop-in replacement for
+<code>conda create</code> and similar commands. It is powerful and fast,
+which allows us to easily replicate our whole environment from today.
+<code>conda create</code> can be very slow or uncooperative when
+creating environments with certain software combinations, and
+<code>mamba</code> helps us get around that in this case. The command is
+exactly the same as a <code>conda create</code> command, e.g.:</p>
 <pre><code>mamba create -n &lt;env-name&gt; -c &lt;channel&gt; &lt;package1&gt; ...</code></pre>
 </blockquote>
 <p><br></p>

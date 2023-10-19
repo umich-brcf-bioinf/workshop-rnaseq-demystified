@@ -90,11 +90,7 @@ samplesheet = read.table("data/samplesheet.csv",
                        row.names = 1)
 ```
 
-Alternatively, we can manually create a sample sheet, ensuring that the sample IDs match our count table.
-```{r Samplesheet3, eval=FALSE}
-
-
-```
+Alternatively, we could manually create a sample sheet, ensuring that the sample IDs match our count table.
 
 We can look at the object by typing its name and hitting Enter. Note, for larger experiments, you may want to use `head()`.
 
@@ -105,7 +101,7 @@ samplesheet
 **Checkpoint**: *If you have loaded `samplesheet`, please indicate with the green 'check' button. Otherwise, please use the red 'x' button to have the command repeated*
 
 
-In this example data, all mice are wild-type and the control diet mice are labeled as "control" and the iron deficient diet fed mice are labeled as "deficient". Again, for larger experiments, you may want to examine the coding of the samples by looking at the `unique()` values of the relevant columns.
+In this example data, all mice are of a wild-type genotype with three samples from control diet mice (labeled as "control") and three samples from iron deficient diet fed mice (labeled as "deficient"). Again, for larger experiments, you may want to examine the coding of the samples and how many group labels are present by looking at the `unique()` values of the relevant columns.
 
 ```{r TreatmentGroupTable}
 unique(samplesheet$condition)
@@ -177,7 +173,7 @@ To create the `DESeqDataSet` we will need the `count_table` and the `samplesheet
 
 ## Making model choices
 
-The design formula specified informs many of the DESeq2 functions how to treat the samples in the analysis, specifically the relevant column(s) in the metadata table and how they should be used in the analysis. 
+We'll talk about the design formula more later but for now it's important to understand that the design specifies the relevant column(s) in the metadata table and how they should be used when fitting a model for our data. 
 
 For our dataset we only have one column we are interested in, that is `condition`. This column has two factor levels, which tells DESeq2 that for each gene we want to evaluate gene expression change with respect to these different levels. Although the design formula is required, it is not used at this step.
 
@@ -203,7 +199,7 @@ Notice that printing the `dds` object helpfully shows us some helpful informatio
 
 # Pre-filtering
 
-While not necessary, [pre-filtering](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#pre-filtering) the count table helps to not only reduce the size of the DESeq2 object, but also gives you a sense of how many genes were reasonably measured at the sequencing depth generated for your samples.
+While not necessary, [pre-filtering](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#pre-filtering) helps to not only reduce the size of the DESeq2 object, but also gives you a sense of how many genes were reasonably measured at the sequencing depth generated for your samples.
 
 Here we will filter out any genes that have less than 10 counts across any of the samples. This is a fairly standard level of filtering, but can filter data less/more depending on quality control metrics from alignments and sequencing depth or total number of samples.
 

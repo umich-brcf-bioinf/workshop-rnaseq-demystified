@@ -1,5 +1,5 @@
 ---
-title: "DE Normalization and Modeling"
+title: "DE Normalization"
 author: "UM Bioinformatics Core"
 date: "`r Sys.Date()`"
 output:
@@ -67,7 +67,24 @@ Two common factors that need to be accounted for during normalization are **sequ
 
 * **Gene length** normalization may also be necessary if comparing between different genes, since genes of different lengths have different probabilities of generating fragments that end up in the library.
 
-> **Note**: The above figure was originally from a [HBC  tutorial](https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html) that also includes a detailed comparison of different normalization (CPM, TPM, FPKM) approaches and their best uses.
+> **Note**: The above figure was originally from a [HBC  tutorial](https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html) that also includes a detailed comparison of different normalization (CPM, TPM, FPKM) approaches and their best uses, which are summarized below.
+
+<EDIT to be a dropdown for table of counts>
+
+### Common normalization methods
+
+Several common normalization methods exist to account for these differences:
+	
+| Normalization method | Description | Accounted factors | Recommendations for use |
+| ---- | ---- | ---- | ---- |
+| **CPM** (counts per million) | counts scaled by total number of reads | sequencing depth | gene count comparisons between replicates of the same samplegroup; **NOT for within sample comparisons or DE analysis**  |
+| **TPM** (transcripts per kilobase million) | counts per length of transcript (kb) per million reads mapped | sequencing depth and gene length | gene count comparisons within a sample or between samples of the same sample group; **NOT for DE analysis** |
+| **RPKM/FPKM** (reads/fragments per kilobase of exon per million reads/fragments mapped) | similar to TPM | sequencing depth and gene length | gene count comparisons between genes within a sample; **NOT for between sample comparisons or DE analysis** |
+| DESeq2's **median of ratios** [[1](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-10-r106)] | counts divided by sample-specific size factors determined by median ratio of gene counts relative to geometric mean per gene | sequencing depth and RNA composition | gene count comparisons between samples and for **DE analysis**; **NOT for within sample comparisons** |
+| EdgeR's **trimmed mean of M values (TMM)** [[2](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-3-r25)] | uses a weighted trimmed mean of the log expression ratios between samples | sequencing depth, RNA composition | gene count comparisons between samples and for **DE analysis**; **NOT for within sample comparisons** |
+
+
+
 
 **Check-in: Questions about normalizations?**
 
@@ -77,9 +94,9 @@ DESeq2 has an [internal normalization process](https://genomebiology.biomedcentr
 
 For data exploration and visualizations, it is helpful to generate an object of independently normalized counts. We will use the [rlog transformation](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#count-data-transformations) from DESeq2 that accounts for sequencing depth for each sample and RNA composition for the downstream quality control visualizations.
 
-The rlog transformation produces log2 scaled data that has also been normalized to overall library size as well as variance across genes at different mean expression levels. For larger numbers of samples, there is an alternative transformation method, [vst](http://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#count-data-transformations) that can be used instead for count normalizations.
+The rlog transformation produces log2 scaled data that has also been normalized to overall library size as well as variance across genes at different mean expression levels. For larger numbers of samples, there is an alternative transformation method, [vst](http://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#count-data-transformations) that can be used instead for count normalization.
 
-The command to generate the normalized count object has a few parts, including `dds` as an input and providing a value to the option `blind`. For our purposes, we set `blind = TRUE` because we want to compare samples in downstream QC plots in an unbiased manner.
+The command to generate the normalized count object has a few parts, including `dds` as an input and providing a value to the option `blind`. 
 
 ```{r CountNorm}
 rld = rlog(dds_filtered, blind = TRUE)

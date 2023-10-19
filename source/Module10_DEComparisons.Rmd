@@ -94,12 +94,47 @@ For each gene, DESeq2 computes a "Wald statistic" which is a single number encap
 
 Imagine shuffling the group labels and recomputing the Wald statistic over and over again. You'd get a distribution of statistics that would look similar to a normal curve. The p-value essentially tells you how likely you are to have seen the statistic by chance. So when we set a p-value = 0.05 as a threshold, we're saying, "there is a 5% chance I'd see something this extreme when there was actually no effect". So the evidence is **strong**, but not **ironclad**.
 
-# Generating DE Results
 
-We can check what comparisons were automatically generated during fitting using the `resultsNames()` function. Note that  the results are stored based on the levels we set in the sample sheet and that the convention is to always have "case" first versus "control" second.
-```{r Results1}
+
+# DESeq2 Model Fitting
+
+Next, we'll fit our standard model using the `DESeq` function and take a look at the objects we generate. This command applies the model to our data, using the sample information supplied when generating the initial `dds` object so can take some time to run.
+
+```{r FitModelStandard, message=FALSE}
+dds_fitted = DESeq(dds_filtered)
+dds_fitted
+```
+
+<details>
+    <summary>*Dispersion models and possible warning messages*</summary>
+
+    Depending on the data set you are analyzing, you may see a warning that the default 'parametric' dispersion model so a local regression was substituted. When seeing this warning, we recommend looking at a dispersion plot with the `plotDispEsts(dds)` function, but as [this bioconductor thread](https://support.bioconductor.org/p/107937/) discusses, other visualizations of our data might be more helpful and/or easier to interpret why the data doesn't fit the default parametric model.
+
+</details>
+<br>
+
+
+Notice that there is now more information in the `DESeqDataSet` object than there was prior to our normalization. There is information about the model fit and about the library size normalization. DESeq2 will use this information when we perform the test for differential expression.
+
+The `DESeq()` function is actually doing three things automatically for us. It calculates:
+
+1. The size factors to normalize for library size with `estimateSizeFactors(dds_filtered)`,
+2. Dispersion estimates to shrink the dispersions with `estimateDispersions(dds_filtered)`, and
+3. The Wald test statistics with `nbinomWaldTest(dds_filtered)`.
+
+The `resultsNames()` function returns the names of the estimated effects of the model. Note that  the results are stored based on the levels we set in the sample sheet and that the convention is to always have "case" first versus "control" second.
+
+```{r FitModelStandardCheck1, eval=TRUE}
 resultsNames(dds_fitted)
 ```
+
+The results include the single comparison representing the two levels of `condition`. If there were more levels in the `condition` column, there would be more results listed here because DESeq2 would implicitly compare all other levels to the reference level.
+
+
+**Checkpoint**: *If you see the same results when you execute `resultsNames(dds_filtered)`, please indicate with the green 'yes' button. Otherwise, please use the red 'x' button to get help before the break*
+
+
+# Generating DE Results
 
 There is only the one comparison in the results, so we will refer to it in the `name` parameter of the `results()` function, and assign the result as an object.
 
@@ -184,7 +219,25 @@ The default FDR rate cutoff for our analyses is 0.05, meaning the proportion of 
 > * If a row contains a sample with an extreme count outlier then the p-value and adjusted p-value will be set to NA. These outlier counts are detected by [Cook’s distance](https://en.wikipedia.org/wiki/Cook%27s_distance).
 > * If a row is filtered by automatic independent filtering, e.g. for having a low mean normalized count, then only the adjusted p-value will be set to NA.
 
-Now that we've generated our differential comparisons and have an understanding of our results, including multiple hypothesis correction, we can proceed with generating summary figures and tables.
+
+
+## Save fitted model and data in Robj
+
+It can be useful to save key R objects to file as we proceed through our analysis - before we do that, let's look at the documentation for the `save` function to see if it does what we want.
+
+```{r SaveDocumentation}
+?save
+```
+
+As we can see from the documentation the function `save` writes an "external representation" of R objects that can be read back from the file at a later date by using the function `load` or `attach` in most cases. We'll proceed with saving our `dds_fitted` object, creating a subdirectory first.
+
+```{r WriteFitModelObject}
+dir.create("outputs/Robjs", recursive=TRUE)
+save(dds_fitted,
+          file="outputs/Robjs/dds_fitted.Robj")
+```
+
+
 
 ---
 
@@ -192,6 +245,7 @@ Now that we've generated our differential comparisons and have an understanding 
 
 In this section, we:
 
+* Fitted our DESeq2 model
 * Performed statistical tests for comparisons of interest
 * Generated tables of differential expression results - i.e. fold changes and adjusted pvalues for each gene in dataset
 * Discussed importance and application of multiple hypothesis correction

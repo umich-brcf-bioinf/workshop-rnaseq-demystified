@@ -81,7 +81,7 @@ In the Scripts pane, there is a line of icons, towards the right side of the pan
 
 What just happened?
 
-1. We see in that our code has been run in the Console panel, including some warning messages.
+1. We see in that our code has been run in the `Console` panel, including some warning messages.
 
 1. We see that a number of objects were created in our Environment panel including an object named `DE_results`.
 
@@ -89,7 +89,7 @@ What just happened?
 
 **What does this volcano plot show?**
 
-*Now that we have an idea of what we are working towards, any questions?*
+*Now that we have seen the end results of a DE analysis, any questions?*
 
 <br>
 <br>
@@ -181,7 +181,7 @@ Since calculating variance is key to the statistical approach used for DESeq2, i
 
 > ## Exercise
 >
-> - Post a question that was NOT addressed but that you hope we will address in the later modules **OR**
+> - Post a question that was NOT addressed but that you hope we will be addressed in the later modules **OR**
 > - Add a thumbs up to your favorite comment(s) to upvote it
 
 ----
@@ -234,7 +234,7 @@ count_table = read.table("data/gene_expected_count.txt", header = TRUE, row.name
 head(count_table, n=2) # look at the top of the table
 ```
 
-Now that the file is read into R, note that we've created a data frame that includes 'gene ids' in ENSEMBL format as rownames and count data from twelve different samples.
+Now that the file is read into R, note that we've created a data frame that includes 'gene ids' in ENSEMBL format as rownames and count data from six different samples.
 
 How many genes were included in our reference? We can get a sense of the size of our data with the `str` function.
 ```{r DataTableCheck2, eval=TRUE}
@@ -274,7 +274,7 @@ How to get session information to aid in a search:
 sessionInfo()
 ```
 
-Highly recommend using resources like [Bioconductor Support](https://support.bioconductor.org/), [Biostars](https://www.biostars.org/), and [Stack Overflow](https://stackoverflow.com/questions/tagged/r), including threads on specific packages or common bioinformatic tasks.
+We highly recommend using resources like [Bioconductor Support](https://support.bioconductor.org/), [Biostars](https://www.biostars.org/), and [Stack Overflow](https://stackoverflow.com/questions/tagged/r), including threads on specific packages or common bioinformatic tasks.
 
 I personally use one or more of these resources **every day**.
 

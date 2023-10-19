@@ -41,8 +41,6 @@ library(DESeq2)
 In this module, we will learn:
 
 * How to 'unblind' our samples
-* How to identify possible "confounding" factors
-* How batches or additional covariates may impact your data
 * How to ensure high quality count data with filtering
 
 <br>
@@ -92,7 +90,7 @@ samplesheet = read.table("data/samplesheet.csv",
                        row.names = 1)
 ```
 
-Alternatively, we can manually create a sample sheet.
+Alternatively, we can manually create a sample sheet, ensuring that the sample IDs match our count table.
 ```{r Samplesheet3, eval=FALSE}
 
 
@@ -172,38 +170,20 @@ To create the DESeqDataSet we need two important inputs:
 
 Is our count matrix from our RSEM outputs considered a "raw" count matrix by DESeq2?
 
-> # Exercise: RSEM outputs versus DESeq2 input requirements {.unlisted .unnumbered}
->
-> If we think back to the RSEM outputs, the 'expected_counts' table may include fractional amounts due to how the alignment tool resolves reads mapping to multiple locuses). DESeq2 is expecting the count matrix to consist only of whole numbers. Recent versions of DESeq2 will handle this for us, but previous versions did not.
->
-> What R function, that we saw in Computational Foundations, could we use to convert the fractional values in `count_table` to integers?
+> If we think back to the RSEM outputs, the 'expected_counts' table may include fractional amounts due to how the alignment tool resolves reads mapping to multiple locuses). However, recent versions of DESeq2 handle this without rounding.
 
-<details>
-<summary>Solution</summary>
-
-We can use the `round()` function:
-
-```{r round count_table}
-counts_rounded = round(count_table)
-```
-</details>
-<br>
 
 To create the `DESeqDataSet` we will need the `count_table` and the `samplesheet`. We will also need a **design formula** to specify our model.
 
 ## Making model choices
 
-The design formula specified informs many of the DESeq2 functions how to treat the samples in the analysis, specifically which column(s) in the sample metadata table are relevant to the experimental design.
+The design formula specified informs many of the DESeq2 functions how to treat the samples in the analysis, specifically the relevant column(s) in the metadata table and how they should be used in the analysis. 
 
-In this case, we aren't aware of any [covariates](https://methods-sagepub-com.proxy.lib.umich.edu/reference/encyc-of-research-design/n85.xml) that should be considered in our comparisons. However, if there are additional attributes of the samples that may impact the DE comparisons, like date of collection, sex, or patient of origin, these should be added as [additional columns](https://support.bioconductor.org/p/75309/) in the sample information table and [added to a design formula](https://support.bioconductor.org/p/98700/).
-
-More complex questions, including adding "interaction terms" between multiple group labels are helpfully described in [this support thread](https://support.bioconductor.org/p/98628/) as well as in the [DESeq2 vignette](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#interactions), which is an excellent document.
-
-The design formula specifies the column(s) in the metadata table and how they should be used in the analysis. For our dataset we only have one column we are interested in, that is `condition`. This column has two factor levels, which tells DESeq2 that for each gene we want to evaluate gene expression change with respect to these different levels.
+For our dataset we only have one column we are interested in, that is `condition`. This column has two factor levels, which tells DESeq2 that for each gene we want to evaluate gene expression change with respect to these different levels. Although the design formula is required, it is not used at this step.
 
 ```{r DESeq2Object}
 ## Create DESeq object, line by line
-dds = DESeqDataSetFromMatrix(countData = counts_rounded,
+dds = DESeqDataSetFromMatrix(countData = count_table,
                               colData = samplesheet_ready,
                               design = ~ condition)
 dds
@@ -237,37 +217,19 @@ Notice the `dds_filtered` object has less elements than the unfiltered `dds` obj
 
 **Checkpoint**: *Questions?*
 
-# Optional content
 
-<details>
-    <summary>*Click for how to model batch effects with DESeq2*</summary>
-
-    Differences between samples can also be due to technical reasons, such as collection on different days or different sequencing runs. Differences between samples that are not due to biological factors as called **batch effects**. We can include batch effects in our design model in the same way as covariates, as long as the technical groups do not overlap, or **confound**, the biological treatment groups.
-
-    Let's try add some additional meta-data information where we have counfounding batch effects and create another DESeq2 object.
-
-```{r Confounders}
-samplesheet_batch = samplesheet_ready
-samplesheet_batch$batch = factor(c(rep(c("Day1", "Day2", "Day3"), 2)), 
-                                 levels = c("Day1", "Day2", "Day3"))
-
-dds_batch = DESeqDataSetFromMatrix(countData = counts_rounded,
-                      colData = samplesheet_batch,
-                      design = ~ batch + condition)
-```
-</details>
-<br>
 
 # Summary
 
 In this section, we:
 
 * Loaded the necessary input files into our R session
-* Discussed model design for DESeq2
+* Discussed single variable model design for DESeq2
 * Initialized a DESeq2 data set
 * Filtered our count data
 
 Now that we've created our DESeq2 objects, including specifying what model is appropriate for our data, and filtered our data, we can proceed with assessing the impact of the experimental conditions on gene expression for our samples.
+
 
 ---
 

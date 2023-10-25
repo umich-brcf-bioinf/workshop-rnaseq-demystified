@@ -172,6 +172,9 @@ We'll take the `expected_count` column from each sample's data, and combine thes
 
 The input for this step will be the directory of *.genes.results files from RSEM, and the output will be a tab-separated count matrix file which we can use for count-level QC and differential expression analysis.
 
+<br><br>
+![Creating the count matrix](images/combine_counts.png)
+<br><br>
 
 <details>
 <summary>Contents of combine.py script</summary>

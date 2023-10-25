@@ -94,7 +94,12 @@ The GTF format stores specific information in each column:
 | 8 | Frame, relating to codons |
 | 9 | Attribute, a semicolon separated list of key/value pairs giving additional information about the feature. |
 
-## Minutiae, Very Briefly
+
+<br><br>
+![Animated reference data](images/fasta-gtf-gene-models.gif)
+<br><br>
+
+### Minutiae, Very Briefly
 
 Bioinformatics is a relatively new, fast-changing, field and its data standards and formats are no different. Consequently there are some oddities and tedious items of note which we would like to only briefly touch on here.
 

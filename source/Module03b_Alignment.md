@@ -132,6 +132,10 @@ If we were to peek inside of `sample_N.genome.bam`, we would see many columns of
 
 The SAM format gives information about where each read maps to in the genome (one read per line), and has information about that mapping.
 
+<br><br>
+![Alignment data animation](images/sam-bam-animated.gif)
+<br><br>
+
 ### Gene-level Quantification
 
 If we were to look at the top 3 lines of `sample_N.genes.results`, we see it is a plain-text file separated by tabs where each row is a gene, and the columns are described the first row.
@@ -184,7 +188,7 @@ rsem-calculate-expression --star --num-threads 1 --star-gzipped-read-file --star
 
 Before starting our alignment exercise, we should make sure that we are on the same page. Follow the link below:
 
-[Link to alignment exercise](Module03b_breakout02_sol.html)
+[Link to alignment exercise](Module03b_breakout02_ex.html)
 
 <br>
 <br>

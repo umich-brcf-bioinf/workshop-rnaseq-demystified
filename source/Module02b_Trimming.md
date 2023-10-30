@@ -92,7 +92,7 @@ At this point, we've run cutadapt on one of our samples. We could construct a se
 
 Before starting our cutadapt exercise, we should make sure that we are on the same page. Follow the link below:
 
-[Link to Cutadapt exercise](Module02b_breakout01_sol.html)
+[Link to Cutadapt exercise](Module02b_breakout01_ex.html)
 
 <br>
 <br>

@@ -310,10 +310,10 @@ PCACustom2 +
 
 Rstudio server allows us to download files through the interactive file panel on the right side. If we navigate into the plot subfolder and select the `PCAplot_rlog_condition.pdf` or the  file, we can then click the blue gear symbol labeled `More` and select `Export...`. We should see a prompt regarding the name of the file and if we click `Download` the file should show up in your local "Downloads" folder.
 
-# Optional Content
+# Optional content
 
 <details>
-    <summary>*Click for example code for generating a ScreePlot*</summary>
+    <summary>*Click for example code for generating a ScreePlot visualization of variance across all principle components*</summary>
      A screeplot is a way to visualize the variance explained by all principal components.
      To generate a scree plot, the PCA results need to be used independently of plotting, such as described by [this statquest post](https://statquest.org/pca-clearly-explained/) and replicated below.
 
@@ -330,19 +330,6 @@ barplot((scree[1:10]*100), main="Scree Plot", xlab="Principal Component", ylab="
     We can see that the majority (~65%) of the variance across our samples is explained by the first three principal components, giving us some additional confidence regarding the quality of our data.
     In these scree plot examples from BioTuring, the plot on the left fits what we would expect for a dataset with high signal from the experimental treatment, where the majority of the variance is explained by the first few principal components. The plot on the right illustrates a scenario where the variance is distributed across many components, which could be due to low signal from the experimental treatment, complex experimental design, or confounding factors.
 image: ![](./images/proportion-of-variance-blog-horz.jpg)
-</details>
-<br>
-
-<details>
-    <summary>*Click for code for a plot of dispersion estimates*</summary>
-    We can visualize the **dispersion estimates** with the `plotDispEsts` function. This plot shows the the DESeq2 normalization results for our data, which centers on shrinking the variance across all genes to better fit the expected spread at a given expression level.
-```{r CheckDispersions}
-plotDispEsts(dds_fitted)
-```
-    
-    Above is the raw data plotted in black, the fitted (or expected) dispersion in red, and the normalized data with scaled variance in blue. Since we have fairly small sample sizes for each condition, we see shrinkage for many genes but a reasonable correlation between the expression level and dispersions.
-
-    This [HBC tutorial](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html) has a more detailed overview of estimating size factors, estimating gene dispersion, and the shrinkage procedure, as well as examples of concerning dispersion plots that may suggest reassessing quality of the experimental data.
 </details>
 <br>
 

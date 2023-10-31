@@ -112,7 +112,20 @@ dds_fitted
 
 </details>
 <br>
+<br>
 
+<details>
+    <summary>*Click for code for a plot of dispersion estimates*</summary>
+    We can visualize the **dispersion estimates** with the `plotDispEsts` function. This plot shows the the DESeq2 normalization results for our data, which centers on shrinking the variance across all genes to better fit the expected spread at a given expression level.
+```{r CheckDispersions}
+plotDispEsts(dds_fitted)
+```
+    
+    Above is the raw data plotted in black, the fitted (or expected) dispersion in red, and the normalized data with scaled variance in blue. Since we have fairly small sample sizes for each condition, we see shrinkage for many genes but a reasonable correlation between the expression level and dispersions.
+
+    This [HBC tutorial](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html) has a more detailed overview of estimating size factors, estimating gene dispersion, and the shrinkage procedure, as well as examples of concerning dispersion plots that may suggest reassessing quality of the experimental data.
+</details>
+<br>
 
 Notice that there is now more information in the `DESeqDataSet` object than there was prior to our normalization. There is information about the model fit and about the library size normalization. DESeq2 will use this information when we perform the test for differential expression.
 

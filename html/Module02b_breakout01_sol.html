@@ -14,7 +14,7 @@
 
 <title>Exercise 01 Solution</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -192,8 +192,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -201,16 +201,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -409,30 +402,39 @@ pre {
 <p><br></p>
 <p><strong>15 Minutes</strong></p>
 <p><br></p>
-<p>Now that we’ve learned the basics of running Cutadapt, we need to trim all the rest of our samples. If you remember from the Computational Foundations course, we learned about using bash variables. Let’s try an exercise where we use a bash variable to trim each one of our FASTQ files.</p>
+<p>Now that we’ve learned the basics of running Cutadapt, we need to
+trim all the rest of our samples. If you remember from the Computational
+Foundations course, we learned about using bash variables. Let’s try an
+exercise where we use a bash variable to trim each one of our FASTQ
+files.</p>
 <p><br></p>
 <div id="instructions" class="section level3">
 <h3>Instructions:</h3>
 <p><br></p>
 <ul>
-<li>Work independently in the main room, posting any questions that arise to slack.</li>
+<li>Work independently in the main room, posting any questions that
+arise to slack.</li>
 <li>Recommendations for writing your own code:
 <ul>
 <li>Read function documentation</li>
 <li>Test out ideas - it’s okay to make mistakes and generate errors</li>
-<li>Use a search engine to look up errors or recommended solutions using keywords</li>
+<li>Use a search engine to look up errors or recommended solutions using
+keywords</li>
 </ul></li>
 <li>We’ll review possible solutions after time is up as a group.</li>
 </ul>
 <p><br></p>
 <ul>
-<li>Review Cutadapt’s help page and choose the proper arguments for our Cutadapt command(s).</li>
-<li>Use a bash variable along with Cutadapt to trim all remaining FASTQ files.</li>
+<li>Review Cutadapt’s help page and choose the proper arguments for our
+Cutadapt command(s).</li>
+<li>Use a bash variable along with Cutadapt to trim all remaining FASTQ
+files.</li>
 <li>Confirm that we have all of our expected output files.</li>
 </ul>
 <p><br></p>
 <blockquote>
-<p>Hint: Using a bash variable allows us to quickly change some arguments in a repeated command, e.g. :</p>
+<p>Hint: Using a bash variable allows us to quickly change some
+arguments in a repeated command, e.g. :</p>
 <pre><code>noun=&quot;World&quot;
 echo &quot;Hello, $noun!&quot;
 noun=&quot;Class&quot;
@@ -440,10 +442,13 @@ echo &quot;Hello, $noun!&quot;</code></pre>
 </blockquote>
 <p><br></p>
 </div>
-<div id="solution---cutadapt-all-samples-exercise" class="section level3">
+<div id="solution---cutadapt-all-samples-exercise"
+class="section level3">
 <h3>Solution - Cutadapt All Samples Exercise</h3>
 <p><br></p>
-<p>One solution is to define a bash variable for the sample, use that variable in a Cutadapt command, and then redefine the variable before repeating the Cutadapt command for each change.</p>
+<p>One solution is to define a bash variable for the sample, use that
+variable in a Cutadapt command, and then redefine the variable before
+repeating the Cutadapt command for each change.</p>
 <pre><code># Define a variable $SAMPLE
 SAMPLE=sample_B
 # Create a command using the variable $SAMPLE
@@ -462,14 +467,18 @@ cutadapt -q 30 -m 20 -o out_trimmed/${SAMPLE}_R1.trimmed.fastq.gz ../reads/${SAM
 SAMPLE=sample_F
 cutadapt -q 30 -m 20 -o out_trimmed/${SAMPLE}_R1.trimmed.fastq.gz ../reads/${SAMPLE}_R1.fastq.gz</code></pre>
 <p><br></p>
-<p>Another solution is to create a for-loop with our bash variable and Cutadapt command. E.g.</p>
+<p>Another solution is to create a for-loop with our bash variable and
+Cutadapt command. E.g.</p>
 <pre><code>for SAMPLE in sample_B sample_C sample_D sample_E sample_F
     do
     cutadapt -q 30 -m 20 -o out_trimmed/${SAMPLE}_R1.trimmed.fastq.gz ../reads/${SAMPLE}_R1.fastq.gz
 done</code></pre>
 <p><br></p>
 <blockquote>
-<p>Helper Hint: If suggesting a for-loop approach, it can be helpful to build up a “dry-run” command as a test case, to get learners to be more cognizant of what their code will do. Echoing filenames first might be a good suggestion.</p>
+<p>Helper Hint: If suggesting a for-loop approach, it can be helpful to
+build up a “dry-run” command as a test case, to get learners to be more
+cognizant of what their code will do. Echoing filenames first might be a
+good suggestion.</p>
 </blockquote>
 <p><br></p>
 </div>

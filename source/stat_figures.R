@@ -1,6 +1,7 @@
 library(tidyverse)
 
-setwd('~/Projects/2022-11-14-umich-rnaseq-demystified')
+# Note, change this if you're going to update these figures!
+setwd("~/Projects/2023-08-14-umich-rnaseq-demystified")
 
 expr = data.frame(X1 = rnorm(n = 6, mean = 4, sd = 0.5),
                   X2 = rnorm(n = 6, mean = 4, sd = 0.5),

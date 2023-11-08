@@ -29,7 +29,7 @@ pre {
 
 <br>
 
-We just tried two new variations of our MultiQC command, one pointed at the directory of our trimmed FastQC results, and another at the whole project directory. For convenience, we've included these reports in the zipped folder you downloaded at the beginning of the class. However, it's also useful to know how to transfer data to/from a remote instance. We'll explore how to use `scp` in this exercise.
+We just learned how to use the MultiQC software to create excellent summary reports of our analysis. For convenience, we've included this report in the zipped folder you downloaded at the beginning of the class, so that it's simple and effortless for us to view the report together. However, it's also useful to know how to transfer data to/from a remote instance. We'll explore how to use `scp` in this exercise.
 
 <br>
 

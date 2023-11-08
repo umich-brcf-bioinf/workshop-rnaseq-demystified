@@ -1,5 +1,5 @@
 ---
-title: "Module 10: DE Testing"
+title: "DE Testing"
 author: "UM Bioinformatics Core"
 date: "`r Sys.Date()`"
 output:
@@ -33,11 +33,13 @@ source("../bin/chunk-options.R")
 knitr_fig_path("10-")
 ```
 
-> # Objectives {.unlisted .unnumbered}
-> * Generate tables of DE results
-> * Understand what a p-value represents.
-> * Understand multiple hypothesis correction application and importance
+In this module, we will learn:
 
+* How to generate tables of DE statistics
+* What a p-value does (and does not!) represent
+* The importance multiple hypothesis corrections
+
+<br>
 
 ```{r Modules, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 library(DESeq2)
@@ -86,11 +88,11 @@ Now, consider needing to make this decision for 20,000 genes. Even if all the ge
 
 **We need a formal, reproducible, way to make this decision!**
 
-Thankfully statistics provides the formality we want, but for any statistical test we need to clearly state what we are testing.  When testing for differential expression we assume that for any for any particular gene, there is no difference in expression between conditions. Statisticians would call this the "null hypothesis".
+Thankfully statistics provides the formality we want, but for any statistical test we need to clearly state what we are testing.  When testing for differential expression we assume that for any particular gene, there is no difference in expression between conditions. Statisticians would call this the **"null hypothesis"**.
 
-For each gene, DESeq2 computes a "Wald statistic" which is a single number encapsulating the difference in the means and the spread of the groups. However, this number alone doesn't tell us how to decide if a gene is differentially expressed. We need a **second** number to give us an idea of how extreme that Wald statistic is among the distribution of Wald statistics, this is the **"p-value"** which along with choosing a threshold will inform us if we can **reject the null hypothesis** and classify a gene as differentially expressed.
+For each gene, DESeq2 computes a "Wald statistic" which is a single number encapsulating the difference in the means and the spread of the groups. However, this number alone doesn't allow us to determine if a gene is differentially expressed. We need a **second** number to give us an idea of how extreme that statistic is among the distribution of possible statistics, which is the **"p-value"**. The **"p-value"** along with choosing a threshold will inform us if we can **reject the null hypothesis** and classify a gene as differentially expressed.
 
-Imagine shuffling the group labels and recomputing the Wald statistic over and over again. You'd get a distribution of statistics that would look similar to a normal curve. The p-value essentially tells you how likely you are to have seen the statistic you see by chance. So when we set a p-value = 0.05 as a threshold, we're saying, "there is a 5% chance I'd see something this extreme when there was actually no effect". So the evidence is **strong**, but not **ironclad**.
+Imagine shuffling the group labels and recomputing the Wald statistic over and over again. You'd get a distribution of statistics that would look similar to a normal curve. The p-value essentially tells you how likely you are to have seen the statistic by chance. So when we set a p-value = 0.05 as a threshold, we're saying, "there is a 5% chance I'd see something this extreme when there was actually no effect". So the evidence is **strong**, but not **ironclad**.
 
 # Generating DE Results
 
@@ -102,14 +104,14 @@ resultsNames(dds_fitted)
 There is only the one comparison in the results, so we will refer to it in the `name` parameter of the `results()` function, and assign the result as an object.
 
 ```{r SetsResult}
-results_minus_vs_plus = results(dds_fitted, name = 'condition_minus_vs_plus')
-head(results_minus_vs_plus)
+results_deficient_vs_control = results(dds_fitted, name = 'condition_deficient_vs_control')
+head(results_deficient_vs_control)
 ```
 
 If we look at the results table, we see that the row names are gene identifiers (in this case ENSEMBL IDs because that's what the GTF we used in the call to RSEM+STAR) and then we see the following columns:
 
 1. `baseMean` is the average of the normalized count values, divided by size factors and taken over all samples, and can be interpreted as the relative expression level of that gene across all samples.
-2. `log2FoldChange` is the log2 transformed ratio of the expression of the numerator group (first group) over the denominator group (second group after "vs"). Note that in our comparison, the `log2FoldChange` column compares the expression of `minus` over the denominator group, `plus`. If the value is positive, that means the expression of that gene is greater across the `minus` samples than across the `plus` samples. If the value is negative, that means the expression of that gene is greater across the `minus` samples.
+2. `log2FoldChange` is the log2 transformed ratio of the expression of the numerator group (first group) over the denominator group (second group after "vs"). Note that in our comparison, the `log2FoldChange` column compares the expression of `deficient` over the denominator group, `control`. If the value is positive, that means the expression of that gene is greater across the `deficient` samples than across the `control` samples. If the value is negative, that means the expression of that gene is greater across the `deficient` samples.
 3. `lfcSE` is the standard error for the log2 fold change estimate.
 
 > # Note: `results()` defaults {.unlisted .unnumbered}
@@ -119,11 +121,11 @@ There are multiple ways to specify the test to be done using the `results()` fun
 
 > `contrast`: a character vector with exactly three elements: the name of a factor in the design formula, the name of the numerator level for the fold change, and the name of the denominator level for the fold change
 
-So an alternative way to test the same contrast as above (i.e. `plus` / `minus`) is:
+So an alternative way to test the same contrast as above (i.e.  `deficient` / `control`) is:
 
 ```{r SetsResultsAlt}
-alt_results_minus_vs_plus = results(dds_fitted, contrast = c('condition', 'minus', 'plus'))
-head(alt_results_minus_vs_plus)
+alt_results_deficient_vs_control = results(dds_fitted, contrast = c('condition', 'deficient', 'control'))
+head(alt_results_deficient_vs_control)
 ```
 
 This way of calling `results()` is especially helpful when the levels of the column of interest contain more than two levels because you can specify exactly which levels to test with little confusion.
@@ -140,17 +142,39 @@ If we continue to look at the results table, after the `lfcSE` column we see:
 
 <br>
 
-### Multiple hypothesis testing and FDR correction
+## Multiple hypothesis testing and FDR correction
+
+
+Each p-value reported in the table is the result of a single test for a single gene. As stated earlier - with a significance cut-off of p-value < 0.05, we're expecting a 5% chance it is a false positive. However the more genes we test, the greater chance we have of seeing a significant results by chance. 
+
+### The multiple hypothesis problem
+
+For example, if we consider running the Wald test for 20 genes instead of just three, we might see something like this where `Gene N` has a p-value below our threshold of 0.05. If we see this pattern, do we expect that `Gene N` is actually differentially expresed (e.g. a true positive)?
 
 <br>
-![](./images/significant_xkcd.png){width=75%}
-<br
+![](./images/FDR-1.png){width=75%}
+<br>
 
-Each p-value reported in the table is the result of a single test for a single gene. As stated earlier - with a significance cut-off of p-value < 0.05, we're expecting a 5% chance it is a false positive. The more genes we test, the greater chance we have of seeing a significant results by chance. **So if we are testing 20,000 genes for differential expression, we would expect to see ~1,000 significant genes (5%) just by chance.**
+What if we tested 100 genes? How many genes would we expect to have p-values < 0.05, just by chance?
 
-To address this [multiple hypothesis testing](https://multithreaded.stitchfix.com/blog/2015/10/15/multiple-hypothesis-testing/) can be performed. While there are a few approaches, the default method in DESeq2 is the False Discovery Rate (FDR) ([Benjamini and Hochberg (1995)](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1995.tb02031.x)).
+<br>
+![](./images/FDR-2.png){width=75%}
+<br>
 
-The default FDR rate cutoff for our analyses is 0.05, meaning the proportion of false positives amongst our *differentially expressed genes* is controlled to 5%. So if we call 500 genes as differentially expressed with this FDR cutoff, we expect only 25 of them to be false positives. DESeq2 vignette's includes a [further discussion of filtering and multiple testing correction](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#independent-filtering-and-multiple-testing).
+What if we tested 10,000 genes? We would expect to see 500 genes with p-values < 0.05, just by chance!
+
+<br>
+![](./images/FDR-3.png){width=75%}
+<br>
+
+**So if we are testing 20,000 genes for differential expression, we would expect to see ~1,000 significant genes (5%) just by chance.**
+<br>
+
+### The FDR solution
+
+To address this [multiple hypothesis correction](https://multithreaded.stitchfix.com/blog/2015/10/15/multiple-hypothesis-testing/) can be performed. While there are a few approaches, the default method in DESeq2 is the False Discovery Rate (FDR) ([Benjamini and Hochberg (1995)](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1995.tb02031.x)).
+
+The default FDR rate cutoff for our analyses is 0.05, meaning the proportion of false positives amongst our *differentially expressed genes* is controlled to 5%. So if we find 500 genes that are differentially expressed with this FDR cutoff, we expect only 25 of them to be false positives. DESeq2 vignette's includes a [further discussion of filtering and multiple testing correction](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#independent-filtering-and-multiple-testing).
 
 > # Note on `padj` values set to NA {.unlisted .unnumbered}
 >
@@ -172,7 +196,7 @@ In this section, we:
 * Generated tables of differential expression results - i.e. fold changes and adjusted pvalues for each gene in dataset
 * Discussed importance and application of multiple hypothesis correction
 
-Now that we've generated our differential comparisons and have an understanding of our results, including multiple hypothesis correction, we can proceed with generating summary figures and tables for our differential expression analysis.
+Now that we've generated our differential comparisons and have an understanding of our results, including multiple hypothesis correction, we can determine how many genes are differentially expressed between our conditions and how to visualize our results.
 
 ---
 

@@ -58,7 +58,7 @@ We should note that the default parameters for STAR are optimized for **mammalia
 
 <center>
 
-![Splice-aware alignmentt](images/splice_aware.png)
+![Splice-aware alignment](images/splice_aware.png)
 
 Credit: https://raw.githubusercontent.com/hbctraining/Intro-to-rnaseq-hpc-O2/master/lectures/Sequence_alignment.pdf
 
@@ -131,6 +131,10 @@ If we were to peek inside of `sample_N.genome.bam`, we would see many columns of
 <img src="images/sam_columns.png" width="800" />
 
 The SAM format gives information about where each read maps to in the genome (one read per line), and has information about that mapping.
+
+<br><br>
+![Alignment data animation](images/sam-bam-animated.gif)
+<br><br>
 
 ### Gene-level Quantification
 

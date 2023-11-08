@@ -1,5 +1,5 @@
 ---
-title: "Module 07: DE Initialization"
+title: "DE Initialization"
 author: "UM Bioinformatics Core"
 date: "`r Sys.Date()`"
 output:
@@ -38,36 +38,26 @@ library(DESeq2)
 # load("rdata/RunningData.RData")
 ```
 
-> # Objectives {.unlisted .unnumbered}
-> * 'Unblind' our sample IDs
-> * Understand possible confounding factors
-> * Understand the impact of batches or additional covariates
-> * Filter count table
+In this module, we will learn:
+
+* How to 'unblind' our samples
+* How to identify possible "confounding" factors
+* How batches or additional covariates may impact your data
+* How to ensure high quality count data with filtering
+
+<br>
 
 # Differential Expression Workflow {.unlisted .unnumbered}
 
-Here we will proceed setting up the inputs needed to initialize DESeq2 before testing for differential expression.
+Here we will setup the inputs needed to initialize DESeq2 before testing for differential expression.
 
 ![](./images/wayfinder/wayfinder-DESeq2Init.png){width=75%}
 
 ---
 
-# DESeq2 objects
-
-Bioconductor software packages often define and use custom classes within R to store data in a way that better fits expectations around biological data, such as illustrated below from [Huber et al. 2015](https://www.nature.com/articles/nmeth.3252).
-
-![A breakdown of the SummarizedExperiment class.](./images/SummarizedExperiment.jpg)
-
-These custom data structures have pre-specified data slots, which hold specific types/classes of data and therefore can be more easily accessed by functions from the same package.
-
-To create the DESeqDataSet we need two tables:
-
-1. A count matrix (which we already loaded and saved as the object `count_table`) and
-2. A table that assigns the condition labels for each sample (which we will generate below).
-
 # Sample Information
 
-As introduced at the beginning of the workshop, we have downloaded and prepared data from an existing publication [(Zhang et al., 2019)](https://elifesciences.org/articles/46976), wherein one goal is to understand the gene expression differences in wild-type mice that are "iron replete" (we label these "plus") and "iron deficient" (we label these "minus").
+As introduced at the beginning of the workshop, we have downloaded and prepared data from an existing publication [(Zhang et al., 2019)](https://elifesciences.org/articles/46976), wherein one goal is to understand the gene expression differences in wild-type mice that that were "iron replete" and fed a control diet (we label these "control") and "iron deficient" (we label these "deficient").
 
 ![](images/Module00_top_down.jpg)
 
@@ -76,10 +66,10 @@ As introduced at the beginning of the workshop, we have downloaded and prepared 
 Our next step will be to describe the samples within our R session, so that we make the proper comparisons with DESeq2. Let's check the sample names from the count table.
 
 ```{r ColumnNames}
-colnames(counts_rounded)
+colnames(count_table)
 ```
 
-Based on the sample names that are the columns of `counts_rounded`, our samples are blinded, e.g. the sample names don't clearly correspond to treatment groups. We will need to specify which sample IDs connect to which experimental conditions.
+Based on the sample names that are the columns of `count_table`, our samples are blinded, e.g. the sample names don't clearly correspond to treatment groups. We will need to specify which sample IDs connect to which experimental conditions.
 
 Typically sample phenotype data, including experimental conditions, are stored as Excel or CSV files that we can read into R, and then use when creating a DESeq2 object. If you are unfamilar with CSV files or how to generate them, there are [tutorials](https://www.wikihow.com/Create-a-CSV-File) available to guide you through the process.
 
@@ -89,7 +79,7 @@ Typically sample phenotype data, including experimental conditions, are stored a
 We'll load our 'pre-made' sample information sheet, `samplesheet.csv`, to unblind our samples.
 
 ```{r Samplesheet, echo = FALSE, eval = TRUE}
-samplesheet = read.table("../data/samplesheet.csv",
+samplesheet = read.table("../data/R_data/samplesheet.csv",
                        sep = ",",
                        header = TRUE,
                        row.names = 1)
@@ -102,6 +92,12 @@ samplesheet = read.table("data/samplesheet.csv",
                        row.names = 1)
 ```
 
+Alternatively, we can manually create a sample sheet.
+```{r Samplesheet3, eval=FALSE}
+
+
+```
+
 We can look at the object by typing its name and hitting Enter. Note, for larger experiments, you may want to use `head()`.
 
 ```{r ShowSamplesheet}
@@ -111,49 +107,41 @@ samplesheet
 **Checkpoint**: *If you have loaded `samplesheet`, please indicate with the green 'check' button. Otherwise, please use the red 'x' button to have the command repeated*
 
 
-
-In this example data, all mice are wild-type and the iron replete mice are labeled as "plus" and the iron deficient mice are labeled as "minus". Again, for larger experiments, you may want to examine the coding of the samples by looking at the `unique()` values of the relevant columns.
+In this example data, all mice are wild-type and the control diet mice are labeled as "control" and the iron deficient diet fed mice are labeled as "deficient". Again, for larger experiments, you may want to examine the coding of the samples by looking at the `unique()` values of the relevant columns.
 
 ```{r TreatmentGroupTable}
 unique(samplesheet$condition)
 ```
 
 
-### Replicates in RNA-seq experiments
+### Replicates and sequencing depth in RNA-seq experiments
 
-A frequent question for RNA-seq projects is "How many replicates do I need?".
+> **Question** In this experiment, we only have samples from three mice per each condition. Do we have enough replicates?
 
-The general goal of our analyses is to separate the “interesting” biological contributions from the “uninteresting” technical or other contributions that either cannot be or were not controlled in the experimental design. The more sources of variation, such as samples coming from heterogenous tissues or experiments with incomplete knockdowns, the more replicates (>3) are recommended.
+The goal of our analysis is to separate the “interesting” biological contributions from the “uninteresting” technical or other contributions that either cannot be or were not controlled in the experimental design. The more sources of variation, such as samples coming from heterogenous tissues or experiments with incomplete knockdowns, the more replicates (>3) are recommended.
 
 ![Image of technical, biological, and experimental contributors to gene expression, from HBC training materials](images/de_variation.png){width=75%}
 
-For a more in depth discussion of experimental design considerations, particularly for the number of replicates, please read [A Beginner’s Guide to Analysis of RNA Sequencing Data](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6096346/) and papers like this one by [Hart et al](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3842884/) that focus on estimating statistical power for RNA-seq experiments.
+For a more in depth discussion of experimental design considerations, particularly for the number of replicates, please read [A Beginner’s Guide to Analysis of RNA Sequencing Data](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6096346/) or papers like this one by [Hart et al](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3842884/) that focus on estimating statistical power for RNA-seq experiments.
 
-### Sequencing depth recommendations
-
-A related experimental design consideration we often discuss with researchers is how much sequencing depth should be generated per sample. This figure shared by Illumina in their technical talks is helpful to understand the relative importance of replicates versus sequencing depth.
-
-![Illumina's differential expression recovery across replicate number and sequencing depth](images/de_replicates_img.png){width=75%}
-
-Generally, for human and mouse experiments the recommendation is 30-40 million reads per sample to capture both highly expressed (abundant) and lowly expressed (rarer) transcripts, assuming that ~25,000 protein-coding genes would be measured for a polyA library prep. However, as the image above shows, sequencing depth has less of an impact than number of replicates in detecting differentially expressed genes (DEGs).
 
 ### Sample table formatting
 
 Next, we'll format our table so that we have the appropriate data type (an ordered [factor](https://swcarpentry.github.io/r-novice-inflammation/12-supp-factors/)) for DESeq2 to recognize our treatment groups and appropriately compare samples.
 
 ```{r echo = FALSE, eval = FALSE}
-# Consider copying sample sheet & updating/mutating condition column to be a factor t
+# Consider copying sample sheet & updating/mutating condition column to be a factor
 ```
 
 ```{r SamplesheetFactor}
 # tidy version
 samplesheet_ready <- samplesheet %>% mutate(condition = factor(condition, 
-                                          levels = c('plus', 'minus')))
+                                          levels = c('control', 'deficient')))
 
 # base version
 samplesheet_ready <- samplesheet
 samplesheet_ready$condition = factor(samplesheet_ready$condition,
-                            levels = c('plus', 'minus'))
+                            levels = c('control', 'deficient'))
 
 unique(samplesheet_ready$condition)
 ```
@@ -170,6 +158,36 @@ This line of code checks if both the identity and order match between our `count
 **Checkpoint**: *If you your sample info check returns `TRUE`, please indicate with the green 'yes' button. Otherwise, please use the red 'x' button to have the command repeated*
 
 # Creating DESeq2 object
+
+Bioconductor software packages often define and use custom structures to store data in a way that suits biological data, such as illustrated below from [Huber et al. 2015](https://www.nature.com/articles/nmeth.3252).
+
+![A breakdown of the SummarizedExperiment class.](./images/SummarizedExperiment.jpg)
+
+These custom data structures have pre-defined data slots, which hold specific types/classes of data and therefore can be more easily accessed by functions from the same package.
+
+To create the DESeqDataSet we need two important inputs:
+
+1. A table that assigns the condition labels for each sample (that we read in and formatted)
+1. A *raw* count matrix
+
+Is our count matrix from our RSEM outputs considered a "raw" count matrix by DESeq2?
+
+> # Exercise: RSEM outputs versus DESeq2 input requirements {.unlisted .unnumbered}
+>
+> If we think back to the RSEM outputs, the 'expected_counts' table may include fractional amounts due to how the alignment tool resolves reads mapping to multiple locuses). DESeq2 is expecting the count matrix to consist only of whole numbers. Recent versions of DESeq2 will handle this for us, but previous versions did not.
+>
+> What R function, that we saw in Computational Foundations, could we use to convert the fractional values in `count_table` to integers?
+
+<details>
+<summary>Solution</summary>
+
+We can use the `round()` function:
+
+```{r round count_table}
+counts_rounded = round(count_table)
+```
+</details>
+<br>
 
 To create the `DESeqDataSet` we will need the `count_table` and the `samplesheet`. We will also need a **design formula** to specify our model.
 
@@ -230,10 +248,8 @@ Notice the `dds_filtered` object has less elements than the unfiltered `dds` obj
 
 ```{r Confounders}
 samplesheet_batch = samplesheet_ready
-samplesheet_batch$batch = factor(c(rep(c("Day1"), 2),
-                       rep(c("Day2"), 2),
-                       rep(c("Day3"), 2)),
-                     levels = c("Day1", "Day2", "Day3"))
+samplesheet_batch$batch = factor(c(rep(c("Day1", "Day2", "Day3"), 2)), 
+                                 levels = c("Day1", "Day2", "Day3"))
 
 dds_batch = DESeqDataSetFromMatrix(countData = counts_rounded,
                       colData = samplesheet_batch,

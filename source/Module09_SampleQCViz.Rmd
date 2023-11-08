@@ -1,5 +1,5 @@
 ---
-title: "Module 09: Sample Quality Control"
+title: "Sample Quality Control"
 author: "UM Bioinformatics Core"
 date: "`r Sys.Date()`"
 output:
@@ -33,13 +33,14 @@ source("../bin/chunk-options.R")
 knitr_fig_path("09-")
 ```
 
-> # Objectives {.unlisted .unnumbered}
-> * Generate common QC visualizations
-> * Understand how to interpret QC visualizations
-> * Understand when to revise the model used in the DESeq2 initialization
-> * Understand the pitfalls of post-hoc analysis
-> * Describe the causes and implications of batch effect or other QC issues in an RNA-Seq experiment
+In this module, we will learn:
 
+* How to generate & interpret common QC visualizations
+* When to revise the model used in the DESeq2 initialization
+* Understand the pitfalls of post-hoc analysis
+* Implications of batch effect or other technical variablity
+
+<br>
 
 ```{r Modules, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 library(DESeq2)
@@ -63,46 +64,49 @@ Prior to testing for differential expression between our comparisons of interest
 
 # Quality Control Visualizations
 
-We have already discussed some aspects of quality control assessment at the sequencing level. Today we will outline sample-level and gene-level quality control for our expression data.
+We have already examined quality control assessment at the sequencing level with `FastQC` and `MultiQC`. Today we will examine sample-level and gene-level quality control for our expression data.
 
-To do this, we will first assess the similarity of our samples by using principal component analysis (PCA). This will allow us to determine how well patterns in the data fits our expectations from the experiments design and possible sources of variation.
+To do this, we will first assess the similarity of our samples by using principal component analysis (PCA). This will allow us to determine how well patterns in the data fit our expectations from the experiments design and examine possible sources of variation.
 
-Other common visualizations that we generate for our analyses include expression heatmaps, sample correlation heatmaps, and boxplots of raw and/or normalized counts, the code for which (due to time restrictions) can be found as bonus content through the materials for today and in the bonus content module at the end.
+Other common visualizations that we generate for our analyses include expression heatmaps, sample correlation heatmaps, and boxplots of raw and/or normalized counts, the code for which (due to time restrictions) can be found as bonus content throughout the materials for today or in the bonus content module at the end.
 
 # Principal Component Analysis
 
-A common and very useful plot for evaluating how well our samples cluster by treatment groups are Principal Component Analysis (PCA) plots. PCA is used to emphasize variation and bring out patterns in large datasets by using dimensionality redution.
+A common and very useful plot for evaluating how well our samples cluster by treatment groups are Principal Component Analysis (PCA) plots. PCA is used to emphasize variation and bring out patterns in large datasets by using dimensionality reduction.
 
 This image from
 [a helpful step by step explaination of PCA](https://blog.bioturing.com/2018/06/14/principal-component-analysis-explained-simply/) helps to illustrate the principal component projections for two genes measured in approximately 60 mouse samples. Generally, this process is repeated and after each gene's contribution to a principal component or weight is determined, the expression and weight are summed across genes for each sample to calculate a value for each principal component.
 
 ![](./images/Blog_pca_6b.png)
 
->**Note**: A more detailed overview of the PCA procedure is outlined in [a Harvard Chan Bioinformatic Core training module](https://hbctraining.github.io/DGE_workshop/lessons/principal_component_analysis.html) and is based on a more thorough description presented in a [StatQuest’s video](https://www.youtube.com/watch?v=_UVHneBUBW0). Additionally, this [TowardsDataScience blog post](https://towardsdatascience.com/principal-component-analysis-3c39fbf5cb9d) goes through the math behind PCAs.
+
+This [blog post includes a helpful overview of PCA basics](https://blog.bioturing.com/2018/06/14/principal-component-analysis-explained-simply/) walks through both the generation and interpretation of PCA plots.
+
+A more detailed overview of the PCA procedure is outlined in [a Harvard Chan Bioinformatic Core training module](https://hbctraining.github.io/DGE_workshop/lessons/principal_component_analysis.html) and is based on a more thorough description presented in a [StatQuest’s video](https://www.youtube.com/watch?v=_UVHneBUBW0). Additionally, this [TowardsDataScience blog post](https://towardsdatascience.com/principal-component-analysis-3c39fbf5cb9d) goes through the math behind PCAs.
+
 
 ## Interpreting PCA plots
 
-For most bulk RNA-seq experiments, we expect the majority of the total variance to be explained by the first two or three principal components. In the following plot, principal component 1 (PC1) explains ~80% of the variance in our data while principal component 2 (PC2) explains ~12% of the variance, which fits that expections.
+For most bulk RNA-seq experiments, we expect the majority of the total variance to be explained by the first two or three principal components. We see this in an example plot from the [DESeq2 vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html):
 
-![](images/PCAplot_Fancy_rlog_ko.Tx.png){width=75%}
+![](./images/PCA0_DESeq2Vignette.png)
 
 > # Question {.unlisted .unnumbered}
 >
 > How might we interpret the variance explained by each principal component in the context of the labeled sample points?
 
-For more information, this [helpful overview of PCA basics](https://blog.bioturing.com/2018/06/14/principal-component-analysis-explained-simply/) walks through both the generation and interpretation of PCA plots.
 
 ## Evaluating batch effects or possible confounders
 
-PCA plots are also useful for evaluating the impact of "uninteresting" sources of variance, like library preparation or sequencer differences. Evidence of batch effects can sometimes be quite obvious, such as this example from the [DESeq2 vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html), where samples within each treatment group look split into two subgroups.
+PCA plots are also useful for evaluating the impact of "uninteresting" sources of variance, like library preparation or sequencer differences. Evidence of batch effects can sometimes be quite obvious. Let's look at the PCA plot from the DESeq2 vigentte again but re-colored to highlight structure in the data.
 
 ![](./images/PCA1_DESeq2Vignette.png)
 
-It turns out this experiment contained samples sequenced single-end and paired-end. If we color only by sequencing run type (paired-end vs. single-end), we see that in this example PC2 (29% of variance) is primarily explained by this technical covariate.
+It turns out this experiment contained samples sequenced single-end and paired-end. If we add an attribute to the plot for the sequencing type (paired-end vs. single-end), we see that in this example PC2 (29% of variance) is primarily explained by this technical covariate.
 
 ![](./images/PCA2_DESeq2Vignette.png)
 
-However, since the samples are clearly seperated by experimental condition on PC1 **and** there are balanced batches, if we saw this pattern in our data we could incorporate the technical covariate into our model design, such as outlined in the [DESeq2 vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs).
+However, since the samples are clearly separated by experimental condition on PC1 **and** there are balanced batches, if we saw this pattern in our data we could incorporate the technical covariate into our model design, such as outlined in the [DESeq2 vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs).
 
 <details>
     <summary>*Click for complex design discussion*</summary>
@@ -170,6 +174,7 @@ With this table of PCA statistics, we can use what we learned at the end of the 
 - Make our color palette color-blind friendly
 - Use shape instead of color of the points to indicate groups on the PCA plot
 
+<br>
 
 ## Customizing a PCA
 
@@ -319,8 +324,7 @@ pcaLoadings = prcomp(t(assay(rld)), scale. = TRUE)
 ## get the scree information
 pca.var = pcaLoadings$sdev^2
 scree = pca.var/sum(pca.var)
-p = barplot((scree[1:10]*100), main="Scree Plot", xlab="Principal Component", ylab="Percent Variation")
-#print(p)
+barplot((scree[1:10]*100), main="Scree Plot", xlab="Principal Component", ylab="Percent Variation")
 ```
 
     We can see that the majority (~65%) of the variance across our samples is explained by the first three principal components, giving us some additional confidence regarding the quality of our data.

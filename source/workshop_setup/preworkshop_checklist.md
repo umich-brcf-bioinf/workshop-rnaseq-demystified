@@ -18,7 +18,7 @@ body{ /* Normal  */
 
 <br/>
 
-1. Watch the <a href="https://forms.gle/zZvHz22oGNEVJ1r39" target="_blank">Intro to RNA-Seq Webinar<a/><br/>
+1. Watch the <a href="https://www.mivideo.it.umich.edu/media/t/1_tx74a3v9" target="_blank">Intro to RNA-Seq Webinar<a/><br/>
 The hands-on workshop builds on the content of this 1-hour webinar that introduces foundational concepts of RNA-Seq experiments including experimental design, sample preparation, QC, sequencing, and initial interpretation of preliminary results.
 
 2. (optional) If you have not already, we invite you to take the <a href="https://forms.gle/zWmRUSULRZt5fXiK7" target="_blank">Pre-workshop survey</a><br/>

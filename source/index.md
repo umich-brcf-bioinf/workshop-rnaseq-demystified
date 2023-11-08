@@ -20,9 +20,11 @@ body, td {
 }
 </style>
 
-#### [Setup instructions](workshop_setup/setup_instructions.html)
+#### [Pre-workshop checklist](workshop_setup/preworkshop_checklist.html){target="_blank"} / [Intro to RNA-Seq Webinar](https://www.mivideo.it.umich.edu/media/t/1_tx74a3v9){target="_blank"}
 
-#### [Slack workspace](https://umbioinfcoreworkshops.slack.com)
+#### [Setup instructions](workshop_setup/setup_instructions.html){target="_blank"}
+
+#### [Slack workspace](https://umbioinfcoreworkshops.slack.com){target="_blank"}
 
 ---
 

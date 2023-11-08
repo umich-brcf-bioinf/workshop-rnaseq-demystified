@@ -1,0 +1,7 @@
+sample,genotype,condition
+sample_A,wt,control
+sample_B,wt,control
+sample_C,wt,control
+sample_D,wt,deficient
+sample_E,wt,deficient
+sample_F,wt,deficient

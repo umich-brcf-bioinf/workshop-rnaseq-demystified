@@ -3,18 +3,6 @@ dir.create("./RNASeqDemystified")
 setwd("./RNASeqDemystified")
 getwd()
 
-# make data folder
-dir.create("./data")
-
-# download files
-download.file("https://raw.githubusercontent.com/umich-brcf-bioinf/2021-04-26-umich-rnaseqDemystified/master/data/Day2Data/samplesheet.csv", "./data/samplesheet.csv")
-
-download.file("https://raw.githubusercontent.com/umich-brcf-bioinf/2021-04-26-umich-rnaseqDemystified/master/data/Day2Data/gene_expected_count.txt", "./data/gene_expected_count.txt")
-
-# check for packages
-missing <- setdiff(c("tidyr", "ggplot2", "pheatmap", "ggrepel", "formattable", "RColorBrewer", "matrixStats", "dplyr", "biomaRt", "DESeq2"), rownames(installed.packages()))
-if (!length(missing)) { cat("Ready for Computational Foundations workshop\n")} else {cat("PROBLEM: could not install:", missing, "\n")}
-?setdiff
 
 # load packages for today
 library(DESeq2)
@@ -30,7 +18,10 @@ library('RColorBrewer', character.only=TRUE)
 
 # load raw count table
 ?read.table
-count_table <- read.table("./data/gene_expected_count.txt", header = TRUE, row.names = 1)
+# download files
+#download.file("https://raw.githubusercontent.com/umich-brcf-bioinf/2021-04-26-umich-rnaseqDemystified/master/data/Day2Data/samplesheet.csv", "./data/samplesheet.csv")
+
+count_table <- read.table("../data/gene_expected_count.txt", header = TRUE, row.names = 1)
 head(count_table)
 tail(count_table)
 
@@ -42,13 +33,16 @@ tail(count_table)
 sessionInfo()
 
 # load sample info
-samplesheet <- read.table("~/RNASeqDemystified/data/samplesheet.csv", sep = ",", header = TRUE, row.names = 1)
+samplesheet <- read.table("../data/samplesheet.csv", sep = ",", header = TRUE, row.names = 1)
 head(samplesheet)
 str(samplesheet)
 
 # reorder factors
-samplesheet$condition <- factor(samplesheet$condition, levels = c( "wt.Tx", "ko.Tx", "ko.control", "wt.control" ))
 unique(samplesheet$condition)
+
+# add "batches"
+samplesheet$batch = factor(c(rep(c("Day1", "Day2", "Day3"), 2)))
+head(samplesheet)
 
 head(count_table)
 
@@ -73,7 +67,6 @@ dds <- DESeq(dds)
 head(dds)
 str(dds)
 
-
 resultsNames(dds)
 
 # setting up plot directories
@@ -83,11 +76,11 @@ getwd()
 
 # Setup plot variables
 plotPath <- "./Figures/BySamples/"
-Comparison <- "ko.Tx"
+Comparison <- "deficient_vs_control"
 
 # generate PCA projections for top 500 genes
 ?plotPCA
-p.all <- plotPCA(rld, intgroup = c('condition'), ntop = 500)
+p.all <- plotPCA(rld, intgroup = c('batch'), ntop = 500)
 head(p.all)
 p.all
 
@@ -100,8 +93,8 @@ dev.off()
 resultsNames(dds)
 
 # look at Tx ko comparison
-Comparison <- "condition_ko.Tx_vs_wt.Tx"  
-res_Tx <- results(dds, name=Comparison)
+Comparison <- "condition_deficient_vs_control"  
+res_Iron <- results(dds, name=Comparison)
 
 # generate additional contrast
 res_WT <- results(dds, contrast=c("condition", "ko.control", "wt.control")) 
@@ -112,7 +105,7 @@ fc <- 1.5
 pval <- 0.05
 
 # select data of interest
-df<- res_WT[order(res_WT$padj),]
+df<- res_Iron[order(res_Iron$padj),]
 df <- as.data.frame(df)
 df <- cbind("id" = row.names(df), df)
 str(df)

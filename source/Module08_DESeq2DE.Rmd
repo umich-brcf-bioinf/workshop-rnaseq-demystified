@@ -1,5 +1,5 @@
 ---
-title: "Module 08: DE Normalization and Modeling"
+title: "DE Normalization and Modeling"
 author: "UM Bioinformatics Core"
 date: "`r Sys.Date()`"
 output:
@@ -33,9 +33,12 @@ source("../bin/chunk-options.R")
 knitr_fig_path("08-")
 ```
 
-> # Objectives {.unlisted .unnumbered}
-> * Discuss count normalizations
-> * Execute model fitting for differential expression comparisons
+In this module, we will learn:
+
+* Different count normalizations and their uses
+* How to fit a model for differential expression comparisons
+
+<br>
 
 ```{r LoadRunningData, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 library(DESeq2)
@@ -183,7 +186,7 @@ In this section, we:
 
 * Learned about count normalizations and uses
 * Generated a normalized count table
-* Fit two DESeq2 models for our data
+* Fit at least one DESeq2 model for our data
 * (Optional) - saw the impact of including a covariate in our model
 * Wrote intermediate data to file
 

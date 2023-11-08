@@ -1,5 +1,5 @@
 ---
-title: "Module 11: DE Visualization"
+title: "DE Visualization"
 author: "UM Bioinformatics Core"
 date: "`r Sys.Date()`"
 output:
@@ -33,12 +33,13 @@ source("../bin/chunk-options.R")
 knitr_fig_path("11-")
 ```
 
-> # Objectives {.unlisted .unnumbered}
-> * Understand advantages of using gene ids when analyzing RNA-seq data.
-> * Given a list of ENSEMBL gene ids, add gene symbols and Entrez accessions.
-> * Generate common visualizations for differential expression comparisons
-> * Understand choosing thresholds for calling differentially expressed genes
-> * Discuss options for functional enrichments
+In this module, we will learn:
+
+* How to generate common differential expression visualizations
+* How to choose thresholds for calling differentially expressed genes
+* Options for functional enrichments and other downstream analyses
+
+<br>
 
 ```{r Modules, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 library(DESeq2)
@@ -50,6 +51,8 @@ library(ggrepel)
 library(pheatmap)
 library(RColorBrewer)
 # load("rdata/RunningData.RData")
+
+results_deficient_vs_control = results(dds_fitted, name = 'condition_deficient_vs_control')
 ```
 
 # Differential Expression Workflow {.unlisted .unnumbered}
@@ -69,7 +72,7 @@ Part of differential expression analysis is generating visualizations and summar
 To generate a general summary of the DE results, we can use the `summary` function to generate a basic summary by DESeq2.
 
 ```{r DESeq2Summary}
-summary(results_minus_vs_plus)
+summary(results_deficient_vs_control)
 ```
 
 However, this summary is simply a text output that we are unable to manipulate. Moreover, notice that the thresholds are not quite as we would like them.
@@ -92,7 +95,7 @@ fdr = 0.05
 If we think back to Computational Foundations, conditional statements could allow us to determine the number of genes that pass our thresholds, which would be useful for annotating our results tables and plots.
 
 > # Exercise {.unlisted .unnumbered}
-> How would we identify the number of genes with adjusted p-values < 0.05 and a fold-change above 1.5 (or below -1.5)?
+> How would we identify the number of genes with adjusted p-values < 0.05 and a fold-change above 1.5 (or below -1.5) in our comparison?
 
 
 <details>
@@ -101,7 +104,7 @@ If we think back to Computational Foundations, conditional statements could allo
 Here is one possible answer:
 
 ```{r StatSigGenes2}
-sum(results_minus_vs_plus$padj < fdr & abs(results_minus_vs_plus$log2FoldChange) >= log2(fc), na.rm = TRUE)
+sum(results_deficient_vs_control$padj < fdr & abs(results_deficient_vs_control$log2FoldChange) >= log2(fc), na.rm = TRUE)
 ```
 
 **Checkpoint**: *If you see the same number of DE ganes with our choosen thresholds, please indicate with a green check. Otherwise use a red x.*
@@ -109,35 +112,35 @@ sum(results_minus_vs_plus$padj < fdr & abs(results_minus_vs_plus$log2FoldChange)
 </details>
 <br>
 
-Let's now create a new column in `results_minus_vs_plus` to record the significance "call" based on these thresholds. And let's separate the call by "Up" or "Down", noting that these are relative to our "Case" condition of "plus", or iron replete mice. There are many ways to accomplish this, but the following will work:
+Let's now create a new column in `results_deficient_vs_control` to record the significance "call" based on these thresholds. And let's separate the call by "Up" or "Down", noting that these are relative to our "Case" condition. There are many ways to accomplish this, but the following will work:
 
 First define all values as "NS" or "not significant":
 
 ```{r NSColumn}
-results_minus_vs_plus$call = 'NS'
-head(results_minus_vs_plus)
+results_deficient_vs_control$call = 'NS'
+head(results_deficient_vs_control)
 ```
 
 Next, determine the "Up" and "Down" indices:
 
 ```{r UpDownIndices}
-up_idx = results_minus_vs_plus$padj < fdr & results_minus_vs_plus$log2FoldChange > log2(fc)
-down_idx = results_minus_vs_plus$padj < fdr & results_minus_vs_plus$log2FoldChange < -log2(fc)
+up_idx = results_deficient_vs_control$padj < fdr & results_deficient_vs_control$log2FoldChange > log2(fc)
+down_idx = results_deficient_vs_control$padj < fdr & results_deficient_vs_control$log2FoldChange < -log2(fc)
 ```
 
 Last, use those indices to assign the correct "Up" or "Down" values to the correct indices, and look at the head of the result:
 
 ```{r CallColumn}
-results_minus_vs_plus$call[up_idx] = 'Up'
-results_minus_vs_plus$call[down_idx] = 'Down'
-head(results_minus_vs_plus)
+results_deficient_vs_control$call[up_idx] = 'Up'
+results_deficient_vs_control$call[down_idx] = 'Down'
+head(results_deficient_vs_control)
 ```
 
 Finally, since plotting functions often require categorical groupings, let's make this `call` column a factor and specify the level ordering:
 
 ```{r FactorCall}
-results_minus_vs_plus$call = factor(results_minus_vs_plus$call, levels = c('Up', 'Down', 'NS'))
-head(results_minus_vs_plus)
+results_deficient_vs_control$call = factor(results_deficient_vs_control$call, levels = c('Up', 'Down', 'NS'))
+head(results_deficient_vs_control)
 ```
 
 > # Tip {.unlisted .unnumbered}
@@ -146,7 +149,7 @@ head(results_minus_vs_plus)
 Now we are in a position to quickly summarize our differential expression results:
 
 ```{r TableCall}
-table(results_minus_vs_plus$call)
+table(results_deficient_vs_control$call)
 ```
 
 We see quickly how many genes were "Up" in iron replete, how many were "Down" in iron replete, and how many were not significant.
@@ -162,28 +165,27 @@ Let's coerce the `DataFrame` which was returned by `DESeq2::results()` into a `t
 ```{r PlotSetup2}
 # Use the rownames argument to create a new column of gene IDs
 # Also arrange by adjusted p-value
-results_forPlot = as_tibble(results_minus_vs_plus, rownames = 'id') %>% arrange(padj)
+results_forPlot = as_tibble(results_deficient_vs_control, rownames = 'id') %>% arrange(padj)
 ```
 
 Let's start with a very simple volcano plot that plots the `log2FoldChange` on the x-axis, and `-log10(padj)` on the y-axis.
 
 ```{r VolcanoPlot}
-# Initialize the plot, saving as object 'p' and specifying the plot type as 'geom_point'
-p = ggplot(results_forPlot, aes(x = log2FoldChange, y = -log10(padj))) +
-    geom_point()
-p
+# Initialize the plot, specifying the plot type as 'geom_point'
+ggplot(results_forPlot, aes(x = log2FoldChange, y = -log10(padj))) +
+  geom_point()
 ```
 
-This is a good start, but, as usual it's good practice to add better labels to the plot with the `labs()` function:
+This is a good start, but it's good practice to add better labels to the plot with the `labs()` function:
 
 ```{r VolcanoPlot2}
-# Add plot labels and change the theme
+# Add plot labels and change the theme - save the plot as object `p`
 p = ggplot(results_forPlot, aes(x = log2FoldChange, y = -log10(padj))) +
     geom_point() +
     theme_bw() +
     labs(
         title = 'Volcano Plot',
-        subtitle = 'Plus vs Minus',
+        subtitle = 'control vs deficient',
         x = 'log2 fold-change',
         y = '-log10 FDR'
     )
@@ -194,21 +196,27 @@ What if we now added some visual guides to indicate where the significant genes 
 
 ```{r VolcanoPlot3}
 # Add threshold lines
-p = p +
+p1 = p +
     geom_vline(
         xintercept = c(0, -log2(fc), log2(fc)),
         linetype = c(1, 2, 2)) +
     geom_hline(
         yintercept = -log10(fdr),
         linetype = 2)
-p
+p1
 ```
 
 Finally, why not color the points by their significance status? We already created the `call` column that has the correct values. In this case we can get away with adding `geom_point()` to our existing plot and specifying the correct aesthetic:
 
 ```{r VolcanoPlot4}
-p = p + geom_point(aes(color = call))
-p
+p2 = p1 + geom_point(aes(color = call))
+p2
+```
+
+Finally, we can adjust our plot to have a nicer color scheme:
+```{r}
+p3 = p2 + scale_color_manual(name = '', values=c('#B31B21',  '#1465AC', 'darkgray'))
+p3
 ```
 
 For additional visualizations for our DE results, we included some example code in the [Bonus Content module](https://umich-brcf-bioinf.github.io/2023-03-13-umich-rnaseq-demystified/html/R_bonus_content.html) and this [HBC tutorial](https://hbctraining.github.io/DGE_workshop/lessons/06_DGE_visualizing_results.html) also includes some nice examples.
@@ -221,10 +229,10 @@ You may be interested in creating a table of only the genes that pass your signi
 
 ```{r ConditionalSubset}
 # tidyr (requires table reformatting)
-res_sig <- as_tibble(results_minus_vs_plus, rownames = "gene_ids") %>% filter(call != 'NS')
+res_sig <- as_tibble(results_deficient_vs_control, rownames = "gene_ids") %>% filter(call != 'NS')
 
 # base
-res_sig <- results_minus_vs_plus[results_minus_vs_plus$call != 'NS', ]
+res_sig <- results_deficient_vs_control[results_deficient_vs_control$call != 'NS', ]
 
 head(res_sig)
 dim(res_sig)
@@ -238,8 +246,6 @@ In this section, we:
 * Generated a volcano plot for our differential expression results
 * Summarized our differential expression results
 * Discussed choosing thresholds
-* Annotated our tables of results to map gene IDs to gene symbols
-* Saved our results to file
 
 
 ---

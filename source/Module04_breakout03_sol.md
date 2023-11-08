@@ -29,7 +29,7 @@ pre {
 
 <br>
 
-We just tried two new variations of our MultiQC command, one pointed at the directory of our trimmed FastQC results, and another at the whole project directory. For convenience, we've included these reports in the zipped folder you downloaded at the beginning of the class. However, it's also useful to know how to transfer data to/from a remote instance. We'll explore how to use `scp` in this exercise.
+We just learned how to use the MultiQC software to create excellent summary reports of our analysis. For convenience, we've included this report in the zipped folder you downloaded at the beginning of the class, so that it's simple and effortless for us to view the report together. However, it's also useful to know how to transfer data to/from a remote instance. We'll explore how to use `scp` in this exercise.
 
 <br>
 
@@ -64,15 +64,24 @@ We just tried two new variations of our MultiQC command, one pointed at the dire
 
 ### Solution - Transfer MultiQC Report With `scp` Exercise
 
-> Helper Hint: By default, any multiQC reports will have identical filenames `multiqc_report.html`. It is helpful to specify a more descriptive destination filename for the transfer below, so that multiple MultiQC reports can be easily differentiated (and don't overwrite one another).
-
 <br>
 
 > Helper Hint: Users must know that they should run `scp` from their **local** computer, not from the AWS instance.
 
 <br>
 
+> Helper Hint: It may be useful for them to create a folder to place the report into.
+
+<br>
+
+> Helper Hint: By default, any multiQC reports will have identical filenames `multiqc_report.html`. It is helpful to specify a more descriptive destination filename for the transfer below, so that multiple MultiQC reports can be easily differentiated (and don't overwrite one another).
+
+<br>
+
+
 ```
+# Create a folder to place our report into
+mkdir ~/rsd-workshop
 # Transfer the full report
 scp <username>@bfx-workshop01.med.umich.edu:~/RSD_Shell/analysis/out_multiqc_all/multiqc_report.html ~/rsd-workshop/multiqc_report_all.html
 ```

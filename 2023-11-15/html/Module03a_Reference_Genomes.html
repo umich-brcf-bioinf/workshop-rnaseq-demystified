@@ -14,7 +14,7 @@
 
 <title>Reference Genomes</title>
 
-<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -481,40 +481,24 @@ pre {
 </ul>
 <div id="differential-expression-workflow" class="section level1">
 <h1>Differential Expression Workflow</h1>
-<p>Here we will set the stage for the next steps by discussing reference
-genomes, which are integral to genome alignments and gene/isoform
-quantification. Along the way we will touch on some things to be aware
-of.</p>
-<p><img src="images/wayfinder/wayfinder-ReferenceGenomes.png" /> <br>
-<br> <br> <br></p>
+<p>Here we will set the stage for the next steps by discussing reference genomes, which are integral to genome alignments and gene/isoform quantification. Along the way we will touch on some things to be aware of.</p>
+<p><img src="images/wayfinder/wayfinder-ReferenceGenomes.png" /> <br> <br> <br> <br></p>
 </div>
 <div id="reference-genomes" class="section level1">
 <h1>Reference Genomes</h1>
-<p>A reference genome consists of the <strong>reference
-sequence</strong> and, optionally, any number of <strong>genomic
-annotations</strong> that describe attributes about that sequence.
-Examples of annotations include:</p>
+<p>A reference genome consists of the <strong>reference sequence</strong> and, optionally, any number of <strong>genomic annotations</strong> that describe attributes about that sequence. Examples of annotations include:</p>
 <ul>
-<li>Gene models consisting of the location and other information about
-genes.</li>
-<li>Variants consisting of the location of common or rare genetic
-variants, their alleles, and frequencies.</li>
-<li>Small RNAs consisting of the location and other information about
-various types of small RNAs.</li>
+<li>Gene models consisting of the location and other information about genes.</li>
+<li>Variants consisting of the location of common or rare genetic variants, their alleles, and frequencies.</li>
+<li>Small RNAs consisting of the location and other information about various types of small RNAs.</li>
 </ul>
-<p>Of particular relevance to us for this workshop are the reference
-sequence and gene models.</p>
+<p>Of particular relevance to us for this workshop are the reference sequence and gene models.</p>
 <div id="reference-sequence" class="section level2">
 <h2>Reference Sequence</h2>
-<p>Reference sequence is stored in <a
-href="https://en.wikipedia.org/wiki/FASTA_format">FASTA</a> files. They
-are similar to FASTQ files in their storage of sequence information, but
-their format is a little different in a couple ways:</p>
+<p>Reference sequence is stored in <a href="https://en.wikipedia.org/wiki/FASTA_format">FASTA</a> files. They are similar to FASTQ files in their storage of sequence information, but their format is a little different in a couple ways:</p>
 <ol style="list-style-type: decimal">
-<li>Records are separated by lines beginning with <code>&gt;</code>
-instead of <code>@</code>.</li>
-<li>Only the sequence is stored in a FASTA file, there is no notion of
-quality attached to the nucleotides.</li>
+<li>Records are separated by lines beginning with <code>&gt;</code> instead of <code>@</code>.</li>
+<li>Only the sequence is stored in a FASTA file, there is no notion of quality attached to the nucleotides.</li>
 </ol>
 <pre><code>&gt;chrM
 GATCACAGGTCTATCACCCTATTAACCACTCACGGGAGCTCTCCATGCAT
@@ -529,20 +513,8 @@ TTTATCTTTAGGCGGTATGCACTTTTAACAGTCACCCCCCAACTAACACA</code></pre>
 </div>
 <div id="gene-models" class="section level2">
 <h2>Gene Models</h2>
-<p>Well-characterized organisms (e.g. human, mouse, zebrafish) have
-fairly mature gene models. These are stored in <a
-href="https://uswest.ensembl.org/info/website/upload/gff.html">GTF</a>
-format, which gives location and other information about each gene
-feature. Below are two examples:</p>
-<pre><code>chr1    unknown exon    11874   12227   .   +   .   gene_id &quot;DDX11L1&quot;; gene_name &quot;DDX11L1&quot;; transcript_id &quot;NR_046018&quot;; tss_id &quot;TSS16932&quot;;
-chr1    unknown exon    12613   12721   .   +   .   gene_id &quot;DDX11L1&quot;; gene_name &quot;DDX11L1&quot;; transcript_id &quot;NR_046018&quot;; tss_id &quot;TSS16932&quot;;
-chr1    unknown exon    13221   14409   .   +   .   gene_id &quot;DDX11L1&quot;; gene_name &quot;DDX11L1&quot;; transcript_id &quot;NR_046018&quot;; tss_id &quot;TSS16932&quot;;
-chr1    unknown exon    14362   14829   .   -   .   gene_id &quot;WASH7P&quot;; gene_name &quot;WASH7P&quot;; transcript_id &quot;NR_024540&quot;; tss_id &quot;TSS8568&quot;;
-
-
-1   havana  gene    11869   14409   .   +   .   gene_id &quot;ENSG00000223972&quot;; gene_version &quot;5&quot;; gene_name &quot;DDX11L1&quot;; gene_source &quot;havana&quot;; gene_biotype &quot;transcribed_unprocessed_pseudogene&quot;;
-1   havana  transcript  11869   14409   .   +   .   gene_id &quot;ENSG00000223972&quot;; gene_version &quot;5&quot;; transcript_id &quot;ENST00000456328&quot;; transcript_version &quot;2&quot;; gene_name &quot;DDX11L1&quot;; gene_source &quot;havana&quot;; gene_biotype &quot;transcribed_unprocessed_pseudogene&quot;; transcript_name &quot;DDX11L1-202&quot;; transcript_source &quot;havana&quot;; transcript_biotype &quot;lncRNA&quot;; tag &quot;basic&quot;; transcript_support_level &quot;1&quot;;
-1   havana  exon    11869   12227   .   +   .   gene_id &quot;ENSG00000223972&quot;; gene_version &quot;5&quot;; transcript_id &quot;ENST00000456328&quot;; transcript_version &quot;2&quot;; exon_number &quot;1&quot;; gene_name &quot;DDX11L1&quot;; gene_source &quot;havana&quot;; gene_biotype &quot;transcribed_unprocessed_pseudogene&quot;; transcript_name &quot;DDX11L1-202&quot;; transcript_source &quot;havana&quot;; transcript_biotype &quot;lncRNA&quot;; exon_id &quot;ENSE00002234944&quot;; exon_version &quot;1&quot;; tag &quot;basic&quot;; transcript_support_level &quot;1&quot;;</code></pre>
+<p>Well-characterized organisms (e.g. human, mouse, zebrafish) have fairly mature gene models. These are stored in <a href="https://uswest.ensembl.org/info/website/upload/gff.html">GTF</a> format, which gives location and other information about each gene feature. Below are two examples:</p>
+<p><br> <img src="images/gtf_refseq.png" alt="RefSeq GTF" /> <br><br> <img src="images/gtf_ensembl.png" alt="ENSEMBL GTF" /> <br><br></p>
 <p>The GTF format stores specific information in each column:</p>
 <table>
 <colgroup>
@@ -590,50 +562,29 @@ chr1    unknown exon    14362   14829   .   -   .   gene_id &quot;WASH7P&quot;; 
 </tr>
 <tr class="odd">
 <td align="center">9</td>
-<td>Attribute, a semicolon separated list of key/value pairs giving
-additional information about the feature.</td>
+<td>Attribute, a semicolon separated list of key/value pairs giving additional information about the feature.</td>
 </tr>
 </tbody>
 </table>
+<p><br><br> <img src="images/fasta-gtf-gene-models.gif" alt="Animated reference data" /> <br><br></p>
+<div id="minutiae-very-briefly" class="section level3">
+<h3>Minutiae, Very Briefly</h3>
+<p>Bioinformatics is a relatively new, fast-changing, field and its data standards and formats are no different. Consequently there are some oddities and tedious items of note which we would like to only briefly touch on here.</p>
 </div>
-<div id="minutiae-very-briefly" class="section level2">
-<h2>Minutiae, Very Briefly</h2>
-<p>Bioinformatics is a relatively new, fast-changing, field and its data
-standards and formats are no different. Consequently there are some
-oddities and tedious items of note which we would like to only briefly
-touch on here.</p>
 <div id="genome-builds" class="section level3">
 <h3>Genome Builds</h3>
-<p>On occassion new reference genomes are released, and the genome build
-number changes. You may be familiar with the UCSC manner of naming human
-genome builds: hg18, hg19, hg38. ENSEMBL, naturally, has their own way
-of referring to genome builds: GRCh36, GRCh37, and GRCh38. Notice with
-the most recent human reference, the numbering now aligns between UCSC
-and ENSEMBL.</p>
+<p>On occassion new reference genomes are released, and the genome build number changes. You may be familiar with the UCSC manner of naming human genome builds: hg18, hg19, hg38. ENSEMBL, naturally, has their own way of referring to genome builds: GRCh36, GRCh37, and GRCh38. Notice with the most recent human reference, the numbering now aligns between UCSC and ENSEMBL.</p>
 <p>Different organisms have their own versioning.</p>
 </div>
 <div id="annotation-sources" class="section level3">
 <h3>Annotation Sources</h3>
-<p><a href="https://www.ncbi.nlm.nih.gov/refseq/rsg/">NCBI RefSeq</a>,
-<a
-href="https://www.ensembl.org/info/genome/genebuild/index.html">ENSEMBL</a>,
-and <a
-href="https://academic.oup.com/bioinformatics/article/22/9/1036/200093">UCSC
-Known Genes</a> are the three primary gene annotation databases
-(different organisms have their own databases). We will not go into
-exactly how the gene annotations are different, but we note that the
-are, and <a
-href="https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-015-1308-8">others
-have examined the consequences of this</a>.</p>
+<p><a href="https://www.ncbi.nlm.nih.gov/refseq/rsg/">NCBI RefSeq</a>, <a href="https://www.ensembl.org/info/genome/genebuild/index.html">ENSEMBL</a>, and <a href="https://academic.oup.com/bioinformatics/article/22/9/1036/200093">UCSC Known Genes</a> are the three primary gene annotation databases (different organisms have their own databases). We will not go into exactly how the gene annotations are different, but we note that the are, and <a href="https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-015-1308-8">others have examined the consequences of this</a>.</p>
 </div>
 <div id="gene-ids" class="section level3">
 <h3>Gene IDs</h3>
-<p>The two GTF examples above highlight different ways of referring to
-the same gene. In the first GTF we see:</p>
+<p>The two GTF examples above highlight different ways of referring to the same gene. In the first GTF we see:</p>
 <ul>
-<li>DDX11L1, the gene symbol, controlled by the <a
-href="https://www.genenames.org/">Human Gene Nomenclature Committee
-(HUGO)</a>.</li>
+<li>DDX11L1, the gene symbol, controlled by the <a href="https://www.genenames.org/">Human Gene Nomenclature Committee (HUGO)</a>.</li>
 <li>NR_046018, the RefSeq transcript ID</li>
 </ul>
 <p>And in the second GTF we see:</p>
@@ -642,88 +593,44 @@ href="https://www.genenames.org/">Human Gene Nomenclature Committee
 <li>DDX11L1, the gene symbol, thankfully the same</li>
 <li>ENST00000456328, the ENSEMBL transcript ID</li>
 </ul>
-<p>Translating between different gene IDs is possible, as we will see in
-Day Two with <code>biomaRt</code>. But in terms of <strong>best
-practice</strong> it is generally a good idea to avoid using the gene
-symbol as the primary gene identifier because not everyone refers to the
-same gene by the same symbol.</p>
+<p>Translating between different gene IDs is possible, as we will see in Day Two with <code>biomaRt</code>. But in terms of <strong>best practice</strong> it is generally a good idea to avoid using the gene symbol as the primary gene identifier because not everyone refers to the same gene by the same symbol.</p>
 </div>
 </div>
 </div>
 <div id="getting-a-reference-genome" class="section level1">
 <h1>Getting a Reference Genome</h1>
-<p>The <a
-href="https://support.illumina.com/sequencing/sequencing_software/igenome.html">Illumina
-iGenomes</a> resource is one of the easiest, and most comprehensive,
-ways to download a reference genome. iGenomes includes both the
-reference sequence and gene models.</p>
-<p>Reference genomes can be <strong>very large</strong>, depending on
-the organism, and so we will not download one to the Amazon instance we
-are using for this workshop. We’ve included instructions for downloading
-these, in case you want to download these to the server where you intend
-to later do a similar RNA-seq analysis (e.g. on High-Performance
-Compute, GreatLakes).</p>
+<p>The <a href="https://support.illumina.com/sequencing/sequencing_software/igenome.html">Illumina iGenomes</a> resource is one of the easiest, and most comprehensive, ways to download a reference genome. iGenomes includes both the reference sequence and gene models.</p>
+<p>Reference genomes can be <strong>very large</strong>, depending on the organism, and so we will not download one to the Amazon instance we are using for this workshop. We’ve included instructions for downloading these, in case you want to download these to the server where you intend to later do a similar RNA-seq analysis (e.g. on High-Performance Compute, GreatLakes).</p>
 <details>
 <summary>
 How would I download references with iGenomes?
 </summary>
-<p>As noted, it’s not recommended to download the iGenomes references to
-the AWS instance. However, if you wanted to know in general how you
-would do that, the process is described here.</p>
-<p>First go to the <a
-href="https://support.illumina.com/sequencing/sequencing_software/igenome.html">iGenomes</a>
-page, find the build you want from the source you want, right click the
-genome build you want to download, and select “Copy link location”:</p>
-<div class="float">
-<img src="images/genome_copy_link.png"
-alt="iGenomes image for copying link location" />
-<div class="figcaption">iGenomes image for copying link location</div>
+<p>As noted, it’s not recommended to download the iGenomes references to the AWS instance. However, if you wanted to know in general how you would do that, the process is described here.</p>
+<p>First go to the <a href="https://support.illumina.com/sequencing/sequencing_software/igenome.html">iGenomes</a> page, find the build you want from the source you want, right click the genome build you want to download, and select “Copy link location”:</p>
+<div class="figure">
+<img src="images/genome_copy_link.png" alt="" />
+<p class="caption">iGenomes image for copying link location</p>
 </div>
-<p>Then on the remote server you would go to the directory you’d like to
-download the genome to and type (that URL is what we copied):</p>
+<p>Then on the remote server you would go to the directory you’d like to download the genome to and type (that URL is what we copied):</p>
 <pre><code>$ wget http://igenomes.illumina.com.s3-website-us-east-1.amazonaws.com/Homo_sapiens/NCBI/GRCh38/Homo_sapiens_NCBI_GRCh38.tar.gz</code></pre>
-<p>After the download finishes (it may take a while as it is tens of GB
-large), you can unpack it with:</p>
+<p>After the download finishes (it may take a while as it is tens of GB large), you can unpack it with:</p>
 <pre><code>$ tar -xf Homo_sapiens_NCBI_GRCh38.tar.gz</code></pre>
 </details>
 <div id="which-reference-is-right-for-me" class="section level2">
 <h2>Which Reference is Right for Me?</h2>
-<p>The key is to be consistent in your research. Switching from ENSEMBL
-to UCSC will create many headaches because of the change in gene
-identifiers, and differences in the gene models themselves. Often people
-choose the one they’re most comfortable with, which is often a function
-of historical accident. The key is not to overthink it.</p>
-<p>Another important note is not to mix the sources. If you download
-reference sequence from UCSC, don’t use an ENSEMBL GTF (and vice versa).
-One of the quirky differences between the two databases is that ENSEMBL
-refers to chromosome only by their number, i.e. <code>1</code>, whereas
-UCSC refers to chromsomes as <code>chr1</code>. This makes reference
-FASTAs from one source incompatible with gene builds from another.</p>
+<p>The key is to be consistent in your research. Switching from ENSEMBL to UCSC will create many headaches because of the change in gene identifiers, and differences in the gene models themselves. Often people choose the one they’re most comfortable with, which is often a function of historical accident. The key is not to overthink it.</p>
+<p>Another important note is not to mix the sources. If you download reference sequence from UCSC, don’t use an ENSEMBL GTF (and vice versa). One of the quirky differences between the two databases is that ENSEMBL refers to chromosome only by their number, i.e. <code>1</code>, whereas UCSC refers to chromsomes as <code>chr1</code>. This makes reference FASTAs from one source incompatible with gene builds from another.</p>
 <p><br> <br></p>
 <hr />
-<p>These materials have been adapted and extended from materials created
-by the <a href="http://bioinformatics.sph.harvard.edu/">Harvard Chan
-Bioinformatics Core (HBC)</a>. These are open access materials
-distributed under the terms of the <a
-href="http://creativecommons.org/licenses/by/4.0/">Creative Commons
-Attribution license (CC BY 4.0)</a>, which permits unrestricted use,
-distribution, and reproduction in any medium, provided the original
-author and source are credited.</p>
+<p>These materials have been adapted and extended from materials created by the <a href="http://bioinformatics.sph.harvard.edu/">Harvard Chan Bioinformatics Core (HBC)</a>. These are open access materials distributed under the terms of the <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution license (CC BY 4.0)</a>, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</p>
 <br/> <br/>
 <hr/>
-<table style="width:100%;">
-<colgroup>
-<col width="28%" />
-<col width="42%" />
-<col width="28%" />
-</colgroup>
+<table>
 <thead>
 <tr class="header">
-<th align="left"><a href="Module02b_Trimming.html">Previous
-lesson</a></th>
+<th align="left"><a href="Module02b_Trimming.html">Previous lesson</a></th>
 <th align="center"><a href="#top">Top of this lesson</a></th>
-<th align="right"><a href="Module03b_Alignment.html">Next
-lesson</a></th>
+<th align="right"><a href="Module03b_Alignment.html">Next lesson</a></th>
 </tr>
 </thead>
 <tbody>
@@ -732,7 +639,7 @@ lesson</a></th>
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUmVmZXJlbmNlIEdlbm9tZXMiCmF1dGhvcjogIlVNIEJpb2luZm9ybWF0aWNzIENvcmUiCm91dHB1dDoKICAgICAgICBodG1sX2RvY3VtZW50OgogICAgICAgICAgICBpbmNsdWRlczoKICAgICAgICAgICAgICAgIGluX2hlYWRlcjogaGVhZGVyLmh0bWwKICAgICAgICAgICAgdGhlbWU6IHBhcGVyCiAgICAgICAgICAgIHRvYzogdHJ1ZQogICAgICAgICAgICB0b2NfZGVwdGg6IDQKICAgICAgICAgICAgdG9jX2Zsb2F0OiB0cnVlCiAgICAgICAgICAgIG51bWJlcl9zZWN0aW9uczogZmFsc2UKICAgICAgICAgICAgZmlnX2NhcHRpb246IHRydWUKICAgICAgICAgICAgbWFya2Rvd246IEdGTQogICAgICAgICAgICBjb2RlX2Rvd25sb2FkOiB0cnVlCi0tLQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPgpib2R5eyAvKiBOb3JtYWwgICovCiAgICAgIGZvbnQtc2l6ZTogMTRwdDsKICB9CnByZSB7CiAgZm9udC1zaXplOiAxMnB0Cn0KPC9zdHlsZT4KCkluIHRoaXMgbW9kdWxlLCB3ZSB3aWxsIGxlYXJuOgoKKiB3aGF0IGEgcmVmZXJlbmNlIGdlbm9tZSBpcyBhbmQgd2hhdCBpdCBjb250YWlucwoqIGRldGFpbHMgYWJvdXQgdGhlIEZBU1RBIGFuZCBHVEYgZm9ybWF0cwoqIHRvIGFwcHJlY2lhdGUgdGhlIGRpZmZlcmVuY2VzIGluIGdlbmUgaWRlbnRpZmllcnMKKiBob3cgdG8gZG93bmxvYWQgYSByZWZlcmVuY2UgZ2Vub21lCgojIERpZmZlcmVudGlhbCBFeHByZXNzaW9uIFdvcmtmbG93CgpIZXJlIHdlIHdpbGwgc2V0IHRoZSBzdGFnZSBmb3IgdGhlIG5leHQgc3RlcHMgYnkgZGlzY3Vzc2luZyByZWZlcmVuY2UgZ2Vub21lcywgd2hpY2ggYXJlIGludGVncmFsIHRvIGdlbm9tZSBhbGlnbm1lbnRzIGFuZCBnZW5lL2lzb2Zvcm0gcXVhbnRpZmljYXRpb24uIEFsb25nIHRoZSB3YXkgd2Ugd2lsbCB0b3VjaCBvbiBzb21lIHRoaW5ncyB0byBiZSBhd2FyZSBvZi4KCiFbXShpbWFnZXMvd2F5ZmluZGVyL3dheWZpbmRlci1SZWZlcmVuY2VHZW5vbWVzLnBuZykKPGJyPgo8YnI+Cjxicj4KPGJyPgoKIyBSZWZlcmVuY2UgR2Vub21lcwoKQSByZWZlcmVuY2UgZ2Vub21lIGNvbnNpc3RzIG9mIHRoZSAqKnJlZmVyZW5jZSBzZXF1ZW5jZSoqIGFuZCwgb3B0aW9uYWxseSwgYW55IG51bWJlciBvZiAqKmdlbm9taWMgYW5ub3RhdGlvbnMqKiB0aGF0IGRlc2NyaWJlIGF0dHJpYnV0ZXMgYWJvdXQgdGhhdCBzZXF1ZW5jZS4gRXhhbXBsZXMgb2YgYW5ub3RhdGlvbnMgaW5jbHVkZToKCiogR2VuZSBtb2RlbHMgY29uc2lzdGluZyBvZiB0aGUgbG9jYXRpb24gYW5kIG90aGVyIGluZm9ybWF0aW9uIGFib3V0IGdlbmVzLgoqIFZhcmlhbnRzIGNvbnNpc3Rpbmcgb2YgdGhlIGxvY2F0aW9uIG9mIGNvbW1vbiBvciByYXJlIGdlbmV0aWMgdmFyaWFudHMsIHRoZWlyIGFsbGVsZXMsIGFuZCBmcmVxdWVuY2llcy4KKiBTbWFsbCBSTkFzIGNvbnNpc3Rpbmcgb2YgdGhlIGxvY2F0aW9uIGFuZCBvdGhlciBpbmZvcm1hdGlvbiBhYm91dCB2YXJpb3VzIHR5cGVzIG9mIHNtYWxsIFJOQXMuCgpPZiBwYXJ0aWN1bGFyIHJlbGV2YW5jZSB0byB1cyBmb3IgdGhpcyB3b3Jrc2hvcCBhcmUgdGhlIHJlZmVyZW5jZSBzZXF1ZW5jZSBhbmQgZ2VuZSBtb2RlbHMuCgojIyBSZWZlcmVuY2UgU2VxdWVuY2UKClJlZmVyZW5jZSBzZXF1ZW5jZSBpcyBzdG9yZWQgaW4gW0ZBU1RBXShodHRwczovL2VuLndpa2lwZWRpYS5vcmcvd2lraS9GQVNUQV9mb3JtYXQpIGZpbGVzLiBUaGV5IGFyZSBzaW1pbGFyIHRvIEZBU1RRIGZpbGVzIGluIHRoZWlyIHN0b3JhZ2Ugb2Ygc2VxdWVuY2UgaW5mb3JtYXRpb24sIGJ1dCB0aGVpciBmb3JtYXQgaXMgYSBsaXR0bGUgZGlmZmVyZW50IGluIGEgY291cGxlIHdheXM6CgoxLiBSZWNvcmRzIGFyZSBzZXBhcmF0ZWQgYnkgbGluZXMgYmVnaW5uaW5nIHdpdGggYD5gIGluc3RlYWQgb2YgYEBgLgoyLiBPbmx5IHRoZSBzZXF1ZW5jZSBpcyBzdG9yZWQgaW4gYSBGQVNUQSBmaWxlLCB0aGVyZSBpcyBubyBub3Rpb24gb2YgcXVhbGl0eSBhdHRhY2hlZCB0byB0aGUgbnVjbGVvdGlkZXMuCgpgYGAKPmNock0KR0FUQ0FDQUdHVENUQVRDQUNDQ1RBVFRBQUNDQUNUQ0FDR0dHQUdDVENUQ0NBVEdDQVQKVFRHR1RBVFRUVENHVENUR0dHR0dHVEdUR0NBQ0dDR0FUQUdDQVRUR0NHQUdBQ0dDVEcKR0FHQ0NHR0FHQ0FDQ0NUQVRHVENHQ0FHVEFUQ1RHVENUVFRHQVRUQ0NUR0NDVENBVFQKQ1RBVFRBVFRUQVRDR0NBQ0NUQUNHVFRDQUFUQVRUQUNBR0dDR0FBQ0FUQUNDVEFDVEEKQUFHVEdUR1RUQUFUVEFBVFRBQVRHQ1RUR1RBR0dBQ0FUQUFUQUFUQUFDQUFUVEdBQVQKR1RDVEdDQUNBR0NDR0NUVFRDQ0FDQUNBR0FDQVRDQVRBQUNBQUFBQUFUVFRDQ0FDQ0EKQUFDQ0NDQ0NDQ1RDQ0NDQ0NHQ1RUQ1RHR0NDQUNBR0NBQ1RUQUFBQ0FDQVRDVENUR0MKQ0FBQUNDQ0NBQUFBQUNBQUFHQUFDQ0NUQUFDQUNDQUdDQ1RBQUNDQUdBVFRUQ0FBQVQKVFRUQVRDVFRUQUdHQ0dHVEFUR0NBQ1RUVFRBQUNBR1RDQUNDQ0NDQ0FBQ1RBQUNBQ0EKYGBgCgojIyBHZW5lIE1vZGVscwoKV2VsbC1jaGFyYWN0ZXJpemVkIG9yZ2FuaXNtcyAoZS5nLiBodW1hbiwgbW91c2UsIHplYnJhZmlzaCkgaGF2ZSBmYWlybHkgbWF0dXJlIGdlbmUgbW9kZWxzLiBUaGVzZSBhcmUgc3RvcmVkIGluIFtHVEZdKGh0dHBzOi8vdXN3ZXN0LmVuc2VtYmwub3JnL2luZm8vd2Vic2l0ZS91cGxvYWQvZ2ZmLmh0bWwpIGZvcm1hdCwgd2hpY2ggZ2l2ZXMgbG9jYXRpb24gYW5kIG90aGVyIGluZm9ybWF0aW9uIGFib3V0IGVhY2ggZ2VuZSBmZWF0dXJlLiBCZWxvdyBhcmUgdHdvIGV4YW1wbGVzOgoKCiAgICBjaHIxCXVua25vd24JZXhvbgkxMTg3NAkxMjIyNwkuCSsJLglnZW5lX2lkICJERFgxMUwxIjsgZ2VuZV9uYW1lICJERFgxMUwxIjsgdHJhbnNjcmlwdF9pZCAiTlJfMDQ2MDE4IjsgdHNzX2lkICJUU1MxNjkzMiI7CiAgICBjaHIxCXVua25vd24JZXhvbgkxMjYxMwkxMjcyMQkuCSsJLglnZW5lX2lkICJERFgxMUwxIjsgZ2VuZV9uYW1lICJERFgxMUwxIjsgdHJhbnNjcmlwdF9pZCAiTlJfMDQ2MDE4IjsgdHNzX2lkICJUU1MxNjkzMiI7CiAgICBjaHIxCXVua25vd24JZXhvbgkxMzIyMQkxNDQwOQkuCSsJLglnZW5lX2lkICJERFgxMUwxIjsgZ2VuZV9uYW1lICJERFgxMUwxIjsgdHJhbnNjcmlwdF9pZCAiTlJfMDQ2MDE4IjsgdHNzX2lkICJUU1MxNjkzMiI7CiAgICBjaHIxCXVua25vd24JZXhvbgkxNDM2MgkxNDgyOQkuCS0JLglnZW5lX2lkICJXQVNIN1AiOyBnZW5lX25hbWUgIldBU0g3UCI7IHRyYW5zY3JpcHRfaWQgIk5SXzAyNDU0MCI7IHRzc19pZCAiVFNTODU2OCI7CgoKICAgIDEJaGF2YW5hCWdlbmUJMTE4NjkJMTQ0MDkJLgkrCS4JZ2VuZV9pZCAiRU5TRzAwMDAwMjIzOTcyIjsgZ2VuZV92ZXJzaW9uICI1IjsgZ2VuZV9uYW1lICJERFgxMUwxIjsgZ2VuZV9zb3VyY2UgImhhdmFuYSI7IGdlbmVfYmlvdHlwZSAidHJhbnNjcmliZWRfdW5wcm9jZXNzZWRfcHNldWRvZ2VuZSI7CiAgICAxCWhhdmFuYQl0cmFuc2NyaXB0CTExODY5CTE0NDA5CS4JKwkuCWdlbmVfaWQgIkVOU0cwMDAwMDIyMzk3MiI7IGdlbmVfdmVyc2lvbiAiNSI7IHRyYW5zY3JpcHRfaWQgIkVOU1QwMDAwMDQ1NjMyOCI7IHRyYW5zY3JpcHRfdmVyc2lvbiAiMiI7IGdlbmVfbmFtZSAiRERYMTFMMSI7IGdlbmVfc291cmNlICJoYXZhbmEiOyBnZW5lX2Jpb3R5cGUgInRyYW5zY3JpYmVkX3VucHJvY2Vzc2VkX3BzZXVkb2dlbmUiOyB0cmFuc2NyaXB0X25hbWUgIkREWDExTDEtMjAyIjsgdHJhbnNjcmlwdF9zb3VyY2UgImhhdmFuYSI7IHRyYW5zY3JpcHRfYmlvdHlwZSAibG5jUk5BIjsgdGFnICJiYXNpYyI7IHRyYW5zY3JpcHRfc3VwcG9ydF9sZXZlbCAiMSI7CiAgICAxCWhhdmFuYQlleG9uCTExODY5CTEyMjI3CS4JKwkuCWdlbmVfaWQgIkVOU0cwMDAwMDIyMzk3MiI7IGdlbmVfdmVyc2lvbiAiNSI7IHRyYW5zY3JpcHRfaWQgIkVOU1QwMDAwMDQ1NjMyOCI7IHRyYW5zY3JpcHRfdmVyc2lvbiAiMiI7IGV4b25fbnVtYmVyICIxIjsgZ2VuZV9uYW1lICJERFgxMUwxIjsgZ2VuZV9zb3VyY2UgImhhdmFuYSI7IGdlbmVfYmlvdHlwZSAidHJhbnNjcmliZWRfdW5wcm9jZXNzZWRfcHNldWRvZ2VuZSI7IHRyYW5zY3JpcHRfbmFtZSAiRERYMTFMMS0yMDIiOyB0cmFuc2NyaXB0X3NvdXJjZSAiaGF2YW5hIjsgdHJhbnNjcmlwdF9iaW90eXBlICJsbmNSTkEiOyBleG9uX2lkICJFTlNFMDAwMDIyMzQ5NDQiOyBleG9uX3ZlcnNpb24gIjEiOyB0YWcgImJhc2ljIjsgdHJhbnNjcmlwdF9zdXBwb3J0X2xldmVsICIxIjsKCgpUaGUgR1RGIGZvcm1hdCBzdG9yZXMgc3BlY2lmaWMgaW5mb3JtYXRpb24gaW4gZWFjaCBjb2x1bW46Cgp8IENvbHVtbiB8IERlc2NyaXB0aW9uIHwKfCA6LS0tLTogfCAtLS0tLS0tLS0tLSB8CnwgMSB8IENocm9tb3NvbWUgfAp8IDIgfCBTb3VyY2UsIGUuZy4gZW5zZW1ibCwgaGF2YW5hIHwKfCAzIHwgR2VuZSBmZWF0dXJlLCBlLmcuIGV4b24sIGludHJvbiwgbVJOQSwgdHJhbnNjcmlwdCB8CnwgNCB8IFN0YXJ0IGxvY2F0aW9uLCAxLWJhc2VkIHwKfCA1IHwgRW5kIGxvY2F0aW9uLCAxLWJhc2VkIHwKfCA2IHwgU2NvcmUgfAp8IDcgfCBTdHJhbmQgfAp8IDggfCBGcmFtZSwgcmVsYXRpbmcgdG8gY29kb25zIHwKfCA5IHwgQXR0cmlidXRlLCBhIHNlbWljb2xvbiBzZXBhcmF0ZWQgbGlzdCBvZiBrZXkvdmFsdWUgcGFpcnMgZ2l2aW5nIGFkZGl0aW9uYWwgaW5mb3JtYXRpb24gYWJvdXQgdGhlIGZlYXR1cmUuIHwKCiMjIE1pbnV0aWFlLCBWZXJ5IEJyaWVmbHkKCkJpb2luZm9ybWF0aWNzIGlzIGEgcmVsYXRpdmVseSBuZXcsIGZhc3QtY2hhbmdpbmcsIGZpZWxkIGFuZCBpdHMgZGF0YSBzdGFuZGFyZHMgYW5kIGZvcm1hdHMgYXJlIG5vIGRpZmZlcmVudC4gQ29uc2VxdWVudGx5IHRoZXJlIGFyZSBzb21lIG9kZGl0aWVzIGFuZCB0ZWRpb3VzIGl0ZW1zIG9mIG5vdGUgd2hpY2ggd2Ugd291bGQgbGlrZSB0byBvbmx5IGJyaWVmbHkgdG91Y2ggb24gaGVyZS4KCiMjIyBHZW5vbWUgQnVpbGRzCgpPbiBvY2Nhc3Npb24gbmV3IHJlZmVyZW5jZSBnZW5vbWVzIGFyZSByZWxlYXNlZCwgYW5kIHRoZSBnZW5vbWUgYnVpbGQgbnVtYmVyIGNoYW5nZXMuIFlvdSBtYXkgYmUgZmFtaWxpYXIgd2l0aCB0aGUgVUNTQyBtYW5uZXIgb2YgbmFtaW5nIGh1bWFuIGdlbm9tZSBidWlsZHM6IGhnMTgsIGhnMTksIGhnMzguIEVOU0VNQkwsIG5hdHVyYWxseSwgaGFzIHRoZWlyIG93biB3YXkgb2YgcmVmZXJyaW5nIHRvIGdlbm9tZSBidWlsZHM6IEdSQ2gzNiwgR1JDaDM3LCBhbmQgR1JDaDM4LiBOb3RpY2Ugd2l0aCB0aGUgbW9zdCByZWNlbnQgaHVtYW4gcmVmZXJlbmNlLCB0aGUgbnVtYmVyaW5nIG5vdyBhbGlnbnMgYmV0d2VlbiBVQ1NDIGFuZCBFTlNFTUJMLgoKRGlmZmVyZW50IG9yZ2FuaXNtcyBoYXZlIHRoZWlyIG93biB2ZXJzaW9uaW5nLgoKIyMjIEFubm90YXRpb24gU291cmNlcwoKW05DQkkgUmVmU2VxXShodHRwczovL3d3dy5uY2JpLm5sbS5uaWguZ292L3JlZnNlcS9yc2cvKSwgW0VOU0VNQkxdKGh0dHBzOi8vd3d3LmVuc2VtYmwub3JnL2luZm8vZ2Vub21lL2dlbmVidWlsZC9pbmRleC5odG1sKSwgYW5kIFtVQ1NDIEtub3duIEdlbmVzXShodHRwczovL2FjYWRlbWljLm91cC5jb20vYmlvaW5mb3JtYXRpY3MvYXJ0aWNsZS8yMi85LzEwMzYvMjAwMDkzKSBhcmUgdGhlIHRocmVlIHByaW1hcnkgZ2VuZSBhbm5vdGF0aW9uIGRhdGFiYXNlcyAoZGlmZmVyZW50IG9yZ2FuaXNtcyBoYXZlIHRoZWlyIG93biBkYXRhYmFzZXMpLiBXZSB3aWxsIG5vdCBnbyBpbnRvIGV4YWN0bHkgaG93IHRoZSBnZW5lIGFubm90YXRpb25zIGFyZSBkaWZmZXJlbnQsIGJ1dCB3ZSBub3RlIHRoYXQgdGhlIGFyZSwgYW5kIFtvdGhlcnMgaGF2ZSBleGFtaW5lZCB0aGUgY29uc2VxdWVuY2VzIG9mIHRoaXNdKGh0dHBzOi8vYm1jZ2Vub21pY3MuYmlvbWVkY2VudHJhbC5jb20vYXJ0aWNsZXMvMTAuMTE4Ni9zMTI4NjQtMDE1LTEzMDgtOCkuCgojIyMgR2VuZSBJRHMKClRoZSB0d28gR1RGIGV4YW1wbGVzIGFib3ZlIGhpZ2hsaWdodCBkaWZmZXJlbnQgd2F5cyBvZiByZWZlcnJpbmcgdG8gdGhlIHNhbWUgZ2VuZS4gSW4gdGhlIGZpcnN0IEdURiB3ZSBzZWU6CgoqIEREWDExTDEsIHRoZSBnZW5lIHN5bWJvbCwgY29udHJvbGxlZCBieSB0aGUgW0h1bWFuIEdlbmUgTm9tZW5jbGF0dXJlIENvbW1pdHRlZSAoSFVHTyldKGh0dHBzOi8vd3d3LmdlbmVuYW1lcy5vcmcvKS4KKiBOUl8wNDYwMTgsIHRoZSBSZWZTZXEgdHJhbnNjcmlwdCBJRAoKQW5kIGluIHRoZSBzZWNvbmQgR1RGIHdlIHNlZToKCiogRU5TRzAwMDAwMjIzOTcyLCB0aGUgRU5TRU1CTCBnZW5lIElECiogRERYMTFMMSwgdGhlIGdlbmUgc3ltYm9sLCB0aGFua2Z1bGx5IHRoZSBzYW1lCiogRU5TVDAwMDAwNDU2MzI4LCB0aGUgRU5TRU1CTCB0cmFuc2NyaXB0IElECgpUcmFuc2xhdGluZyBiZXR3ZWVuIGRpZmZlcmVudCBnZW5lIElEcyBpcyBwb3NzaWJsZSwgYXMgd2Ugd2lsbCBzZWUgaW4gRGF5IFR3byB3aXRoIGBiaW9tYVJ0YC4gQnV0IGluIHRlcm1zIG9mICoqYmVzdCBwcmFjdGljZSoqIGl0IGlzIGdlbmVyYWxseSBhIGdvb2QgaWRlYSB0byBhdm9pZCB1c2luZyB0aGUgZ2VuZSBzeW1ib2wgYXMgdGhlIHByaW1hcnkgZ2VuZSBpZGVudGlmaWVyIGJlY2F1c2Ugbm90IGV2ZXJ5b25lIHJlZmVycyB0byB0aGUgc2FtZSBnZW5lIGJ5IHRoZSBzYW1lIHN5bWJvbC4KCiMgR2V0dGluZyBhIFJlZmVyZW5jZSBHZW5vbWUKClRoZSBbSWxsdW1pbmEgaUdlbm9tZXNdKGh0dHBzOi8vc3VwcG9ydC5pbGx1bWluYS5jb20vc2VxdWVuY2luZy9zZXF1ZW5jaW5nX3NvZnR3YXJlL2lnZW5vbWUuaHRtbCkgcmVzb3VyY2UgaXMgb25lIG9mIHRoZSBlYXNpZXN0LCBhbmQgbW9zdCBjb21wcmVoZW5zaXZlLCB3YXlzIHRvIGRvd25sb2FkIGEgcmVmZXJlbmNlIGdlbm9tZS4gaUdlbm9tZXMgaW5jbHVkZXMgYm90aCB0aGUgcmVmZXJlbmNlIHNlcXVlbmNlIGFuZCBnZW5lIG1vZGVscy4KClJlZmVyZW5jZSBnZW5vbWVzIGNhbiBiZSAqKnZlcnkgbGFyZ2UqKiwgZGVwZW5kaW5nIG9uIHRoZSBvcmdhbmlzbSwgYW5kIHNvIHdlIHdpbGwgbm90IGRvd25sb2FkIG9uZSB0byB0aGUgQW1hem9uIGluc3RhbmNlIHdlIGFyZSB1c2luZyBmb3IgdGhpcyB3b3Jrc2hvcC4gV2UndmUgaW5jbHVkZWQgaW5zdHJ1Y3Rpb25zIGZvciBkb3dubG9hZGluZyB0aGVzZSwgaW4gY2FzZSB5b3Ugd2FudCB0byBkb3dubG9hZCB0aGVzZSB0byB0aGUgc2VydmVyIHdoZXJlIHlvdSBpbnRlbmQgdG8gbGF0ZXIgZG8gYSBzaW1pbGFyIFJOQS1zZXEgYW5hbHlzaXMgKGUuZy4gb24gSGlnaC1QZXJmb3JtYW5jZSBDb21wdXRlLCBHcmVhdExha2VzKS4KCjxkZXRhaWxzPgo8c3VtbWFyeT5Ib3cgd291bGQgSSBkb3dubG9hZCByZWZlcmVuY2VzIHdpdGggaUdlbm9tZXM/PC9zdW1tYXJ5PgoKQXMgbm90ZWQsIGl0J3Mgbm90IHJlY29tbWVuZGVkIHRvIGRvd25sb2FkIHRoZSBpR2Vub21lcyByZWZlcmVuY2VzIHRvIHRoZSBBV1MgaW5zdGFuY2UuIEhvd2V2ZXIsIGlmIHlvdSB3YW50ZWQgdG8ga25vdyBpbiBnZW5lcmFsIGhvdyB5b3Ugd291bGQgZG8gdGhhdCwgdGhlIHByb2Nlc3MgaXMgZGVzY3JpYmVkIGhlcmUuCgpGaXJzdCBnbyB0byB0aGUgW2lHZW5vbWVzXShodHRwczovL3N1cHBvcnQuaWxsdW1pbmEuY29tL3NlcXVlbmNpbmcvc2VxdWVuY2luZ19zb2Z0d2FyZS9pZ2Vub21lLmh0bWwpIHBhZ2UsIGZpbmQgdGhlIGJ1aWxkIHlvdSB3YW50IGZyb20gdGhlIHNvdXJjZSB5b3Ugd2FudCwgcmlnaHQgY2xpY2sgdGhlIGdlbm9tZSBidWlsZCB5b3Ugd2FudCB0byBkb3dubG9hZCwgYW5kIHNlbGVjdCAiQ29weSBsaW5rIGxvY2F0aW9uIjoKCiFbaUdlbm9tZXMgaW1hZ2UgZm9yIGNvcHlpbmcgbGluayBsb2NhdGlvbl0oaW1hZ2VzL2dlbm9tZV9jb3B5X2xpbmsucG5nKQoKVGhlbiBvbiB0aGUgcmVtb3RlIHNlcnZlciB5b3Ugd291bGQgZ28gdG8gdGhlIGRpcmVjdG9yeSB5b3UnZCBsaWtlIHRvIGRvd25sb2FkIHRoZSBnZW5vbWUgdG8gYW5kIHR5cGUgKHRoYXQgVVJMIGlzIHdoYXQgd2UgY29waWVkKToKCmBgYAokIHdnZXQgaHR0cDovL2lnZW5vbWVzLmlsbHVtaW5hLmNvbS5zMy13ZWJzaXRlLXVzLWVhc3QtMS5hbWF6b25hd3MuY29tL0hvbW9fc2FwaWVucy9OQ0JJL0dSQ2gzOC9Ib21vX3NhcGllbnNfTkNCSV9HUkNoMzgudGFyLmd6CmBgYAoKQWZ0ZXIgdGhlIGRvd25sb2FkIGZpbmlzaGVzIChpdCBtYXkgdGFrZSBhIHdoaWxlIGFzIGl0IGlzIHRlbnMgb2YgR0IgbGFyZ2UpLCB5b3UgY2FuIHVucGFjayBpdCB3aXRoOgoKYGBgCiQgdGFyIC14ZiBIb21vX3NhcGllbnNfTkNCSV9HUkNoMzgudGFyLmd6CmBgYAoKPC9kZXRhaWxzPgoKCiMjIFdoaWNoIFJlZmVyZW5jZSBpcyBSaWdodCBmb3IgTWU/CgpUaGUga2V5IGlzIHRvIGJlIGNvbnNpc3RlbnQgaW4geW91ciByZXNlYXJjaC4gU3dpdGNoaW5nIGZyb20gRU5TRU1CTCB0byBVQ1NDIHdpbGwgY3JlYXRlIG1hbnkgaGVhZGFjaGVzIGJlY2F1c2Ugb2YgdGhlIGNoYW5nZSBpbiBnZW5lIGlkZW50aWZpZXJzLCBhbmQgZGlmZmVyZW5jZXMgaW4gdGhlIGdlbmUgbW9kZWxzIHRoZW1zZWx2ZXMuIE9mdGVuIHBlb3BsZSBjaG9vc2UgdGhlIG9uZSB0aGV5J3JlIG1vc3QgY29tZm9ydGFibGUgd2l0aCwgd2hpY2ggaXMgb2Z0ZW4gYSBmdW5jdGlvbiBvZiBoaXN0b3JpY2FsIGFjY2lkZW50LiBUaGUga2V5IGlzIG5vdCB0byBvdmVydGhpbmsgaXQuCgpBbm90aGVyIGltcG9ydGFudCBub3RlIGlzIG5vdCB0byBtaXggdGhlIHNvdXJjZXMuIElmIHlvdSBkb3dubG9hZCByZWZlcmVuY2Ugc2VxdWVuY2UgZnJvbSBVQ1NDLCBkb24ndCB1c2UgYW4gRU5TRU1CTCBHVEYgKGFuZCB2aWNlIHZlcnNhKS4gT25lIG9mIHRoZSBxdWlya3kgZGlmZmVyZW5jZXMgYmV0d2VlbiB0aGUgdHdvIGRhdGFiYXNlcyBpcyB0aGF0IEVOU0VNQkwgcmVmZXJzIHRvIGNocm9tb3NvbWUgb25seSBieSB0aGVpciBudW1iZXIsIGkuZS4gYDFgLCB3aGVyZWFzIFVDU0MgcmVmZXJzIHRvIGNocm9tc29tZXMgYXMgYGNocjFgLiBUaGlzIG1ha2VzIHJlZmVyZW5jZSBGQVNUQXMgZnJvbSBvbmUgc291cmNlIGluY29tcGF0aWJsZSB3aXRoIGdlbmUgYnVpbGRzIGZyb20gYW5vdGhlci4KCjxicj4KPGJyPgoKLS0tCgpUaGVzZSBtYXRlcmlhbHMgaGF2ZSBiZWVuIGFkYXB0ZWQgYW5kIGV4dGVuZGVkIGZyb20gbWF0ZXJpYWxzIGNyZWF0ZWQgYnkgdGhlIFtIYXJ2YXJkIENoYW4gQmlvaW5mb3JtYXRpY3MgQ29yZSAoSEJDKV0oaHR0cDovL2Jpb2luZm9ybWF0aWNzLnNwaC5oYXJ2YXJkLmVkdS8pLiBUaGVzZSBhcmUgb3BlbiBhY2Nlc3MgbWF0ZXJpYWxzIGRpc3RyaWJ1dGVkIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgW0NyZWF0aXZlIENvbW1vbnMgQXR0cmlidXRpb24gbGljZW5zZSAoQ0MgQlkgNC4wKV0oaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbGljZW5zZXMvYnkvNC4wLyksIHdoaWNoIHBlcm1pdHMgdW5yZXN0cmljdGVkIHVzZSwgZGlzdHJpYnV0aW9uLCBhbmQgcmVwcm9kdWN0aW9uIGluIGFueSBtZWRpdW0sIHByb3ZpZGVkIHRoZSBvcmlnaW5hbCBhdXRob3IgYW5kIHNvdXJjZSBhcmUgY3JlZGl0ZWQuCgo8YnIvPgo8YnIvPgo8aHIvPgp8IFtQcmV2aW91cyBsZXNzb25dKE1vZHVsZTAyYl9UcmltbWluZy5odG1sKSB8IFtUb3Agb2YgdGhpcyBsZXNzb25dKCN0b3ApIHwgW05leHQgbGVzc29uXShNb2R1bGUwM2JfQWxpZ25tZW50Lmh0bWwpIHwKfCA6LS0tIHwgOi0tLS06IHwgLS0tOiB8</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUmVmZXJlbmNlIEdlbm9tZXMiCmF1dGhvcjogIlVNIEJpb2luZm9ybWF0aWNzIENvcmUiCm91dHB1dDoKICAgICAgICBodG1sX2RvY3VtZW50OgogICAgICAgICAgICBpbmNsdWRlczoKICAgICAgICAgICAgICAgIGluX2hlYWRlcjogaGVhZGVyLmh0bWwKICAgICAgICAgICAgdGhlbWU6IHBhcGVyCiAgICAgICAgICAgIHRvYzogdHJ1ZQogICAgICAgICAgICB0b2NfZGVwdGg6IDQKICAgICAgICAgICAgdG9jX2Zsb2F0OiB0cnVlCiAgICAgICAgICAgIG51bWJlcl9zZWN0aW9uczogZmFsc2UKICAgICAgICAgICAgZmlnX2NhcHRpb246IHRydWUKICAgICAgICAgICAgbWFya2Rvd246IEdGTQogICAgICAgICAgICBjb2RlX2Rvd25sb2FkOiB0cnVlCi0tLQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPgpib2R5eyAvKiBOb3JtYWwgICovCiAgICAgIGZvbnQtc2l6ZTogMTRwdDsKICB9CnByZSB7CiAgZm9udC1zaXplOiAxMnB0Cn0KPC9zdHlsZT4KCkluIHRoaXMgbW9kdWxlLCB3ZSB3aWxsIGxlYXJuOgoKKiB3aGF0IGEgcmVmZXJlbmNlIGdlbm9tZSBpcyBhbmQgd2hhdCBpdCBjb250YWlucwoqIGRldGFpbHMgYWJvdXQgdGhlIEZBU1RBIGFuZCBHVEYgZm9ybWF0cwoqIHRvIGFwcHJlY2lhdGUgdGhlIGRpZmZlcmVuY2VzIGluIGdlbmUgaWRlbnRpZmllcnMKKiBob3cgdG8gZG93bmxvYWQgYSByZWZlcmVuY2UgZ2Vub21lCgojIERpZmZlcmVudGlhbCBFeHByZXNzaW9uIFdvcmtmbG93CgpIZXJlIHdlIHdpbGwgc2V0IHRoZSBzdGFnZSBmb3IgdGhlIG5leHQgc3RlcHMgYnkgZGlzY3Vzc2luZyByZWZlcmVuY2UgZ2Vub21lcywgd2hpY2ggYXJlIGludGVncmFsIHRvIGdlbm9tZSBhbGlnbm1lbnRzIGFuZCBnZW5lL2lzb2Zvcm0gcXVhbnRpZmljYXRpb24uIEFsb25nIHRoZSB3YXkgd2Ugd2lsbCB0b3VjaCBvbiBzb21lIHRoaW5ncyB0byBiZSBhd2FyZSBvZi4KCiFbXShpbWFnZXMvd2F5ZmluZGVyL3dheWZpbmRlci1SZWZlcmVuY2VHZW5vbWVzLnBuZykKPGJyPgo8YnI+Cjxicj4KPGJyPgoKIyBSZWZlcmVuY2UgR2Vub21lcwoKQSByZWZlcmVuY2UgZ2Vub21lIGNvbnNpc3RzIG9mIHRoZSAqKnJlZmVyZW5jZSBzZXF1ZW5jZSoqIGFuZCwgb3B0aW9uYWxseSwgYW55IG51bWJlciBvZiAqKmdlbm9taWMgYW5ub3RhdGlvbnMqKiB0aGF0IGRlc2NyaWJlIGF0dHJpYnV0ZXMgYWJvdXQgdGhhdCBzZXF1ZW5jZS4gRXhhbXBsZXMgb2YgYW5ub3RhdGlvbnMgaW5jbHVkZToKCiogR2VuZSBtb2RlbHMgY29uc2lzdGluZyBvZiB0aGUgbG9jYXRpb24gYW5kIG90aGVyIGluZm9ybWF0aW9uIGFib3V0IGdlbmVzLgoqIFZhcmlhbnRzIGNvbnNpc3Rpbmcgb2YgdGhlIGxvY2F0aW9uIG9mIGNvbW1vbiBvciByYXJlIGdlbmV0aWMgdmFyaWFudHMsIHRoZWlyIGFsbGVsZXMsIGFuZCBmcmVxdWVuY2llcy4KKiBTbWFsbCBSTkFzIGNvbnNpc3Rpbmcgb2YgdGhlIGxvY2F0aW9uIGFuZCBvdGhlciBpbmZvcm1hdGlvbiBhYm91dCB2YXJpb3VzIHR5cGVzIG9mIHNtYWxsIFJOQXMuCgpPZiBwYXJ0aWN1bGFyIHJlbGV2YW5jZSB0byB1cyBmb3IgdGhpcyB3b3Jrc2hvcCBhcmUgdGhlIHJlZmVyZW5jZSBzZXF1ZW5jZSBhbmQgZ2VuZSBtb2RlbHMuCgojIyBSZWZlcmVuY2UgU2VxdWVuY2UKClJlZmVyZW5jZSBzZXF1ZW5jZSBpcyBzdG9yZWQgaW4gW0ZBU1RBXShodHRwczovL2VuLndpa2lwZWRpYS5vcmcvd2lraS9GQVNUQV9mb3JtYXQpIGZpbGVzLiBUaGV5IGFyZSBzaW1pbGFyIHRvIEZBU1RRIGZpbGVzIGluIHRoZWlyIHN0b3JhZ2Ugb2Ygc2VxdWVuY2UgaW5mb3JtYXRpb24sIGJ1dCB0aGVpciBmb3JtYXQgaXMgYSBsaXR0bGUgZGlmZmVyZW50IGluIGEgY291cGxlIHdheXM6CgoxLiBSZWNvcmRzIGFyZSBzZXBhcmF0ZWQgYnkgbGluZXMgYmVnaW5uaW5nIHdpdGggYD5gIGluc3RlYWQgb2YgYEBgLgoyLiBPbmx5IHRoZSBzZXF1ZW5jZSBpcyBzdG9yZWQgaW4gYSBGQVNUQSBmaWxlLCB0aGVyZSBpcyBubyBub3Rpb24gb2YgcXVhbGl0eSBhdHRhY2hlZCB0byB0aGUgbnVjbGVvdGlkZXMuCgpgYGAKPmNock0KR0FUQ0FDQUdHVENUQVRDQUNDQ1RBVFRBQUNDQUNUQ0FDR0dHQUdDVENUQ0NBVEdDQVQKVFRHR1RBVFRUVENHVENUR0dHR0dHVEdUR0NBQ0dDR0FUQUdDQVRUR0NHQUdBQ0dDVEcKR0FHQ0NHR0FHQ0FDQ0NUQVRHVENHQ0FHVEFUQ1RHVENUVFRHQVRUQ0NUR0NDVENBVFQKQ1RBVFRBVFRUQVRDR0NBQ0NUQUNHVFRDQUFUQVRUQUNBR0dDR0FBQ0FUQUNDVEFDVEEKQUFHVEdUR1RUQUFUVEFBVFRBQVRHQ1RUR1RBR0dBQ0FUQUFUQUFUQUFDQUFUVEdBQVQKR1RDVEdDQUNBR0NDR0NUVFRDQ0FDQUNBR0FDQVRDQVRBQUNBQUFBQUFUVFRDQ0FDQ0EKQUFDQ0NDQ0NDQ1RDQ0NDQ0NHQ1RUQ1RHR0NDQUNBR0NBQ1RUQUFBQ0FDQVRDVENUR0MKQ0FBQUNDQ0NBQUFBQUNBQUFHQUFDQ0NUQUFDQUNDQUdDQ1RBQUNDQUdBVFRUQ0FBQVQKVFRUQVRDVFRUQUdHQ0dHVEFUR0NBQ1RUVFRBQUNBR1RDQUNDQ0NDQ0FBQ1RBQUNBQ0EKYGBgCgojIyBHZW5lIE1vZGVscwoKV2VsbC1jaGFyYWN0ZXJpemVkIG9yZ2FuaXNtcyAoZS5nLiBodW1hbiwgbW91c2UsIHplYnJhZmlzaCkgaGF2ZSBmYWlybHkgbWF0dXJlIGdlbmUgbW9kZWxzLiBUaGVzZSBhcmUgc3RvcmVkIGluIFtHVEZdKGh0dHBzOi8vdXN3ZXN0LmVuc2VtYmwub3JnL2luZm8vd2Vic2l0ZS91cGxvYWQvZ2ZmLmh0bWwpIGZvcm1hdCwgd2hpY2ggZ2l2ZXMgbG9jYXRpb24gYW5kIG90aGVyIGluZm9ybWF0aW9uIGFib3V0IGVhY2ggZ2VuZSBmZWF0dXJlLiBCZWxvdyBhcmUgdHdvIGV4YW1wbGVzOgoKPGJyPgohW1JlZlNlcSBHVEZdKGltYWdlcy9ndGZfcmVmc2VxLnBuZykKPGJyPjxicj4KIVtFTlNFTUJMIEdURl0oaW1hZ2VzL2d0Zl9lbnNlbWJsLnBuZykKPGJyPjxicj4KClRoZSBHVEYgZm9ybWF0IHN0b3JlcyBzcGVjaWZpYyBpbmZvcm1hdGlvbiBpbiBlYWNoIGNvbHVtbjoKCnwgQ29sdW1uIHwgRGVzY3JpcHRpb24gfAp8IDotLS0tOiB8IC0tLS0tLS0tLS0tIHwKfCAxIHwgQ2hyb21vc29tZSB8CnwgMiB8IFNvdXJjZSwgZS5nLiBlbnNlbWJsLCBoYXZhbmEgfAp8IDMgfCBHZW5lIGZlYXR1cmUsIGUuZy4gZXhvbiwgaW50cm9uLCBtUk5BLCB0cmFuc2NyaXB0IHwKfCA0IHwgU3RhcnQgbG9jYXRpb24sIDEtYmFzZWQgfAp8IDUgfCBFbmQgbG9jYXRpb24sIDEtYmFzZWQgfAp8IDYgfCBTY29yZSB8CnwgNyB8IFN0cmFuZCB8CnwgOCB8IEZyYW1lLCByZWxhdGluZyB0byBjb2RvbnMgfAp8IDkgfCBBdHRyaWJ1dGUsIGEgc2VtaWNvbG9uIHNlcGFyYXRlZCBsaXN0IG9mIGtleS92YWx1ZSBwYWlycyBnaXZpbmcgYWRkaXRpb25hbCBpbmZvcm1hdGlvbiBhYm91dCB0aGUgZmVhdHVyZS4gfAoKCjxicj48YnI+CiFbQW5pbWF0ZWQgcmVmZXJlbmNlIGRhdGFdKGltYWdlcy9mYXN0YS1ndGYtZ2VuZS1tb2RlbHMuZ2lmKQo8YnI+PGJyPgoKIyMjIE1pbnV0aWFlLCBWZXJ5IEJyaWVmbHkKCkJpb2luZm9ybWF0aWNzIGlzIGEgcmVsYXRpdmVseSBuZXcsIGZhc3QtY2hhbmdpbmcsIGZpZWxkIGFuZCBpdHMgZGF0YSBzdGFuZGFyZHMgYW5kIGZvcm1hdHMgYXJlIG5vIGRpZmZlcmVudC4gQ29uc2VxdWVudGx5IHRoZXJlIGFyZSBzb21lIG9kZGl0aWVzIGFuZCB0ZWRpb3VzIGl0ZW1zIG9mIG5vdGUgd2hpY2ggd2Ugd291bGQgbGlrZSB0byBvbmx5IGJyaWVmbHkgdG91Y2ggb24gaGVyZS4KCiMjIyBHZW5vbWUgQnVpbGRzCgpPbiBvY2Nhc3Npb24gbmV3IHJlZmVyZW5jZSBnZW5vbWVzIGFyZSByZWxlYXNlZCwgYW5kIHRoZSBnZW5vbWUgYnVpbGQgbnVtYmVyIGNoYW5nZXMuIFlvdSBtYXkgYmUgZmFtaWxpYXIgd2l0aCB0aGUgVUNTQyBtYW5uZXIgb2YgbmFtaW5nIGh1bWFuIGdlbm9tZSBidWlsZHM6IGhnMTgsIGhnMTksIGhnMzguIEVOU0VNQkwsIG5hdHVyYWxseSwgaGFzIHRoZWlyIG93biB3YXkgb2YgcmVmZXJyaW5nIHRvIGdlbm9tZSBidWlsZHM6IEdSQ2gzNiwgR1JDaDM3LCBhbmQgR1JDaDM4LiBOb3RpY2Ugd2l0aCB0aGUgbW9zdCByZWNlbnQgaHVtYW4gcmVmZXJlbmNlLCB0aGUgbnVtYmVyaW5nIG5vdyBhbGlnbnMgYmV0d2VlbiBVQ1NDIGFuZCBFTlNFTUJMLgoKRGlmZmVyZW50IG9yZ2FuaXNtcyBoYXZlIHRoZWlyIG93biB2ZXJzaW9uaW5nLgoKIyMjIEFubm90YXRpb24gU291cmNlcwoKW05DQkkgUmVmU2VxXShodHRwczovL3d3dy5uY2JpLm5sbS5uaWguZ292L3JlZnNlcS9yc2cvKSwgW0VOU0VNQkxdKGh0dHBzOi8vd3d3LmVuc2VtYmwub3JnL2luZm8vZ2Vub21lL2dlbmVidWlsZC9pbmRleC5odG1sKSwgYW5kIFtVQ1NDIEtub3duIEdlbmVzXShodHRwczovL2FjYWRlbWljLm91cC5jb20vYmlvaW5mb3JtYXRpY3MvYXJ0aWNsZS8yMi85LzEwMzYvMjAwMDkzKSBhcmUgdGhlIHRocmVlIHByaW1hcnkgZ2VuZSBhbm5vdGF0aW9uIGRhdGFiYXNlcyAoZGlmZmVyZW50IG9yZ2FuaXNtcyBoYXZlIHRoZWlyIG93biBkYXRhYmFzZXMpLiBXZSB3aWxsIG5vdCBnbyBpbnRvIGV4YWN0bHkgaG93IHRoZSBnZW5lIGFubm90YXRpb25zIGFyZSBkaWZmZXJlbnQsIGJ1dCB3ZSBub3RlIHRoYXQgdGhlIGFyZSwgYW5kIFtvdGhlcnMgaGF2ZSBleGFtaW5lZCB0aGUgY29uc2VxdWVuY2VzIG9mIHRoaXNdKGh0dHBzOi8vYm1jZ2Vub21pY3MuYmlvbWVkY2VudHJhbC5jb20vYXJ0aWNsZXMvMTAuMTE4Ni9zMTI4NjQtMDE1LTEzMDgtOCkuCgojIyMgR2VuZSBJRHMKClRoZSB0d28gR1RGIGV4YW1wbGVzIGFib3ZlIGhpZ2hsaWdodCBkaWZmZXJlbnQgd2F5cyBvZiByZWZlcnJpbmcgdG8gdGhlIHNhbWUgZ2VuZS4gSW4gdGhlIGZpcnN0IEdURiB3ZSBzZWU6CgoqIEREWDExTDEsIHRoZSBnZW5lIHN5bWJvbCwgY29udHJvbGxlZCBieSB0aGUgW0h1bWFuIEdlbmUgTm9tZW5jbGF0dXJlIENvbW1pdHRlZSAoSFVHTyldKGh0dHBzOi8vd3d3LmdlbmVuYW1lcy5vcmcvKS4KKiBOUl8wNDYwMTgsIHRoZSBSZWZTZXEgdHJhbnNjcmlwdCBJRAoKQW5kIGluIHRoZSBzZWNvbmQgR1RGIHdlIHNlZToKCiogRU5TRzAwMDAwMjIzOTcyLCB0aGUgRU5TRU1CTCBnZW5lIElECiogRERYMTFMMSwgdGhlIGdlbmUgc3ltYm9sLCB0aGFua2Z1bGx5IHRoZSBzYW1lCiogRU5TVDAwMDAwNDU2MzI4LCB0aGUgRU5TRU1CTCB0cmFuc2NyaXB0IElECgpUcmFuc2xhdGluZyBiZXR3ZWVuIGRpZmZlcmVudCBnZW5lIElEcyBpcyBwb3NzaWJsZSwgYXMgd2Ugd2lsbCBzZWUgaW4gRGF5IFR3byB3aXRoIGBiaW9tYVJ0YC4gQnV0IGluIHRlcm1zIG9mICoqYmVzdCBwcmFjdGljZSoqIGl0IGlzIGdlbmVyYWxseSBhIGdvb2QgaWRlYSB0byBhdm9pZCB1c2luZyB0aGUgZ2VuZSBzeW1ib2wgYXMgdGhlIHByaW1hcnkgZ2VuZSBpZGVudGlmaWVyIGJlY2F1c2Ugbm90IGV2ZXJ5b25lIHJlZmVycyB0byB0aGUgc2FtZSBnZW5lIGJ5IHRoZSBzYW1lIHN5bWJvbC4KCiMgR2V0dGluZyBhIFJlZmVyZW5jZSBHZW5vbWUKClRoZSBbSWxsdW1pbmEgaUdlbm9tZXNdKGh0dHBzOi8vc3VwcG9ydC5pbGx1bWluYS5jb20vc2VxdWVuY2luZy9zZXF1ZW5jaW5nX3NvZnR3YXJlL2lnZW5vbWUuaHRtbCkgcmVzb3VyY2UgaXMgb25lIG9mIHRoZSBlYXNpZXN0LCBhbmQgbW9zdCBjb21wcmVoZW5zaXZlLCB3YXlzIHRvIGRvd25sb2FkIGEgcmVmZXJlbmNlIGdlbm9tZS4gaUdlbm9tZXMgaW5jbHVkZXMgYm90aCB0aGUgcmVmZXJlbmNlIHNlcXVlbmNlIGFuZCBnZW5lIG1vZGVscy4KClJlZmVyZW5jZSBnZW5vbWVzIGNhbiBiZSAqKnZlcnkgbGFyZ2UqKiwgZGVwZW5kaW5nIG9uIHRoZSBvcmdhbmlzbSwgYW5kIHNvIHdlIHdpbGwgbm90IGRvd25sb2FkIG9uZSB0byB0aGUgQW1hem9uIGluc3RhbmNlIHdlIGFyZSB1c2luZyBmb3IgdGhpcyB3b3Jrc2hvcC4gV2UndmUgaW5jbHVkZWQgaW5zdHJ1Y3Rpb25zIGZvciBkb3dubG9hZGluZyB0aGVzZSwgaW4gY2FzZSB5b3Ugd2FudCB0byBkb3dubG9hZCB0aGVzZSB0byB0aGUgc2VydmVyIHdoZXJlIHlvdSBpbnRlbmQgdG8gbGF0ZXIgZG8gYSBzaW1pbGFyIFJOQS1zZXEgYW5hbHlzaXMgKGUuZy4gb24gSGlnaC1QZXJmb3JtYW5jZSBDb21wdXRlLCBHcmVhdExha2VzKS4KCjxkZXRhaWxzPgo8c3VtbWFyeT5Ib3cgd291bGQgSSBkb3dubG9hZCByZWZlcmVuY2VzIHdpdGggaUdlbm9tZXM/PC9zdW1tYXJ5PgoKQXMgbm90ZWQsIGl0J3Mgbm90IHJlY29tbWVuZGVkIHRvIGRvd25sb2FkIHRoZSBpR2Vub21lcyByZWZlcmVuY2VzIHRvIHRoZSBBV1MgaW5zdGFuY2UuIEhvd2V2ZXIsIGlmIHlvdSB3YW50ZWQgdG8ga25vdyBpbiBnZW5lcmFsIGhvdyB5b3Ugd291bGQgZG8gdGhhdCwgdGhlIHByb2Nlc3MgaXMgZGVzY3JpYmVkIGhlcmUuCgpGaXJzdCBnbyB0byB0aGUgW2lHZW5vbWVzXShodHRwczovL3N1cHBvcnQuaWxsdW1pbmEuY29tL3NlcXVlbmNpbmcvc2VxdWVuY2luZ19zb2Z0d2FyZS9pZ2Vub21lLmh0bWwpIHBhZ2UsIGZpbmQgdGhlIGJ1aWxkIHlvdSB3YW50IGZyb20gdGhlIHNvdXJjZSB5b3Ugd2FudCwgcmlnaHQgY2xpY2sgdGhlIGdlbm9tZSBidWlsZCB5b3Ugd2FudCB0byBkb3dubG9hZCwgYW5kIHNlbGVjdCAiQ29weSBsaW5rIGxvY2F0aW9uIjoKCiFbaUdlbm9tZXMgaW1hZ2UgZm9yIGNvcHlpbmcgbGluayBsb2NhdGlvbl0oaW1hZ2VzL2dlbm9tZV9jb3B5X2xpbmsucG5nKQoKVGhlbiBvbiB0aGUgcmVtb3RlIHNlcnZlciB5b3Ugd291bGQgZ28gdG8gdGhlIGRpcmVjdG9yeSB5b3UnZCBsaWtlIHRvIGRvd25sb2FkIHRoZSBnZW5vbWUgdG8gYW5kIHR5cGUgKHRoYXQgVVJMIGlzIHdoYXQgd2UgY29waWVkKToKCmBgYAokIHdnZXQgaHR0cDovL2lnZW5vbWVzLmlsbHVtaW5hLmNvbS5zMy13ZWJzaXRlLXVzLWVhc3QtMS5hbWF6b25hd3MuY29tL0hvbW9fc2FwaWVucy9OQ0JJL0dSQ2gzOC9Ib21vX3NhcGllbnNfTkNCSV9HUkNoMzgudGFyLmd6CmBgYAoKQWZ0ZXIgdGhlIGRvd25sb2FkIGZpbmlzaGVzIChpdCBtYXkgdGFrZSBhIHdoaWxlIGFzIGl0IGlzIHRlbnMgb2YgR0IgbGFyZ2UpLCB5b3UgY2FuIHVucGFjayBpdCB3aXRoOgoKYGBgCiQgdGFyIC14ZiBIb21vX3NhcGllbnNfTkNCSV9HUkNoMzgudGFyLmd6CmBgYAoKPC9kZXRhaWxzPgoKCiMjIFdoaWNoIFJlZmVyZW5jZSBpcyBSaWdodCBmb3IgTWU/CgpUaGUga2V5IGlzIHRvIGJlIGNvbnNpc3RlbnQgaW4geW91ciByZXNlYXJjaC4gU3dpdGNoaW5nIGZyb20gRU5TRU1CTCB0byBVQ1NDIHdpbGwgY3JlYXRlIG1hbnkgaGVhZGFjaGVzIGJlY2F1c2Ugb2YgdGhlIGNoYW5nZSBpbiBnZW5lIGlkZW50aWZpZXJzLCBhbmQgZGlmZmVyZW5jZXMgaW4gdGhlIGdlbmUgbW9kZWxzIHRoZW1zZWx2ZXMuIE9mdGVuIHBlb3BsZSBjaG9vc2UgdGhlIG9uZSB0aGV5J3JlIG1vc3QgY29tZm9ydGFibGUgd2l0aCwgd2hpY2ggaXMgb2Z0ZW4gYSBmdW5jdGlvbiBvZiBoaXN0b3JpY2FsIGFjY2lkZW50LiBUaGUga2V5IGlzIG5vdCB0byBvdmVydGhpbmsgaXQuCgpBbm90aGVyIGltcG9ydGFudCBub3RlIGlzIG5vdCB0byBtaXggdGhlIHNvdXJjZXMuIElmIHlvdSBkb3dubG9hZCByZWZlcmVuY2Ugc2VxdWVuY2UgZnJvbSBVQ1NDLCBkb24ndCB1c2UgYW4gRU5TRU1CTCBHVEYgKGFuZCB2aWNlIHZlcnNhKS4gT25lIG9mIHRoZSBxdWlya3kgZGlmZmVyZW5jZXMgYmV0d2VlbiB0aGUgdHdvIGRhdGFiYXNlcyBpcyB0aGF0IEVOU0VNQkwgcmVmZXJzIHRvIGNocm9tb3NvbWUgb25seSBieSB0aGVpciBudW1iZXIsIGkuZS4gYDFgLCB3aGVyZWFzIFVDU0MgcmVmZXJzIHRvIGNocm9tc29tZXMgYXMgYGNocjFgLiBUaGlzIG1ha2VzIHJlZmVyZW5jZSBGQVNUQXMgZnJvbSBvbmUgc291cmNlIGluY29tcGF0aWJsZSB3aXRoIGdlbmUgYnVpbGRzIGZyb20gYW5vdGhlci4KCjxicj4KPGJyPgoKLS0tCgpUaGVzZSBtYXRlcmlhbHMgaGF2ZSBiZWVuIGFkYXB0ZWQgYW5kIGV4dGVuZGVkIGZyb20gbWF0ZXJpYWxzIGNyZWF0ZWQgYnkgdGhlIFtIYXJ2YXJkIENoYW4gQmlvaW5mb3JtYXRpY3MgQ29yZSAoSEJDKV0oaHR0cDovL2Jpb2luZm9ybWF0aWNzLnNwaC5oYXJ2YXJkLmVkdS8pLiBUaGVzZSBhcmUgb3BlbiBhY2Nlc3MgbWF0ZXJpYWxzIGRpc3RyaWJ1dGVkIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgW0NyZWF0aXZlIENvbW1vbnMgQXR0cmlidXRpb24gbGljZW5zZSAoQ0MgQlkgNC4wKV0oaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbGljZW5zZXMvYnkvNC4wLyksIHdoaWNoIHBlcm1pdHMgdW5yZXN0cmljdGVkIHVzZSwgZGlzdHJpYnV0aW9uLCBhbmQgcmVwcm9kdWN0aW9uIGluIGFueSBtZWRpdW0sIHByb3ZpZGVkIHRoZSBvcmlnaW5hbCBhdXRob3IgYW5kIHNvdXJjZSBhcmUgY3JlZGl0ZWQuCgo8YnIvPgo8YnIvPgo8aHIvPgp8IFtQcmV2aW91cyBsZXNzb25dKE1vZHVsZTAyYl9UcmltbWluZy5odG1sKSB8IFtUb3Agb2YgdGhpcyBsZXNzb25dKCN0b3ApIHwgW05leHQgbGVzc29uXShNb2R1bGUwM2JfQWxpZ25tZW50Lmh0bWwpIHwKfCA6LS0tIHwgOi0tLS06IHwgLS0tOiB8Cg==</div>
 
 
 </div>

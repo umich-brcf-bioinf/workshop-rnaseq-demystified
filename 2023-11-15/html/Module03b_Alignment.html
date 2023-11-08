@@ -14,7 +14,7 @@
 
 <title>Alignment</title>
 
-<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -480,97 +480,44 @@ pre {
 </ul>
 <div id="differential-expression-workflow" class="section level1">
 <h1>Differential Expression Workflow</h1>
-<p>We’ll discuss the alignment and gene quantification steps which
-gather the necessary data that we will need prior to testing for
-differential expression, the topic of Day 2.</p>
-<p><img src="images/wayfinder/wayfinder-Alignment.png" /> <br> <br> <br>
-<br></p>
+<p>We’ll discuss the alignment and gene quantification steps which gather the necessary data that we will need prior to testing for differential expression, the topic of Day 2.</p>
+<p><img src="images/wayfinder/wayfinder-Alignment.png" /> <br> <br> <br> <br></p>
 </div>
 <div id="alignment-and-gene-quantification" class="section level1">
 <h1>Alignment and Gene Quantification</h1>
-<p>The FASTQ files of raw sequenced reads are untethered from any notion
-of where they came from in the genome, and which transcribed genes the
-sequence belongs to. The alignment and gene quantification steps fill in
-that gap and allow us to proceed with the question we are really
-interested in: Which genes are differentially expressed between groups
-of samples?</p>
-<p>We will use RSEM (<a
-href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-323">paper</a>
-and <a href="https://github.com/deweylab/RSEM">GitHub</a>) combined with
-STAR Aligner (<a
-href="https://academic.oup.com/bioinformatics/article/29/1/15/272537">paper</a>
-and <a href="https://github.com/alexdobin/STAR">GitHub</a>) to
-accomplish the task of read mapping and gene quantifcation
-simultaneously.</p>
+<p>The FASTQ files of raw sequenced reads are untethered from any notion of where they came from in the genome, and which transcribed genes the sequence belongs to. The alignment and gene quantification steps fill in that gap and allow us to proceed with the question we are really interested in: Which genes are differentially expressed between groups of samples?</p>
+<p>We will use RSEM (<a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-323">paper</a> and <a href="https://github.com/deweylab/RSEM">GitHub</a>) combined with STAR Aligner (<a href="https://academic.oup.com/bioinformatics/article/29/1/15/272537">paper</a> and <a href="https://github.com/alexdobin/STAR">GitHub</a>) to accomplish the task of read mapping and gene quantifcation simultaneously.</p>
 <div id="star" class="section level2">
 <h2>STAR</h2>
-<p>The “Spliced Transcripts Alignment to a Reference” (STAR) Aligner is
-aware of splice-sites of transcripts and is able to align reads that
-span them. The figure below illustrates the difference between
-splice-unaware aligners (e.g. Bowtie2) and splice-aware aligners
-(e.g. STAR).</p>
+<p>The “Spliced Transcripts Alignment to a Reference” (STAR) Aligner is aware of splice-sites of transcripts and is able to align reads that span them. The figure below illustrates the difference between splice-unaware aligners (e.g. Bowtie2) and splice-aware aligners (e.g. STAR).</p>
 <p>Some benefits of splice-aware aligners include:</p>
 <ul>
-<li>Fewer reads are discarded for lack of alignments, leading to more
-accurate gene quantification.</li>
+<li>Fewer reads are discarded for lack of alignments, leading to more accurate gene quantification.</li>
 <li>Direct evidence of isoform usage is possible.</li>
 </ul>
-<p>We should note that the default parameters for STAR are optimized for
-<strong>mammalian genomes</strong>.</p>
+<p>We should note that the default parameters for STAR are optimized for <strong>mammalian genomes</strong>.</p>
 <center>
-<div class="float">
-<img src="images/splice_aware.png" alt="Splice-aware alignmentt" />
-<div class="figcaption">Splice-aware alignmentt</div>
+<div class="figure">
+<img src="images/splice_aware.png" alt="" />
+<p class="caption">Splice-aware alignment</p>
 </div>
-<p>Credit: <a
-href="https://raw.githubusercontent.com/hbctraining/Intro-to-rnaseq-hpc-O2/master/lectures/Sequence_alignment.pdf"
-class="uri">https://raw.githubusercontent.com/hbctraining/Intro-to-rnaseq-hpc-O2/master/lectures/Sequence_alignment.pdf</a></p>
+<p>Credit: <a href="https://raw.githubusercontent.com/hbctraining/Intro-to-rnaseq-hpc-O2/master/lectures/Sequence_alignment.pdf" class="uri">https://raw.githubusercontent.com/hbctraining/Intro-to-rnaseq-hpc-O2/master/lectures/Sequence_alignment.pdf</a></p>
 </center>
 </div>
 <div id="rsem" class="section level2">
 <h2>RSEM</h2>
-<p>RSEM (RNA-seq by Expectation Maximization) determines gene and
-isoform abundance using an expectation maximization (EM) algorithm to
-determine the probability that any particular read originated from a
-particular transcript. From there, gene-level quantification is reported
-by effectively collapsing the isoform quantifications over all isoforms
-belonging to the gene.</p>
-<p>The primary issue that RSEM attempts to solve is that reads can align
-to multiple isoforms (when, for example, they share an exon), and that
-creates ambiguity in deciding which isoform a read gets assigned to for
-quantification. RSEM uses the EM algorithm described above to handle
-this ambiguity appropriately.</p>
+<p>RSEM (RNA-seq by Expectation Maximization) determines gene and isoform abundance using an expectation maximization (EM) algorithm to determine the probability that any particular read originated from a particular transcript. From there, gene-level quantification is reported by effectively collapsing the isoform quantifications over all isoforms belonging to the gene.</p>
+<p>The primary issue that RSEM attempts to solve is that reads can align to multiple isoforms (when, for example, they share an exon), and that creates ambiguity in deciding which isoform a read gets assigned to for quantification. RSEM uses the EM algorithm described above to handle this ambiguity appropriately.</p>
 </div>
 </div>
 <div id="running-rsemstar" class="section level1">
 <h1>Running RSEM+STAR</h1>
-<p>RSEM can be run with just two commands: the first
-<code>rsem-prepare-reference</code> (<a
-href="https://deweylab.github.io/RSEM/rsem-prepare-reference.html">manual</a>)
-builds an index for STAR and RSEM to use, and the second
-<code>rsem-calculate-expression</code> (<a
-href="https://deweylab.github.io/RSEM/rsem-calculate-expression.html">manual</a>)
-does the alignment and gene quantification.</p>
-<p>We’ll explore the expected outputs from these commands and discuss
-their contents, before creating our own reference and aligning reads
-with our example data.</p>
+<p>RSEM can be run with just two commands: the first <code>rsem-prepare-reference</code> (<a href="https://deweylab.github.io/RSEM/rsem-prepare-reference.html">manual</a>) builds an index for STAR and RSEM to use, and the second <code>rsem-calculate-expression</code> (<a href="https://deweylab.github.io/RSEM/rsem-calculate-expression.html">manual</a>) does the alignment and gene quantification.</p>
+<p>We’ll explore the expected outputs from these commands and discuss their contents, before creating our own reference and aligning reads with our example data.</p>
 <div id="rsem-prepare-reference-details" class="section level2">
 <h2><code>rsem-prepare-reference</code> Details</h2>
-<p>The purpose of <code>rsem-prepare-reference</code> is to create a
-reference index for alignment. A reference index is essentially a lookup
-table that speeds up the finding of sequence matches for alignment. In
-the case of a splice-aware aligner, the reference index is also aware of
-the various splice junctions at locations in the gene model, and a
-subset of reads will map across these. This allows us to infer isoform
-usage later on.</p>
-<p><code>rsem-prepare-reference</code> will use a FASTA file and a GTF
-as inputs, and it will produce a number of large files which make up the
-index. RSEM has the flexible capability of supporting multiple different
-aligners. We’ll be using STAR. The output files therefore contain items
-from the indexing process of STAR and RSEM. These files allow for the
-fast and efficient search and retrieval of sequence and gene-model
-information during alignment and quantification. The outputs will look
-like the following:</p>
+<p>The purpose of <code>rsem-prepare-reference</code> is to create a reference index for alignment. A reference index is essentially a lookup table that speeds up the finding of sequence matches for alignment. In the case of a splice-aware aligner, the reference index is also aware of the various splice junctions at locations in the gene model, and a subset of reads will map across these. This allows us to infer isoform usage later on.</p>
+<p><code>rsem-prepare-reference</code> will use a FASTA file and a GTF as inputs, and it will produce a number of large files which make up the index. RSEM has the flexible capability of supporting multiple different aligners. We’ll be using STAR. The output files therefore contain items from the indexing process of STAR and RSEM. These files allow for the fast and efficient search and retrieval of sequence and gene-model information during alignment and quantification. The outputs will look like the following:</p>
 <pre><code>GRCm38.102.chr19reduced.chrlist
 GRCm38.102.chr19reduced.grp
 GRCm38.102.chr19reduced.idx.fa
@@ -597,14 +544,8 @@ transcriptInfo.tab</code></pre>
 </div>
 <div id="rsem-calculate-expression-details" class="section level2">
 <h2><code>rsem-calculate-expression</code> Details</h2>
-<p>After preparing the reference index, we can do alignment and
-quantification with the <code>rsem-calculate-expression</code> command
-(<a
-href="https://deweylab.github.io/RSEM/rsem-calculate-expression.html">here</a>
-is a link to the manual). For our inputs, we will be using our FASTQ
-reads and the path to the reference index that we create.</p>
-<p>There are numerous outputs, which are laid out in the following
-table:</p>
+<p>After preparing the reference index, we can do alignment and quantification with the <code>rsem-calculate-expression</code> command (<a href="https://deweylab.github.io/RSEM/rsem-calculate-expression.html">here</a> is a link to the manual). For our inputs, we will be using our FASTQ reads and the path to the reference index that we create.</p>
+<p>There are numerous outputs, which are laid out in the following table:</p>
 <table>
 <colgroup>
 <col width="26%" />
@@ -619,14 +560,11 @@ table:</p>
 <tbody>
 <tr class="odd">
 <td><code>sample_N.genome.bam</code></td>
-<td>The alignments in genomic coordinates. Used for visualization in a
-genome browser such as <a
-href="https://software.broadinstitute.org/software/igv/">IGV</a>.</td>
+<td>The alignments in genomic coordinates. Used for visualization in a genome browser such as <a href="https://software.broadinstitute.org/software/igv/">IGV</a>.</td>
 </tr>
 <tr class="even">
 <td><code>sample_N.transcript.bam</code></td>
-<td>The alignments in transcriptomic coordinates. Not used for this
-workshop.</td>
+<td>The alignments in transcriptomic coordinates. Not used for this workshop.</td>
 </tr>
 <tr class="odd">
 <td><code>sample_N.genes.results</code></td>
@@ -638,33 +576,18 @@ workshop.</td>
 </tr>
 </tbody>
 </table>
-<p>The two results we will use most often from RSEM+STAR are the
-gene-level quantifications (<code>sample_N.genes.results</code>) and the
-alignments in genome-coordinates (<code>sample_N.genome.bam</code>).
-Each sample for which we run RSEM+STAR will have these output files
-named after the sample.</p>
+<p>The two results we will use most often from RSEM+STAR are the gene-level quantifications (<code>sample_N.genes.results</code>) and the alignments in genome-coordinates (<code>sample_N.genome.bam</code>). Each sample for which we run RSEM+STAR will have these output files named after the sample.</p>
 <div id="genome-alignments" class="section level3">
 <h3>Genome Alignments</h3>
-<p>The <code>sample_N.genome.bam</code> alignments file is a special,
-compressed, version of a SAM file (sequence alignment/map). In order to
-view it, we have to use a special program called <a
-href="https://www.htslib.org/doc/samtools.html"><code>samtools</code></a>.</p>
-<p>If we were to peek inside of <code>sample_N.genome.bam</code>, we
-would see many columns of data. By using <code>samtools</code>, we will
-be able to view the columns in plain text (SAM format). The mandatory
-columns in SAM format are shown in the following table from the <a
-href="https://samtools.github.io/hts-specs/SAMv1.pdf">official SAM/BAM
-format specification</a>.</p>
+<p>The <code>sample_N.genome.bam</code> alignments file is a special, compressed, version of a SAM file (sequence alignment/map). In order to view it, we have to use a special program called <a href="https://www.htslib.org/doc/samtools.html"><code>samtools</code></a>.</p>
+<p>If we were to peek inside of <code>sample_N.genome.bam</code>, we would see many columns of data. By using <code>samtools</code>, we will be able to view the columns in plain text (SAM format). The mandatory columns in SAM format are shown in the following table from the <a href="https://samtools.github.io/hts-specs/SAMv1.pdf">official SAM/BAM format specification</a>.</p>
 <p><img src="images/sam_columns.png" width="800" /></p>
-<p>The SAM format gives information about where each read maps to in the
-genome (one read per line), and has information about that mapping.</p>
+<p>The SAM format gives information about where each read maps to in the genome (one read per line), and has information about that mapping.</p>
+<p><br><br> <img src="images/sam-bam-animated.gif" alt="Alignment data animation" /> <br><br></p>
 </div>
 <div id="gene-level-quantification" class="section level3">
 <h3>Gene-level Quantification</h3>
-<p>If we were to look at the top 3 lines of
-<code>sample_N.genes.results</code>, we see it is a plain-text file
-separated by tabs where each row is a gene, and the columns are
-described the first row.</p>
+<p>If we were to look at the top 3 lines of <code>sample_N.genes.results</code>, we see it is a plain-text file separated by tabs where each row is a gene, and the columns are described the first row.</p>
 <table>
 <colgroup>
 <col width="26%" />
@@ -683,8 +606,7 @@ described the first row.</p>
 </tr>
 <tr class="even">
 <td>transcript_id(s)</td>
-<td>The transcript IDs corresponding to the gene in the gene model
-GTF.</td>
+<td>The transcript IDs corresponding to the gene in the gene model GTF.</td>
 </tr>
 <tr class="odd">
 <td>length</td>
@@ -692,19 +614,15 @@ GTF.</td>
 </tr>
 <tr class="even">
 <td>effective_length</td>
-<td>The weighted average, over its transcripts, of the mean number of
-positions from which a fragment may start within the sequence of
-transcript.</td>
+<td>The weighted average, over its transcripts, of the mean number of positions from which a fragment may start within the sequence of transcript.</td>
 </tr>
 <tr class="odd">
 <td>expected_count</td>
-<td>The sum, over all transcripts, of the estimated counts from the EM
-algorithm.</td>
+<td>The sum, over all transcripts, of the estimated counts from the EM algorithm.</td>
 </tr>
 <tr class="even">
 <td>TPM</td>
-<td>Transcript per million, a relative measure of transcript abundance
-where the sum of all TPMs is 1 million.</td>
+<td>Transcript per million, a relative measure of transcript abundance where the sum of all TPMs is 1 million.</td>
 </tr>
 <tr class="odd">
 <td>FPKM</td>
@@ -712,22 +630,15 @@ where the sum of all TPMs is 1 million.</td>
 </tr>
 </tbody>
 </table>
-<p>The <code>genes.results</code> files for each sample can be directly
-imported into DESeq2 using the <a
-href="https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#rsem"><code>tximport</code></a>
-R Bioconductor package.</p>
-<p>Alternatively, we can combine these results into a count matrix. The
-count matrix can be very useful, since it contains summary-level data in
-a widely supported format, this makes it great for sharing and as input
-into different analyses.</p>
+<p>The <code>genes.results</code> files for each sample can be directly imported into DESeq2 using the <a href="https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#rsem"><code>tximport</code></a> R Bioconductor package.</p>
+<p>Alternatively, we can combine these results into a count matrix. The count matrix can be very useful, since it contains summary-level data in a widely supported format, this makes it great for sharing and as input into different analyses.</p>
 </div>
 </div>
 <div id="rsem-prepare-reference-exercise" class="section level2">
 <h2>RSEM Prepare Reference Exercise:</h2>
 <ol style="list-style-type: decimal">
 <li>View the help page for rsem-prepare-reference</li>
-<li>Create a command that will index our example genome, but do not run
-it</li>
+<li>Create a command that will index our example genome, but do not run it</li>
 </ol>
 <pre><code># View the help file
 rsem-prepare-reference -h
@@ -738,8 +649,7 @@ rsem-prepare-reference --gtf ../refs/GRCm38.102.chr19reduced.gtf --star --num-th
 <h2>RSEM Calculate Expression Exercise:</h2>
 <ol style="list-style-type: decimal">
 <li>View the help page for rsem-calculate-expression</li>
-<li>Create a command to execute RSEM / STAR alignment and quantification
-for one of our samples</li>
+<li>Create a command to execute RSEM / STAR alignment and quantification for one of our samples</li>
 </ol>
 <pre><code># First create a directory for the aligned results
 mkdir out_rsem
@@ -749,36 +659,19 @@ rsem-calculate-expression --star --num-threads 1 --star-gzipped-read-file --star
 </div>
 <div id="aligning-all-samples-exercise" class="section level2">
 <h2>Aligning All Samples Exercise:</h2>
-<p>Before starting our alignment exercise, we should make sure that we
-are on the same page. Follow the link below:</p>
-<p><a href="Module03b_breakout02_ex.html">Link to alignment
-exercise</a></p>
+<p>Before starting our alignment exercise, we should make sure that we are on the same page. Follow the link below:</p>
+<p><a href="Module03b_breakout02_ex.html">Link to alignment exercise</a></p>
 <p><br> <br></p>
 <hr />
-<p>These materials have been adapted and extended from materials created
-by the <a href="http://bioinformatics.sph.harvard.edu/">Harvard Chan
-Bioinformatics Core (HBC)</a>. These are open access materials
-distributed under the terms of the <a
-href="http://creativecommons.org/licenses/by/4.0/">Creative Commons
-Attribution license (CC BY 4.0)</a>, which permits unrestricted use,
-distribution, and reproduction in any medium, provided the original
-author and source are credited.</p>
+<p>These materials have been adapted and extended from materials created by the <a href="http://bioinformatics.sph.harvard.edu/">Harvard Chan Bioinformatics Core (HBC)</a>. These are open access materials distributed under the terms of the <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution license (CC BY 4.0)</a>, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</p>
 <br/> <br/>
 <hr/>
-<table style="width:100%;">
-<colgroup>
-<col width="28%" />
-<col width="42%" />
-<col width="28%" />
-</colgroup>
+<table>
 <thead>
 <tr class="header">
-<th align="left"><a href="Module03a_Reference_Genomes.html">Previous
-lesson</a></th>
+<th align="left"><a href="Module03a_Reference_Genomes.html">Previous lesson</a></th>
 <th align="center"><a href="#top">Top of this lesson</a></th>
-<th align="right"><a
-href="Module04_Alignment_QC_and_Quantification.html">Next
-lesson</a></th>
+<th align="right"><a href="Module04_Alignment_QC_and_Quantification.html">Next lesson</a></th>
 </tr>
 </thead>
 <tbody>
@@ -787,7 +680,7 @@ lesson</a></th>
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiQWxpZ25tZW50IgphdXRob3I6ICJVTSBCaW9pbmZvcm1hdGljcyBDb3JlIgpvdXRwdXQ6CiAgICAgICAgaHRtbF9kb2N1bWVudDoKICAgICAgICAgICAgaW5jbHVkZXM6CiAgICAgICAgICAgICAgICBpbl9oZWFkZXI6IGhlYWRlci5odG1sCiAgICAgICAgICAgIHRoZW1lOiBwYXBlcgogICAgICAgICAgICB0b2M6IHRydWUKICAgICAgICAgICAgdG9jX2RlcHRoOiA0CiAgICAgICAgICAgIHRvY19mbG9hdDogdHJ1ZQogICAgICAgICAgICBudW1iZXJfc2VjdGlvbnM6IGZhbHNlCiAgICAgICAgICAgIGZpZ19jYXB0aW9uOiB0cnVlCiAgICAgICAgICAgIG1hcmtkb3duOiBHRk0KICAgICAgICAgICAgY29kZV9kb3dubG9hZDogdHJ1ZQotLS0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KYm9keXsgLyogTm9ybWFsICAqLwogICAgICBmb250LXNpemU6IDE0cHQ7CiAgfQpwcmUgewogIGZvbnQtc2l6ZTogMTJwdAp9Cjwvc3R5bGU+CgpJbiB0aGlzIG1vZHVsZSwgd2Ugd2lsbCBsZWFybjoKCiogdGhlIGNvbmNlcHQgb2Ygc3BsaWNlLWF3YXJlIGFsaWdubWVudHMKKiB0aGUgdHdvIHN0ZXBzIG5lZWRlZCB0byBydW4gUlNFTStTVEFSCiogZGV0YWlscyBvZiBTQU0gYW5kIEJBTSBmaWxlcywgYW5kIFJTRU0gb3V0cHV0cwoKIyBEaWZmZXJlbnRpYWwgRXhwcmVzc2lvbiBXb3JrZmxvdwoKV2UnbGwgZGlzY3VzcyB0aGUgYWxpZ25tZW50IGFuZCBnZW5lIHF1YW50aWZpY2F0aW9uIHN0ZXBzIHdoaWNoIGdhdGhlciB0aGUgbmVjZXNzYXJ5IGRhdGEgdGhhdCB3ZSB3aWxsIG5lZWQgcHJpb3IgdG8gdGVzdGluZyBmb3IgZGlmZmVyZW50aWFsIGV4cHJlc3Npb24sIHRoZSB0b3BpYyBvZiBEYXkgMi4KCiFbXShpbWFnZXMvd2F5ZmluZGVyL3dheWZpbmRlci1BbGlnbm1lbnQucG5nKQo8YnI+Cjxicj4KPGJyPgo8YnI+CgojIEFsaWdubWVudCBhbmQgR2VuZSBRdWFudGlmaWNhdGlvbgoKVGhlIEZBU1RRIGZpbGVzIG9mIHJhdyBzZXF1ZW5jZWQgcmVhZHMgYXJlIHVudGV0aGVyZWQgZnJvbSBhbnkgbm90aW9uIG9mIHdoZXJlIHRoZXkgY2FtZSBmcm9tIGluIHRoZSBnZW5vbWUsIGFuZCB3aGljaCB0cmFuc2NyaWJlZCBnZW5lcyB0aGUgc2VxdWVuY2UgYmVsb25ncyB0by4gVGhlIGFsaWdubWVudCBhbmQgZ2VuZSBxdWFudGlmaWNhdGlvbiBzdGVwcyBmaWxsIGluIHRoYXQgZ2FwIGFuZCBhbGxvdyB1cyB0byBwcm9jZWVkIHdpdGggdGhlIHF1ZXN0aW9uIHdlIGFyZSByZWFsbHkgaW50ZXJlc3RlZCBpbjogV2hpY2ggZ2VuZXMgYXJlIGRpZmZlcmVudGlhbGx5IGV4cHJlc3NlZCBiZXR3ZWVuIGdyb3VwcyBvZiBzYW1wbGVzPwoKV2Ugd2lsbCB1c2UgUlNFTSAoW3BhcGVyXShodHRwczovL2JtY2Jpb2luZm9ybWF0aWNzLmJpb21lZGNlbnRyYWwuY29tL2FydGljbGVzLzEwLjExODYvMTQ3MS0yMTA1LTEyLTMyMykgYW5kIFtHaXRIdWJdKGh0dHBzOi8vZ2l0aHViLmNvbS9kZXdleWxhYi9SU0VNKSkgY29tYmluZWQgd2l0aCBTVEFSIEFsaWduZXIgKFtwYXBlcl0oaHR0cHM6Ly9hY2FkZW1pYy5vdXAuY29tL2Jpb2luZm9ybWF0aWNzL2FydGljbGUvMjkvMS8xNS8yNzI1MzcpIGFuZCBbR2l0SHViXShodHRwczovL2dpdGh1Yi5jb20vYWxleGRvYmluL1NUQVIpKSB0byBhY2NvbXBsaXNoIHRoZSB0YXNrIG9mIHJlYWQgbWFwcGluZyBhbmQgZ2VuZSBxdWFudGlmY2F0aW9uIHNpbXVsdGFuZW91c2x5LgoKIyMgU1RBUgoKVGhlICJTcGxpY2VkIFRyYW5zY3JpcHRzIEFsaWdubWVudCB0byBhIFJlZmVyZW5jZSIgKFNUQVIpIEFsaWduZXIgaXMgYXdhcmUgb2Ygc3BsaWNlLXNpdGVzIG9mIHRyYW5zY3JpcHRzIGFuZCBpcyBhYmxlIHRvIGFsaWduIHJlYWRzIHRoYXQgc3BhbiB0aGVtLiBUaGUgZmlndXJlIGJlbG93IGlsbHVzdHJhdGVzIHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gc3BsaWNlLXVuYXdhcmUgYWxpZ25lcnMgKGUuZy4gQm93dGllMikgYW5kIHNwbGljZS1hd2FyZSBhbGlnbmVycyAoZS5nLiBTVEFSKS4KClNvbWUgYmVuZWZpdHMgb2Ygc3BsaWNlLWF3YXJlIGFsaWduZXJzIGluY2x1ZGU6CgoqIEZld2VyIHJlYWRzIGFyZSBkaXNjYXJkZWQgZm9yIGxhY2sgb2YgYWxpZ25tZW50cywgbGVhZGluZyB0byBtb3JlIGFjY3VyYXRlIGdlbmUgcXVhbnRpZmljYXRpb24uCiogRGlyZWN0IGV2aWRlbmNlIG9mIGlzb2Zvcm0gdXNhZ2UgaXMgcG9zc2libGUuCgpXZSBzaG91bGQgbm90ZSB0aGF0IHRoZSBkZWZhdWx0IHBhcmFtZXRlcnMgZm9yIFNUQVIgYXJlIG9wdGltaXplZCBmb3IgKiptYW1tYWxpYW4gZ2Vub21lcyoqLgoKPGNlbnRlcj4KCiFbU3BsaWNlLWF3YXJlIGFsaWdubWVudHRdKGltYWdlcy9zcGxpY2VfYXdhcmUucG5nKQoKQ3JlZGl0OiBodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vaGJjdHJhaW5pbmcvSW50cm8tdG8tcm5hc2VxLWhwYy1PMi9tYXN0ZXIvbGVjdHVyZXMvU2VxdWVuY2VfYWxpZ25tZW50LnBkZgoKPC9jZW50ZXI+CgojIyBSU0VNCgpSU0VNIChSTkEtc2VxIGJ5IEV4cGVjdGF0aW9uIE1heGltaXphdGlvbikgZGV0ZXJtaW5lcyBnZW5lIGFuZCBpc29mb3JtIGFidW5kYW5jZSB1c2luZyBhbiBleHBlY3RhdGlvbiBtYXhpbWl6YXRpb24gKEVNKSBhbGdvcml0aG0gdG8gZGV0ZXJtaW5lIHRoZSBwcm9iYWJpbGl0eSB0aGF0IGFueSBwYXJ0aWN1bGFyIHJlYWQgb3JpZ2luYXRlZCBmcm9tIGEgcGFydGljdWxhciB0cmFuc2NyaXB0LiBGcm9tIHRoZXJlLCBnZW5lLWxldmVsIHF1YW50aWZpY2F0aW9uIGlzIHJlcG9ydGVkIGJ5IGVmZmVjdGl2ZWx5IGNvbGxhcHNpbmcgdGhlIGlzb2Zvcm0gcXVhbnRpZmljYXRpb25zIG92ZXIgYWxsIGlzb2Zvcm1zIGJlbG9uZ2luZyB0byB0aGUgZ2VuZS4KClRoZSBwcmltYXJ5IGlzc3VlIHRoYXQgUlNFTSBhdHRlbXB0cyB0byBzb2x2ZSBpcyB0aGF0IHJlYWRzIGNhbiBhbGlnbiB0byBtdWx0aXBsZSBpc29mb3JtcyAod2hlbiwgZm9yIGV4YW1wbGUsIHRoZXkgc2hhcmUgYW4gZXhvbiksIGFuZCB0aGF0IGNyZWF0ZXMgYW1iaWd1aXR5IGluIGRlY2lkaW5nIHdoaWNoIGlzb2Zvcm0gYSByZWFkIGdldHMgYXNzaWduZWQgdG8gZm9yIHF1YW50aWZpY2F0aW9uLiBSU0VNIHVzZXMgdGhlIEVNIGFsZ29yaXRobSBkZXNjcmliZWQgYWJvdmUgdG8gaGFuZGxlIHRoaXMgYW1iaWd1aXR5IGFwcHJvcHJpYXRlbHkuCgojIFJ1bm5pbmcgUlNFTStTVEFSCgpSU0VNIGNhbiBiZSBydW4gd2l0aCBqdXN0IHR3byBjb21tYW5kczogdGhlIGZpcnN0IGByc2VtLXByZXBhcmUtcmVmZXJlbmNlYCAoW21hbnVhbF0oaHR0cHM6Ly9kZXdleWxhYi5naXRodWIuaW8vUlNFTS9yc2VtLXByZXBhcmUtcmVmZXJlbmNlLmh0bWwpKSBidWlsZHMgYW4gaW5kZXggZm9yIFNUQVIgYW5kIFJTRU0gdG8gdXNlLCBhbmQgdGhlIHNlY29uZCBgcnNlbS1jYWxjdWxhdGUtZXhwcmVzc2lvbmAgKFttYW51YWxdKGh0dHBzOi8vZGV3ZXlsYWIuZ2l0aHViLmlvL1JTRU0vcnNlbS1jYWxjdWxhdGUtZXhwcmVzc2lvbi5odG1sKSkgZG9lcyB0aGUgYWxpZ25tZW50IGFuZCBnZW5lIHF1YW50aWZpY2F0aW9uLgoKV2UnbGwgZXhwbG9yZSB0aGUgZXhwZWN0ZWQgb3V0cHV0cyBmcm9tIHRoZXNlIGNvbW1hbmRzIGFuZCBkaXNjdXNzIHRoZWlyIGNvbnRlbnRzLCBiZWZvcmUgY3JlYXRpbmcgb3VyIG93biByZWZlcmVuY2UgYW5kIGFsaWduaW5nIHJlYWRzIHdpdGggb3VyIGV4YW1wbGUgZGF0YS4KCiMjIGByc2VtLXByZXBhcmUtcmVmZXJlbmNlYCBEZXRhaWxzCgogVGhlIHB1cnBvc2Ugb2YgYHJzZW0tcHJlcGFyZS1yZWZlcmVuY2VgIGlzIHRvIGNyZWF0ZSBhIHJlZmVyZW5jZSBpbmRleCBmb3IgYWxpZ25tZW50LiBBIHJlZmVyZW5jZSBpbmRleCBpcyBlc3NlbnRpYWxseSBhIGxvb2t1cCB0YWJsZSB0aGF0IHNwZWVkcyB1cCB0aGUgZmluZGluZyBvZiBzZXF1ZW5jZSBtYXRjaGVzIGZvciBhbGlnbm1lbnQuIEluIHRoZSBjYXNlIG9mIGEgc3BsaWNlLWF3YXJlIGFsaWduZXIsIHRoZSByZWZlcmVuY2UgaW5kZXggaXMgYWxzbyBhd2FyZSBvZiB0aGUgdmFyaW91cyBzcGxpY2UganVuY3Rpb25zIGF0IGxvY2F0aW9ucyBpbiB0aGUgZ2VuZSBtb2RlbCwgYW5kIGEgc3Vic2V0IG9mIHJlYWRzIHdpbGwgbWFwIGFjcm9zcyB0aGVzZS4gVGhpcyBhbGxvd3MgdXMgdG8gaW5mZXIgaXNvZm9ybSB1c2FnZSBsYXRlciBvbi4KCmByc2VtLXByZXBhcmUtcmVmZXJlbmNlYCB3aWxsIHVzZSBhIEZBU1RBIGZpbGUgYW5kIGEgR1RGIGFzIGlucHV0cywgYW5kIGl0IHdpbGwgcHJvZHVjZSBhIG51bWJlciBvZiBsYXJnZSBmaWxlcyB3aGljaCBtYWtlIHVwIHRoZSBpbmRleC4gUlNFTSBoYXMgdGhlIGZsZXhpYmxlIGNhcGFiaWxpdHkgb2Ygc3VwcG9ydGluZyBtdWx0aXBsZSBkaWZmZXJlbnQgYWxpZ25lcnMuIFdlJ2xsIGJlIHVzaW5nIFNUQVIuIFRoZSBvdXRwdXQgZmlsZXMgdGhlcmVmb3JlIGNvbnRhaW4gaXRlbXMgZnJvbSB0aGUgaW5kZXhpbmcgcHJvY2VzcyBvZiBTVEFSIGFuZCBSU0VNLiBUaGVzZSBmaWxlcyBhbGxvdyBmb3IgdGhlIGZhc3QgYW5kIGVmZmljaWVudCBzZWFyY2ggYW5kIHJldHJpZXZhbCBvZiBzZXF1ZW5jZSBhbmQgZ2VuZS1tb2RlbCBpbmZvcm1hdGlvbiBkdXJpbmcgYWxpZ25tZW50IGFuZCBxdWFudGlmaWNhdGlvbi4gVGhlIG91dHB1dHMgd2lsbCBsb29rIGxpa2UgdGhlIGZvbGxvd2luZzoKCiAgICBHUkNtMzguMTAyLmNocjE5cmVkdWNlZC5jaHJsaXN0CiAgICBHUkNtMzguMTAyLmNocjE5cmVkdWNlZC5ncnAKICAgIEdSQ20zOC4xMDIuY2hyMTlyZWR1Y2VkLmlkeC5mYQogICAgR1JDbTM4LjEwMi5jaHIxOXJlZHVjZWQubjJnLmlkeC5mYQogICAgR1JDbTM4LjEwMi5jaHIxOXJlZHVjZWQuc2VxCiAgICBHUkNtMzguMTAyLmNocjE5cmVkdWNlZC50aQogICAgR1JDbTM4LjEwMi5jaHIxOXJlZHVjZWQudHJhbnNjcmlwdHMuZmEKICAgIEdlbm9tZQogICAgTG9nLm91dAogICAgU0EKICAgIFNBaW5kZXgKICAgIGNockxlbmd0aC50eHQKICAgIGNock5hbWUudHh0CiAgICBjaHJOYW1lTGVuZ3RoLnR4dAogICAgY2hyU3RhcnQudHh0CiAgICBleG9uR2VUckluZm8udGFiCiAgICBleG9uSW5mby50YWIKICAgIGdlbmVJbmZvLnRhYgogICAgZ2Vub21lUGFyYW1ldGVycy50eHQKICAgIHNqZGJJbmZvLnR4dAogICAgc2pkYkxpc3QuZnJvbUdURi5vdXQudGFiCiAgICBzamRiTGlzdC5vdXQudGFiCiAgICB0cmFuc2NyaXB0SW5mby50YWIKCiMjIGByc2VtLWNhbGN1bGF0ZS1leHByZXNzaW9uYCBEZXRhaWxzCgpBZnRlciBwcmVwYXJpbmcgdGhlIHJlZmVyZW5jZSBpbmRleCwgd2UgY2FuIGRvIGFsaWdubWVudCBhbmQgcXVhbnRpZmljYXRpb24gd2l0aCB0aGUgYHJzZW0tY2FsY3VsYXRlLWV4cHJlc3Npb25gIGNvbW1hbmQgKFtoZXJlXShodHRwczovL2Rld2V5bGFiLmdpdGh1Yi5pby9SU0VNL3JzZW0tY2FsY3VsYXRlLWV4cHJlc3Npb24uaHRtbCkgaXMgYSBsaW5rIHRvIHRoZSBtYW51YWwpLiBGb3Igb3VyIGlucHV0cywgd2Ugd2lsbCBiZSB1c2luZyBvdXIgRkFTVFEgcmVhZHMgYW5kIHRoZSBwYXRoIHRvIHRoZSByZWZlcmVuY2UgaW5kZXggdGhhdCB3ZSBjcmVhdGUuCgpUaGVyZSBhcmUgbnVtZXJvdXMgb3V0cHV0cywgd2hpY2ggYXJlIGxhaWQgb3V0IGluIHRoZSBmb2xsb3dpbmcgdGFibGU6Cgp8IEZpbGUgfCBEZXNjcmlwdGlvbiB8CnwgLS0tLSB8IC0tLS0tLS0tLS0tIHwKfCBgc2FtcGxlX04uZ2Vub21lLmJhbWAgfCBUaGUgYWxpZ25tZW50cyBpbiBnZW5vbWljIGNvb3JkaW5hdGVzLiBVc2VkIGZvciB2aXN1YWxpemF0aW9uIGluIGEgZ2Vub21lIGJyb3dzZXIgc3VjaCBhcyBbSUdWXShodHRwczovL3NvZnR3YXJlLmJyb2FkaW5zdGl0dXRlLm9yZy9zb2Z0d2FyZS9pZ3YvKS4gfAp8IGBzYW1wbGVfTi50cmFuc2NyaXB0LmJhbWAgfCBUaGUgYWxpZ25tZW50cyBpbiB0cmFuc2NyaXB0b21pYyBjb29yZGluYXRlcy4gTm90IHVzZWQgZm9yIHRoaXMgd29ya3Nob3AuIHwKfCBgc2FtcGxlX04uZ2VuZXMucmVzdWx0c2AgfCBHZW5lLWxldmVsIHJlc3VsdHMgdG8gYmUgdXNlZCBpbiBkb3duc3RyZWFtIERFIGFuYWx5c2lzLiB8CnwgYHNhbXBsZV9OLmlzb2Zvcm1zLnJlc3VsdHNgIHwgSXNvZm9ybS1sZXZlbCByZXN1bHRzLiBOb3QgdXNlZCBmb3IgdGhpcyB3b3Jrc2hvcC4gfAoKClRoZSB0d28gcmVzdWx0cyB3ZSB3aWxsIHVzZSBtb3N0IG9mdGVuIGZyb20gUlNFTStTVEFSIGFyZSB0aGUgZ2VuZS1sZXZlbCBxdWFudGlmaWNhdGlvbnMgKGBzYW1wbGVfTi5nZW5lcy5yZXN1bHRzYCkgYW5kIHRoZSBhbGlnbm1lbnRzIGluIGdlbm9tZS1jb29yZGluYXRlcyAoYHNhbXBsZV9OLmdlbm9tZS5iYW1gKS4gRWFjaCBzYW1wbGUgZm9yIHdoaWNoIHdlIHJ1biBSU0VNK1NUQVIgd2lsbCBoYXZlIHRoZXNlIG91dHB1dCBmaWxlcyBuYW1lZCBhZnRlciB0aGUgc2FtcGxlLgoKIyMjIEdlbm9tZSBBbGlnbm1lbnRzCgpUaGUgYHNhbXBsZV9OLmdlbm9tZS5iYW1gIGFsaWdubWVudHMgZmlsZSBpcyBhIHNwZWNpYWwsIGNvbXByZXNzZWQsIHZlcnNpb24gb2YgYSBTQU0gZmlsZSAoc2VxdWVuY2UgYWxpZ25tZW50L21hcCkuIEluIG9yZGVyIHRvIHZpZXcgaXQsIHdlIGhhdmUgdG8gdXNlIGEgc3BlY2lhbCBwcm9ncmFtIGNhbGxlZCBbYHNhbXRvb2xzYF0oaHR0cHM6Ly93d3cuaHRzbGliLm9yZy9kb2Mvc2FtdG9vbHMuaHRtbCkuCgpJZiB3ZSB3ZXJlIHRvIHBlZWsgaW5zaWRlIG9mIGBzYW1wbGVfTi5nZW5vbWUuYmFtYCwgd2Ugd291bGQgc2VlIG1hbnkgY29sdW1ucyBvZiBkYXRhLiBCeSB1c2luZyBgc2FtdG9vbHNgLCB3ZSB3aWxsIGJlIGFibGUgdG8gdmlldyB0aGUgY29sdW1ucyBpbiBwbGFpbiB0ZXh0IChTQU0gZm9ybWF0KS4gVGhlIG1hbmRhdG9yeSBjb2x1bW5zIGluIFNBTSBmb3JtYXQgYXJlIHNob3duIGluIHRoZSBmb2xsb3dpbmcgdGFibGUgZnJvbSB0aGUgW29mZmljaWFsIFNBTS9CQU0gZm9ybWF0IHNwZWNpZmljYXRpb25dKGh0dHBzOi8vc2FtdG9vbHMuZ2l0aHViLmlvL2h0cy1zcGVjcy9TQU12MS5wZGYpLgoKPGltZyBzcmM9ImltYWdlcy9zYW1fY29sdW1ucy5wbmciIHdpZHRoPSI4MDAiIC8+CgpUaGUgU0FNIGZvcm1hdCBnaXZlcyBpbmZvcm1hdGlvbiBhYm91dCB3aGVyZSBlYWNoIHJlYWQgbWFwcyB0byBpbiB0aGUgZ2Vub21lIChvbmUgcmVhZCBwZXIgbGluZSksIGFuZCBoYXMgaW5mb3JtYXRpb24gYWJvdXQgdGhhdCBtYXBwaW5nLgoKIyMjIEdlbmUtbGV2ZWwgUXVhbnRpZmljYXRpb24KCklmIHdlIHdlcmUgdG8gbG9vayBhdCB0aGUgdG9wIDMgbGluZXMgb2YgYHNhbXBsZV9OLmdlbmVzLnJlc3VsdHNgLCB3ZSBzZWUgaXQgaXMgYSBwbGFpbi10ZXh0IGZpbGUgc2VwYXJhdGVkIGJ5IHRhYnMgd2hlcmUgZWFjaCByb3cgaXMgYSBnZW5lLCBhbmQgdGhlIGNvbHVtbnMgYXJlIGRlc2NyaWJlZCB0aGUgZmlyc3Qgcm93LgoKCnwgQ29sdW1uIHwgRGVzY3JpcHRpb24gfAp8IC0tLS0gfCAtLS0tLS0tLS0tLSB8CnwgZ2VuZV9pZCB8IFRoZSBJRCBmcm9tIHRoZSBnZW5lIG1vZGVsIEdURi4gfAp8IHRyYW5zY3JpcHRfaWQocykgfCBUaGUgdHJhbnNjcmlwdCBJRHMgY29ycmVzcG9uZGluZyB0byB0aGUgZ2VuZSBpbiB0aGUgZ2VuZSBtb2RlbCBHVEYuIHwKfCBsZW5ndGggfCBUaGUgd2VpZ2h0ZWQgYXZlcmFnZSBvZiBpdHMgdHJhbnNjcmlwdHMnIGxlbmd0aHMuIHwKfCBlZmZlY3RpdmVfbGVuZ3RoIHwgVGhlIHdlaWdodGVkIGF2ZXJhZ2UsIG92ZXIgaXRzIHRyYW5zY3JpcHRzLCBvZiB0aGUgbWVhbiBudW1iZXIgb2YgcG9zaXRpb25zIGZyb20gd2hpY2ggYSBmcmFnbWVudCBtYXkgc3RhcnQgd2l0aGluIHRoZSBzZXF1ZW5jZSBvZiB0cmFuc2NyaXB0LiB8CnwgZXhwZWN0ZWRfY291bnQgfCBUaGUgc3VtLCBvdmVyIGFsbCB0cmFuc2NyaXB0cywgb2YgdGhlIGVzdGltYXRlZCBjb3VudHMgZnJvbSB0aGUgRU0gYWxnb3JpdGhtLiB8CnwgVFBNIHwgVHJhbnNjcmlwdCBwZXIgbWlsbGlvbiwgYSByZWxhdGl2ZSBtZWFzdXJlIG9mIHRyYW5zY3JpcHQgYWJ1bmRhbmNlIHdoZXJlIHRoZSBzdW0gb2YgYWxsIFRQTXMgaXMgMSBtaWxsaW9uLiB8CnwgRlBLTSB8IEZyYWdtZW50cyBwZXIga2lsb2Jhc2Ugb2YgdHJhbnNjcmlwdCBwZXIgbWlsbGlvbiBtYXBwZWQgcmVhZHMuIHwKCgpUaGUgYGdlbmVzLnJlc3VsdHNgIGZpbGVzIGZvciBlYWNoIHNhbXBsZSBjYW4gYmUgZGlyZWN0bHkgaW1wb3J0ZWQgaW50byBERVNlcTIgdXNpbmcgdGhlIFtgdHhpbXBvcnRgXShodHRwczovL2Jpb2NvbmR1Y3Rvci5vcmcvcGFja2FnZXMvcmVsZWFzZS9iaW9jL3ZpZ25ldHRlcy90eGltcG9ydC9pbnN0L2RvYy90eGltcG9ydC5odG1sI3JzZW0pIFIgQmlvY29uZHVjdG9yIHBhY2thZ2UuCgpBbHRlcm5hdGl2ZWx5LCB3ZSBjYW4gY29tYmluZSB0aGVzZSByZXN1bHRzIGludG8gYSBjb3VudCBtYXRyaXguIFRoZSBjb3VudCBtYXRyaXggY2FuIGJlIHZlcnkgdXNlZnVsLCBzaW5jZSBpdCBjb250YWlucyBzdW1tYXJ5LWxldmVsIGRhdGEgaW4gYSB3aWRlbHkgc3VwcG9ydGVkIGZvcm1hdCwgdGhpcyBtYWtlcyBpdCBncmVhdCBmb3Igc2hhcmluZyBhbmQgYXMgaW5wdXQgaW50byBkaWZmZXJlbnQgYW5hbHlzZXMuCgoKIyMgUlNFTSBQcmVwYXJlIFJlZmVyZW5jZSBFeGVyY2lzZToKCjEuIFZpZXcgdGhlIGhlbHAgcGFnZSBmb3IgcnNlbS1wcmVwYXJlLXJlZmVyZW5jZQoyLiBDcmVhdGUgYSBjb21tYW5kIHRoYXQgd2lsbCBpbmRleCBvdXIgZXhhbXBsZSBnZW5vbWUsIGJ1dCBkbyBub3QgcnVuIGl0CgpgYGAKIyBWaWV3IHRoZSBoZWxwIGZpbGUKcnNlbS1wcmVwYXJlLXJlZmVyZW5jZSAtaAojIENyZWF0ZS9leGVjdXRlIHRoZSBwcmVwYXJlLXJlZmVyZW5jZSBjb21tYW5kCnJzZW0tcHJlcGFyZS1yZWZlcmVuY2UgLS1ndGYgLi4vcmVmcy9HUkNtMzguMTAyLmNocjE5cmVkdWNlZC5ndGYgLS1zdGFyIC0tbnVtLXRocmVhZHMgMSAuLi9yZWZzL0dSQ20zOC4xMDIuY2hyMTlyZWR1Y2VkLmZhIC4uL3JlZnMvR1JDbTM4LjEwMi5jaHIxOXJlZHVjZWQKYGBgCgoKIyMgUlNFTSBDYWxjdWxhdGUgRXhwcmVzc2lvbiBFeGVyY2lzZToKCjEuIFZpZXcgdGhlIGhlbHAgcGFnZSBmb3IgcnNlbS1jYWxjdWxhdGUtZXhwcmVzc2lvbgoyLiBDcmVhdGUgYSBjb21tYW5kIHRvIGV4ZWN1dGUgUlNFTSAvIFNUQVIgYWxpZ25tZW50IGFuZCBxdWFudGlmaWNhdGlvbiBmb3Igb25lIG9mIG91ciBzYW1wbGVzCgpgYGAKIyBGaXJzdCBjcmVhdGUgYSBkaXJlY3RvcnkgZm9yIHRoZSBhbGlnbmVkIHJlc3VsdHMKbWtkaXIgb3V0X3JzZW0KIyBDb25zdHJ1Y3QgYW4gUlNFTSBjb21tYW5kIHRvIGFsaWduIHNhbXBsZV9BIHRvIG91ciByZWZlcmVuY2UKcnNlbS1jYWxjdWxhdGUtZXhwcmVzc2lvbiAtLXN0YXIgLS1udW0tdGhyZWFkcyAxIC0tc3Rhci1nemlwcGVkLXJlYWQtZmlsZSAtLXN0YXItb3V0cHV0LWdlbm9tZS1iYW0gLS1rZWVwLWludGVybWVkaWF0ZS1maWxlcyBvdXRfdHJpbW1lZC9zYW1wbGVfQV9SMS50cmltbWVkLmZhc3RxLmd6IC4uL3JlZnMvR1JDbTM4LjEwMi5jaHIxOXJlZHVjZWQgb3V0X3JzZW0vc2FtcGxlX0EKYGBgCjxicj4KPGJyPgoKIyMgQWxpZ25pbmcgQWxsIFNhbXBsZXMgRXhlcmNpc2U6CgpCZWZvcmUgc3RhcnRpbmcgb3VyIGFsaWdubWVudCBleGVyY2lzZSwgd2Ugc2hvdWxkIG1ha2Ugc3VyZSB0aGF0IHdlIGFyZSBvbiB0aGUgc2FtZSBwYWdlLiBGb2xsb3cgdGhlIGxpbmsgYmVsb3c6CgpbTGluayB0byBhbGlnbm1lbnQgZXhlcmNpc2VdKE1vZHVsZTAzYl9icmVha291dDAyX2V4Lmh0bWwpCgo8YnI+Cjxicj4KCi0tLQoKVGhlc2UgbWF0ZXJpYWxzIGhhdmUgYmVlbiBhZGFwdGVkIGFuZCBleHRlbmRlZCBmcm9tIG1hdGVyaWFscyBjcmVhdGVkIGJ5IHRoZSBbSGFydmFyZCBDaGFuIEJpb2luZm9ybWF0aWNzIENvcmUgKEhCQyldKGh0dHA6Ly9iaW9pbmZvcm1hdGljcy5zcGguaGFydmFyZC5lZHUvKS4gVGhlc2UgYXJlIG9wZW4gYWNjZXNzIG1hdGVyaWFscyBkaXN0cmlidXRlZCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIFtDcmVhdGl2ZSBDb21tb25zIEF0dHJpYnV0aW9uIGxpY2Vuc2UgKENDIEJZIDQuMCldKGh0dHA6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LzQuMC8pLCB3aGljaCBwZXJtaXRzIHVucmVzdHJpY3RlZCB1c2UsIGRpc3RyaWJ1dGlvbiwgYW5kIHJlcHJvZHVjdGlvbiBpbiBhbnkgbWVkaXVtLCBwcm92aWRlZCB0aGUgb3JpZ2luYWwgYXV0aG9yIGFuZCBzb3VyY2UgYXJlIGNyZWRpdGVkLgoKPGJyLz4KPGJyLz4KPGhyLz4KfCBbUHJldmlvdXMgbGVzc29uXShNb2R1bGUwM2FfUmVmZXJlbmNlX0dlbm9tZXMuaHRtbCkgfCBbVG9wIG9mIHRoaXMgbGVzc29uXSgjdG9wKSB8IFtOZXh0IGxlc3Nvbl0oTW9kdWxlMDRfQWxpZ25tZW50X1FDX2FuZF9RdWFudGlmaWNhdGlvbi5odG1sKSB8CnwgOi0tLSB8IDotLS0tOiB8IC0tLTogfA==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiQWxpZ25tZW50IgphdXRob3I6ICJVTSBCaW9pbmZvcm1hdGljcyBDb3JlIgpvdXRwdXQ6CiAgICAgICAgaHRtbF9kb2N1bWVudDoKICAgICAgICAgICAgaW5jbHVkZXM6CiAgICAgICAgICAgICAgICBpbl9oZWFkZXI6IGhlYWRlci5odG1sCiAgICAgICAgICAgIHRoZW1lOiBwYXBlcgogICAgICAgICAgICB0b2M6IHRydWUKICAgICAgICAgICAgdG9jX2RlcHRoOiA0CiAgICAgICAgICAgIHRvY19mbG9hdDogdHJ1ZQogICAgICAgICAgICBudW1iZXJfc2VjdGlvbnM6IGZhbHNlCiAgICAgICAgICAgIGZpZ19jYXB0aW9uOiB0cnVlCiAgICAgICAgICAgIG1hcmtkb3duOiBHRk0KICAgICAgICAgICAgY29kZV9kb3dubG9hZDogdHJ1ZQotLS0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KYm9keXsgLyogTm9ybWFsICAqLwogICAgICBmb250LXNpemU6IDE0cHQ7CiAgfQpwcmUgewogIGZvbnQtc2l6ZTogMTJwdAp9Cjwvc3R5bGU+CgpJbiB0aGlzIG1vZHVsZSwgd2Ugd2lsbCBsZWFybjoKCiogdGhlIGNvbmNlcHQgb2Ygc3BsaWNlLWF3YXJlIGFsaWdubWVudHMKKiB0aGUgdHdvIHN0ZXBzIG5lZWRlZCB0byBydW4gUlNFTStTVEFSCiogZGV0YWlscyBvZiBTQU0gYW5kIEJBTSBmaWxlcywgYW5kIFJTRU0gb3V0cHV0cwoKIyBEaWZmZXJlbnRpYWwgRXhwcmVzc2lvbiBXb3JrZmxvdwoKV2UnbGwgZGlzY3VzcyB0aGUgYWxpZ25tZW50IGFuZCBnZW5lIHF1YW50aWZpY2F0aW9uIHN0ZXBzIHdoaWNoIGdhdGhlciB0aGUgbmVjZXNzYXJ5IGRhdGEgdGhhdCB3ZSB3aWxsIG5lZWQgcHJpb3IgdG8gdGVzdGluZyBmb3IgZGlmZmVyZW50aWFsIGV4cHJlc3Npb24sIHRoZSB0b3BpYyBvZiBEYXkgMi4KCiFbXShpbWFnZXMvd2F5ZmluZGVyL3dheWZpbmRlci1BbGlnbm1lbnQucG5nKQo8YnI+Cjxicj4KPGJyPgo8YnI+CgojIEFsaWdubWVudCBhbmQgR2VuZSBRdWFudGlmaWNhdGlvbgoKVGhlIEZBU1RRIGZpbGVzIG9mIHJhdyBzZXF1ZW5jZWQgcmVhZHMgYXJlIHVudGV0aGVyZWQgZnJvbSBhbnkgbm90aW9uIG9mIHdoZXJlIHRoZXkgY2FtZSBmcm9tIGluIHRoZSBnZW5vbWUsIGFuZCB3aGljaCB0cmFuc2NyaWJlZCBnZW5lcyB0aGUgc2VxdWVuY2UgYmVsb25ncyB0by4gVGhlIGFsaWdubWVudCBhbmQgZ2VuZSBxdWFudGlmaWNhdGlvbiBzdGVwcyBmaWxsIGluIHRoYXQgZ2FwIGFuZCBhbGxvdyB1cyB0byBwcm9jZWVkIHdpdGggdGhlIHF1ZXN0aW9uIHdlIGFyZSByZWFsbHkgaW50ZXJlc3RlZCBpbjogV2hpY2ggZ2VuZXMgYXJlIGRpZmZlcmVudGlhbGx5IGV4cHJlc3NlZCBiZXR3ZWVuIGdyb3VwcyBvZiBzYW1wbGVzPwoKV2Ugd2lsbCB1c2UgUlNFTSAoW3BhcGVyXShodHRwczovL2JtY2Jpb2luZm9ybWF0aWNzLmJpb21lZGNlbnRyYWwuY29tL2FydGljbGVzLzEwLjExODYvMTQ3MS0yMTA1LTEyLTMyMykgYW5kIFtHaXRIdWJdKGh0dHBzOi8vZ2l0aHViLmNvbS9kZXdleWxhYi9SU0VNKSkgY29tYmluZWQgd2l0aCBTVEFSIEFsaWduZXIgKFtwYXBlcl0oaHR0cHM6Ly9hY2FkZW1pYy5vdXAuY29tL2Jpb2luZm9ybWF0aWNzL2FydGljbGUvMjkvMS8xNS8yNzI1MzcpIGFuZCBbR2l0SHViXShodHRwczovL2dpdGh1Yi5jb20vYWxleGRvYmluL1NUQVIpKSB0byBhY2NvbXBsaXNoIHRoZSB0YXNrIG9mIHJlYWQgbWFwcGluZyBhbmQgZ2VuZSBxdWFudGlmY2F0aW9uIHNpbXVsdGFuZW91c2x5LgoKIyMgU1RBUgoKVGhlICJTcGxpY2VkIFRyYW5zY3JpcHRzIEFsaWdubWVudCB0byBhIFJlZmVyZW5jZSIgKFNUQVIpIEFsaWduZXIgaXMgYXdhcmUgb2Ygc3BsaWNlLXNpdGVzIG9mIHRyYW5zY3JpcHRzIGFuZCBpcyBhYmxlIHRvIGFsaWduIHJlYWRzIHRoYXQgc3BhbiB0aGVtLiBUaGUgZmlndXJlIGJlbG93IGlsbHVzdHJhdGVzIHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gc3BsaWNlLXVuYXdhcmUgYWxpZ25lcnMgKGUuZy4gQm93dGllMikgYW5kIHNwbGljZS1hd2FyZSBhbGlnbmVycyAoZS5nLiBTVEFSKS4KClNvbWUgYmVuZWZpdHMgb2Ygc3BsaWNlLWF3YXJlIGFsaWduZXJzIGluY2x1ZGU6CgoqIEZld2VyIHJlYWRzIGFyZSBkaXNjYXJkZWQgZm9yIGxhY2sgb2YgYWxpZ25tZW50cywgbGVhZGluZyB0byBtb3JlIGFjY3VyYXRlIGdlbmUgcXVhbnRpZmljYXRpb24uCiogRGlyZWN0IGV2aWRlbmNlIG9mIGlzb2Zvcm0gdXNhZ2UgaXMgcG9zc2libGUuCgpXZSBzaG91bGQgbm90ZSB0aGF0IHRoZSBkZWZhdWx0IHBhcmFtZXRlcnMgZm9yIFNUQVIgYXJlIG9wdGltaXplZCBmb3IgKiptYW1tYWxpYW4gZ2Vub21lcyoqLgoKPGNlbnRlcj4KCiFbU3BsaWNlLWF3YXJlIGFsaWdubWVudF0oaW1hZ2VzL3NwbGljZV9hd2FyZS5wbmcpCgpDcmVkaXQ6IGh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9oYmN0cmFpbmluZy9JbnRyby10by1ybmFzZXEtaHBjLU8yL21hc3Rlci9sZWN0dXJlcy9TZXF1ZW5jZV9hbGlnbm1lbnQucGRmCgo8L2NlbnRlcj4KCiMjIFJTRU0KClJTRU0gKFJOQS1zZXEgYnkgRXhwZWN0YXRpb24gTWF4aW1pemF0aW9uKSBkZXRlcm1pbmVzIGdlbmUgYW5kIGlzb2Zvcm0gYWJ1bmRhbmNlIHVzaW5nIGFuIGV4cGVjdGF0aW9uIG1heGltaXphdGlvbiAoRU0pIGFsZ29yaXRobSB0byBkZXRlcm1pbmUgdGhlIHByb2JhYmlsaXR5IHRoYXQgYW55IHBhcnRpY3VsYXIgcmVhZCBvcmlnaW5hdGVkIGZyb20gYSBwYXJ0aWN1bGFyIHRyYW5zY3JpcHQuIEZyb20gdGhlcmUsIGdlbmUtbGV2ZWwgcXVhbnRpZmljYXRpb24gaXMgcmVwb3J0ZWQgYnkgZWZmZWN0aXZlbHkgY29sbGFwc2luZyB0aGUgaXNvZm9ybSBxdWFudGlmaWNhdGlvbnMgb3ZlciBhbGwgaXNvZm9ybXMgYmVsb25naW5nIHRvIHRoZSBnZW5lLgoKVGhlIHByaW1hcnkgaXNzdWUgdGhhdCBSU0VNIGF0dGVtcHRzIHRvIHNvbHZlIGlzIHRoYXQgcmVhZHMgY2FuIGFsaWduIHRvIG11bHRpcGxlIGlzb2Zvcm1zICh3aGVuLCBmb3IgZXhhbXBsZSwgdGhleSBzaGFyZSBhbiBleG9uKSwgYW5kIHRoYXQgY3JlYXRlcyBhbWJpZ3VpdHkgaW4gZGVjaWRpbmcgd2hpY2ggaXNvZm9ybSBhIHJlYWQgZ2V0cyBhc3NpZ25lZCB0byBmb3IgcXVhbnRpZmljYXRpb24uIFJTRU0gdXNlcyB0aGUgRU0gYWxnb3JpdGhtIGRlc2NyaWJlZCBhYm92ZSB0byBoYW5kbGUgdGhpcyBhbWJpZ3VpdHkgYXBwcm9wcmlhdGVseS4KCiMgUnVubmluZyBSU0VNK1NUQVIKClJTRU0gY2FuIGJlIHJ1biB3aXRoIGp1c3QgdHdvIGNvbW1hbmRzOiB0aGUgZmlyc3QgYHJzZW0tcHJlcGFyZS1yZWZlcmVuY2VgIChbbWFudWFsXShodHRwczovL2Rld2V5bGFiLmdpdGh1Yi5pby9SU0VNL3JzZW0tcHJlcGFyZS1yZWZlcmVuY2UuaHRtbCkpIGJ1aWxkcyBhbiBpbmRleCBmb3IgU1RBUiBhbmQgUlNFTSB0byB1c2UsIGFuZCB0aGUgc2Vjb25kIGByc2VtLWNhbGN1bGF0ZS1leHByZXNzaW9uYCAoW21hbnVhbF0oaHR0cHM6Ly9kZXdleWxhYi5naXRodWIuaW8vUlNFTS9yc2VtLWNhbGN1bGF0ZS1leHByZXNzaW9uLmh0bWwpKSBkb2VzIHRoZSBhbGlnbm1lbnQgYW5kIGdlbmUgcXVhbnRpZmljYXRpb24uCgpXZSdsbCBleHBsb3JlIHRoZSBleHBlY3RlZCBvdXRwdXRzIGZyb20gdGhlc2UgY29tbWFuZHMgYW5kIGRpc2N1c3MgdGhlaXIgY29udGVudHMsIGJlZm9yZSBjcmVhdGluZyBvdXIgb3duIHJlZmVyZW5jZSBhbmQgYWxpZ25pbmcgcmVhZHMgd2l0aCBvdXIgZXhhbXBsZSBkYXRhLgoKIyMgYHJzZW0tcHJlcGFyZS1yZWZlcmVuY2VgIERldGFpbHMKCiBUaGUgcHVycG9zZSBvZiBgcnNlbS1wcmVwYXJlLXJlZmVyZW5jZWAgaXMgdG8gY3JlYXRlIGEgcmVmZXJlbmNlIGluZGV4IGZvciBhbGlnbm1lbnQuIEEgcmVmZXJlbmNlIGluZGV4IGlzIGVzc2VudGlhbGx5IGEgbG9va3VwIHRhYmxlIHRoYXQgc3BlZWRzIHVwIHRoZSBmaW5kaW5nIG9mIHNlcXVlbmNlIG1hdGNoZXMgZm9yIGFsaWdubWVudC4gSW4gdGhlIGNhc2Ugb2YgYSBzcGxpY2UtYXdhcmUgYWxpZ25lciwgdGhlIHJlZmVyZW5jZSBpbmRleCBpcyBhbHNvIGF3YXJlIG9mIHRoZSB2YXJpb3VzIHNwbGljZSBqdW5jdGlvbnMgYXQgbG9jYXRpb25zIGluIHRoZSBnZW5lIG1vZGVsLCBhbmQgYSBzdWJzZXQgb2YgcmVhZHMgd2lsbCBtYXAgYWNyb3NzIHRoZXNlLiBUaGlzIGFsbG93cyB1cyB0byBpbmZlciBpc29mb3JtIHVzYWdlIGxhdGVyIG9uLgoKYHJzZW0tcHJlcGFyZS1yZWZlcmVuY2VgIHdpbGwgdXNlIGEgRkFTVEEgZmlsZSBhbmQgYSBHVEYgYXMgaW5wdXRzLCBhbmQgaXQgd2lsbCBwcm9kdWNlIGEgbnVtYmVyIG9mIGxhcmdlIGZpbGVzIHdoaWNoIG1ha2UgdXAgdGhlIGluZGV4LiBSU0VNIGhhcyB0aGUgZmxleGlibGUgY2FwYWJpbGl0eSBvZiBzdXBwb3J0aW5nIG11bHRpcGxlIGRpZmZlcmVudCBhbGlnbmVycy4gV2UnbGwgYmUgdXNpbmcgU1RBUi4gVGhlIG91dHB1dCBmaWxlcyB0aGVyZWZvcmUgY29udGFpbiBpdGVtcyBmcm9tIHRoZSBpbmRleGluZyBwcm9jZXNzIG9mIFNUQVIgYW5kIFJTRU0uIFRoZXNlIGZpbGVzIGFsbG93IGZvciB0aGUgZmFzdCBhbmQgZWZmaWNpZW50IHNlYXJjaCBhbmQgcmV0cmlldmFsIG9mIHNlcXVlbmNlIGFuZCBnZW5lLW1vZGVsIGluZm9ybWF0aW9uIGR1cmluZyBhbGlnbm1lbnQgYW5kIHF1YW50aWZpY2F0aW9uLiBUaGUgb3V0cHV0cyB3aWxsIGxvb2sgbGlrZSB0aGUgZm9sbG93aW5nOgoKICAgIEdSQ20zOC4xMDIuY2hyMTlyZWR1Y2VkLmNocmxpc3QKICAgIEdSQ20zOC4xMDIuY2hyMTlyZWR1Y2VkLmdycAogICAgR1JDbTM4LjEwMi5jaHIxOXJlZHVjZWQuaWR4LmZhCiAgICBHUkNtMzguMTAyLmNocjE5cmVkdWNlZC5uMmcuaWR4LmZhCiAgICBHUkNtMzguMTAyLmNocjE5cmVkdWNlZC5zZXEKICAgIEdSQ20zOC4xMDIuY2hyMTlyZWR1Y2VkLnRpCiAgICBHUkNtMzguMTAyLmNocjE5cmVkdWNlZC50cmFuc2NyaXB0cy5mYQogICAgR2Vub21lCiAgICBMb2cub3V0CiAgICBTQQogICAgU0FpbmRleAogICAgY2hyTGVuZ3RoLnR4dAogICAgY2hyTmFtZS50eHQKICAgIGNock5hbWVMZW5ndGgudHh0CiAgICBjaHJTdGFydC50eHQKICAgIGV4b25HZVRySW5mby50YWIKICAgIGV4b25JbmZvLnRhYgogICAgZ2VuZUluZm8udGFiCiAgICBnZW5vbWVQYXJhbWV0ZXJzLnR4dAogICAgc2pkYkluZm8udHh0CiAgICBzamRiTGlzdC5mcm9tR1RGLm91dC50YWIKICAgIHNqZGJMaXN0Lm91dC50YWIKICAgIHRyYW5zY3JpcHRJbmZvLnRhYgoKIyMgYHJzZW0tY2FsY3VsYXRlLWV4cHJlc3Npb25gIERldGFpbHMKCkFmdGVyIHByZXBhcmluZyB0aGUgcmVmZXJlbmNlIGluZGV4LCB3ZSBjYW4gZG8gYWxpZ25tZW50IGFuZCBxdWFudGlmaWNhdGlvbiB3aXRoIHRoZSBgcnNlbS1jYWxjdWxhdGUtZXhwcmVzc2lvbmAgY29tbWFuZCAoW2hlcmVdKGh0dHBzOi8vZGV3ZXlsYWIuZ2l0aHViLmlvL1JTRU0vcnNlbS1jYWxjdWxhdGUtZXhwcmVzc2lvbi5odG1sKSBpcyBhIGxpbmsgdG8gdGhlIG1hbnVhbCkuIEZvciBvdXIgaW5wdXRzLCB3ZSB3aWxsIGJlIHVzaW5nIG91ciBGQVNUUSByZWFkcyBhbmQgdGhlIHBhdGggdG8gdGhlIHJlZmVyZW5jZSBpbmRleCB0aGF0IHdlIGNyZWF0ZS4KClRoZXJlIGFyZSBudW1lcm91cyBvdXRwdXRzLCB3aGljaCBhcmUgbGFpZCBvdXQgaW4gdGhlIGZvbGxvd2luZyB0YWJsZToKCnwgRmlsZSB8IERlc2NyaXB0aW9uIHwKfCAtLS0tIHwgLS0tLS0tLS0tLS0gfAp8IGBzYW1wbGVfTi5nZW5vbWUuYmFtYCB8IFRoZSBhbGlnbm1lbnRzIGluIGdlbm9taWMgY29vcmRpbmF0ZXMuIFVzZWQgZm9yIHZpc3VhbGl6YXRpb24gaW4gYSBnZW5vbWUgYnJvd3NlciBzdWNoIGFzIFtJR1ZdKGh0dHBzOi8vc29mdHdhcmUuYnJvYWRpbnN0aXR1dGUub3JnL3NvZnR3YXJlL2lndi8pLiB8CnwgYHNhbXBsZV9OLnRyYW5zY3JpcHQuYmFtYCB8IFRoZSBhbGlnbm1lbnRzIGluIHRyYW5zY3JpcHRvbWljIGNvb3JkaW5hdGVzLiBOb3QgdXNlZCBmb3IgdGhpcyB3b3Jrc2hvcC4gfAp8IGBzYW1wbGVfTi5nZW5lcy5yZXN1bHRzYCB8IEdlbmUtbGV2ZWwgcmVzdWx0cyB0byBiZSB1c2VkIGluIGRvd25zdHJlYW0gREUgYW5hbHlzaXMuIHwKfCBgc2FtcGxlX04uaXNvZm9ybXMucmVzdWx0c2AgfCBJc29mb3JtLWxldmVsIHJlc3VsdHMuIE5vdCB1c2VkIGZvciB0aGlzIHdvcmtzaG9wLiB8CgoKVGhlIHR3byByZXN1bHRzIHdlIHdpbGwgdXNlIG1vc3Qgb2Z0ZW4gZnJvbSBSU0VNK1NUQVIgYXJlIHRoZSBnZW5lLWxldmVsIHF1YW50aWZpY2F0aW9ucyAoYHNhbXBsZV9OLmdlbmVzLnJlc3VsdHNgKSBhbmQgdGhlIGFsaWdubWVudHMgaW4gZ2Vub21lLWNvb3JkaW5hdGVzIChgc2FtcGxlX04uZ2Vub21lLmJhbWApLiBFYWNoIHNhbXBsZSBmb3Igd2hpY2ggd2UgcnVuIFJTRU0rU1RBUiB3aWxsIGhhdmUgdGhlc2Ugb3V0cHV0IGZpbGVzIG5hbWVkIGFmdGVyIHRoZSBzYW1wbGUuCgojIyMgR2Vub21lIEFsaWdubWVudHMKClRoZSBgc2FtcGxlX04uZ2Vub21lLmJhbWAgYWxpZ25tZW50cyBmaWxlIGlzIGEgc3BlY2lhbCwgY29tcHJlc3NlZCwgdmVyc2lvbiBvZiBhIFNBTSBmaWxlIChzZXF1ZW5jZSBhbGlnbm1lbnQvbWFwKS4gSW4gb3JkZXIgdG8gdmlldyBpdCwgd2UgaGF2ZSB0byB1c2UgYSBzcGVjaWFsIHByb2dyYW0gY2FsbGVkIFtgc2FtdG9vbHNgXShodHRwczovL3d3dy5odHNsaWIub3JnL2RvYy9zYW10b29scy5odG1sKS4KCklmIHdlIHdlcmUgdG8gcGVlayBpbnNpZGUgb2YgYHNhbXBsZV9OLmdlbm9tZS5iYW1gLCB3ZSB3b3VsZCBzZWUgbWFueSBjb2x1bW5zIG9mIGRhdGEuIEJ5IHVzaW5nIGBzYW10b29sc2AsIHdlIHdpbGwgYmUgYWJsZSB0byB2aWV3IHRoZSBjb2x1bW5zIGluIHBsYWluIHRleHQgKFNBTSBmb3JtYXQpLiBUaGUgbWFuZGF0b3J5IGNvbHVtbnMgaW4gU0FNIGZvcm1hdCBhcmUgc2hvd24gaW4gdGhlIGZvbGxvd2luZyB0YWJsZSBmcm9tIHRoZSBbb2ZmaWNpYWwgU0FNL0JBTSBmb3JtYXQgc3BlY2lmaWNhdGlvbl0oaHR0cHM6Ly9zYW10b29scy5naXRodWIuaW8vaHRzLXNwZWNzL1NBTXYxLnBkZikuCgo8aW1nIHNyYz0iaW1hZ2VzL3NhbV9jb2x1bW5zLnBuZyIgd2lkdGg9IjgwMCIgLz4KClRoZSBTQU0gZm9ybWF0IGdpdmVzIGluZm9ybWF0aW9uIGFib3V0IHdoZXJlIGVhY2ggcmVhZCBtYXBzIHRvIGluIHRoZSBnZW5vbWUgKG9uZSByZWFkIHBlciBsaW5lKSwgYW5kIGhhcyBpbmZvcm1hdGlvbiBhYm91dCB0aGF0IG1hcHBpbmcuCgo8YnI+PGJyPgohW0FsaWdubWVudCBkYXRhIGFuaW1hdGlvbl0oaW1hZ2VzL3NhbS1iYW0tYW5pbWF0ZWQuZ2lmKQo8YnI+PGJyPgoKIyMjIEdlbmUtbGV2ZWwgUXVhbnRpZmljYXRpb24KCklmIHdlIHdlcmUgdG8gbG9vayBhdCB0aGUgdG9wIDMgbGluZXMgb2YgYHNhbXBsZV9OLmdlbmVzLnJlc3VsdHNgLCB3ZSBzZWUgaXQgaXMgYSBwbGFpbi10ZXh0IGZpbGUgc2VwYXJhdGVkIGJ5IHRhYnMgd2hlcmUgZWFjaCByb3cgaXMgYSBnZW5lLCBhbmQgdGhlIGNvbHVtbnMgYXJlIGRlc2NyaWJlZCB0aGUgZmlyc3Qgcm93LgoKCnwgQ29sdW1uIHwgRGVzY3JpcHRpb24gfAp8IC0tLS0gfCAtLS0tLS0tLS0tLSB8CnwgZ2VuZV9pZCB8IFRoZSBJRCBmcm9tIHRoZSBnZW5lIG1vZGVsIEdURi4gfAp8IHRyYW5zY3JpcHRfaWQocykgfCBUaGUgdHJhbnNjcmlwdCBJRHMgY29ycmVzcG9uZGluZyB0byB0aGUgZ2VuZSBpbiB0aGUgZ2VuZSBtb2RlbCBHVEYuIHwKfCBsZW5ndGggfCBUaGUgd2VpZ2h0ZWQgYXZlcmFnZSBvZiBpdHMgdHJhbnNjcmlwdHMnIGxlbmd0aHMuIHwKfCBlZmZlY3RpdmVfbGVuZ3RoIHwgVGhlIHdlaWdodGVkIGF2ZXJhZ2UsIG92ZXIgaXRzIHRyYW5zY3JpcHRzLCBvZiB0aGUgbWVhbiBudW1iZXIgb2YgcG9zaXRpb25zIGZyb20gd2hpY2ggYSBmcmFnbWVudCBtYXkgc3RhcnQgd2l0aGluIHRoZSBzZXF1ZW5jZSBvZiB0cmFuc2NyaXB0LiB8CnwgZXhwZWN0ZWRfY291bnQgfCBUaGUgc3VtLCBvdmVyIGFsbCB0cmFuc2NyaXB0cywgb2YgdGhlIGVzdGltYXRlZCBjb3VudHMgZnJvbSB0aGUgRU0gYWxnb3JpdGhtLiB8CnwgVFBNIHwgVHJhbnNjcmlwdCBwZXIgbWlsbGlvbiwgYSByZWxhdGl2ZSBtZWFzdXJlIG9mIHRyYW5zY3JpcHQgYWJ1bmRhbmNlIHdoZXJlIHRoZSBzdW0gb2YgYWxsIFRQTXMgaXMgMSBtaWxsaW9uLiB8CnwgRlBLTSB8IEZyYWdtZW50cyBwZXIga2lsb2Jhc2Ugb2YgdHJhbnNjcmlwdCBwZXIgbWlsbGlvbiBtYXBwZWQgcmVhZHMuIHwKCgpUaGUgYGdlbmVzLnJlc3VsdHNgIGZpbGVzIGZvciBlYWNoIHNhbXBsZSBjYW4gYmUgZGlyZWN0bHkgaW1wb3J0ZWQgaW50byBERVNlcTIgdXNpbmcgdGhlIFtgdHhpbXBvcnRgXShodHRwczovL2Jpb2NvbmR1Y3Rvci5vcmcvcGFja2FnZXMvcmVsZWFzZS9iaW9jL3ZpZ25ldHRlcy90eGltcG9ydC9pbnN0L2RvYy90eGltcG9ydC5odG1sI3JzZW0pIFIgQmlvY29uZHVjdG9yIHBhY2thZ2UuCgpBbHRlcm5hdGl2ZWx5LCB3ZSBjYW4gY29tYmluZSB0aGVzZSByZXN1bHRzIGludG8gYSBjb3VudCBtYXRyaXguIFRoZSBjb3VudCBtYXRyaXggY2FuIGJlIHZlcnkgdXNlZnVsLCBzaW5jZSBpdCBjb250YWlucyBzdW1tYXJ5LWxldmVsIGRhdGEgaW4gYSB3aWRlbHkgc3VwcG9ydGVkIGZvcm1hdCwgdGhpcyBtYWtlcyBpdCBncmVhdCBmb3Igc2hhcmluZyBhbmQgYXMgaW5wdXQgaW50byBkaWZmZXJlbnQgYW5hbHlzZXMuCgoKIyMgUlNFTSBQcmVwYXJlIFJlZmVyZW5jZSBFeGVyY2lzZToKCjEuIFZpZXcgdGhlIGhlbHAgcGFnZSBmb3IgcnNlbS1wcmVwYXJlLXJlZmVyZW5jZQoyLiBDcmVhdGUgYSBjb21tYW5kIHRoYXQgd2lsbCBpbmRleCBvdXIgZXhhbXBsZSBnZW5vbWUsIGJ1dCBkbyBub3QgcnVuIGl0CgpgYGAKIyBWaWV3IHRoZSBoZWxwIGZpbGUKcnNlbS1wcmVwYXJlLXJlZmVyZW5jZSAtaAojIENyZWF0ZS9leGVjdXRlIHRoZSBwcmVwYXJlLXJlZmVyZW5jZSBjb21tYW5kCnJzZW0tcHJlcGFyZS1yZWZlcmVuY2UgLS1ndGYgLi4vcmVmcy9HUkNtMzguMTAyLmNocjE5cmVkdWNlZC5ndGYgLS1zdGFyIC0tbnVtLXRocmVhZHMgMSAuLi9yZWZzL0dSQ20zOC4xMDIuY2hyMTlyZWR1Y2VkLmZhIC4uL3JlZnMvR1JDbTM4LjEwMi5jaHIxOXJlZHVjZWQKYGBgCgoKIyMgUlNFTSBDYWxjdWxhdGUgRXhwcmVzc2lvbiBFeGVyY2lzZToKCjEuIFZpZXcgdGhlIGhlbHAgcGFnZSBmb3IgcnNlbS1jYWxjdWxhdGUtZXhwcmVzc2lvbgoyLiBDcmVhdGUgYSBjb21tYW5kIHRvIGV4ZWN1dGUgUlNFTSAvIFNUQVIgYWxpZ25tZW50IGFuZCBxdWFudGlmaWNhdGlvbiBmb3Igb25lIG9mIG91ciBzYW1wbGVzCgpgYGAKIyBGaXJzdCBjcmVhdGUgYSBkaXJlY3RvcnkgZm9yIHRoZSBhbGlnbmVkIHJlc3VsdHMKbWtkaXIgb3V0X3JzZW0KIyBDb25zdHJ1Y3QgYW4gUlNFTSBjb21tYW5kIHRvIGFsaWduIHNhbXBsZV9BIHRvIG91ciByZWZlcmVuY2UKcnNlbS1jYWxjdWxhdGUtZXhwcmVzc2lvbiAtLXN0YXIgLS1udW0tdGhyZWFkcyAxIC0tc3Rhci1nemlwcGVkLXJlYWQtZmlsZSAtLXN0YXItb3V0cHV0LWdlbm9tZS1iYW0gLS1rZWVwLWludGVybWVkaWF0ZS1maWxlcyBvdXRfdHJpbW1lZC9zYW1wbGVfQV9SMS50cmltbWVkLmZhc3RxLmd6IC4uL3JlZnMvR1JDbTM4LjEwMi5jaHIxOXJlZHVjZWQgb3V0X3JzZW0vc2FtcGxlX0EKYGBgCjxicj4KPGJyPgoKIyMgQWxpZ25pbmcgQWxsIFNhbXBsZXMgRXhlcmNpc2U6CgpCZWZvcmUgc3RhcnRpbmcgb3VyIGFsaWdubWVudCBleGVyY2lzZSwgd2Ugc2hvdWxkIG1ha2Ugc3VyZSB0aGF0IHdlIGFyZSBvbiB0aGUgc2FtZSBwYWdlLiBGb2xsb3cgdGhlIGxpbmsgYmVsb3c6CgpbTGluayB0byBhbGlnbm1lbnQgZXhlcmNpc2VdKE1vZHVsZTAzYl9icmVha291dDAyX2V4Lmh0bWwpCgo8YnI+Cjxicj4KCi0tLQoKVGhlc2UgbWF0ZXJpYWxzIGhhdmUgYmVlbiBhZGFwdGVkIGFuZCBleHRlbmRlZCBmcm9tIG1hdGVyaWFscyBjcmVhdGVkIGJ5IHRoZSBbSGFydmFyZCBDaGFuIEJpb2luZm9ybWF0aWNzIENvcmUgKEhCQyldKGh0dHA6Ly9iaW9pbmZvcm1hdGljcy5zcGguaGFydmFyZC5lZHUvKS4gVGhlc2UgYXJlIG9wZW4gYWNjZXNzIG1hdGVyaWFscyBkaXN0cmlidXRlZCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIFtDcmVhdGl2ZSBDb21tb25zIEF0dHJpYnV0aW9uIGxpY2Vuc2UgKENDIEJZIDQuMCldKGh0dHA6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LzQuMC8pLCB3aGljaCBwZXJtaXRzIHVucmVzdHJpY3RlZCB1c2UsIGRpc3RyaWJ1dGlvbiwgYW5kIHJlcHJvZHVjdGlvbiBpbiBhbnkgbWVkaXVtLCBwcm92aWRlZCB0aGUgb3JpZ2luYWwgYXV0aG9yIGFuZCBzb3VyY2UgYXJlIGNyZWRpdGVkLgoKPGJyLz4KPGJyLz4KPGhyLz4KfCBbUHJldmlvdXMgbGVzc29uXShNb2R1bGUwM2FfUmVmZXJlbmNlX0dlbm9tZXMuaHRtbCkgfCBbVG9wIG9mIHRoaXMgbGVzc29uXSgjdG9wKSB8IFtOZXh0IGxlc3Nvbl0oTW9kdWxlMDRfQWxpZ25tZW50X1FDX2FuZF9RdWFudGlmaWNhdGlvbi5odG1sKSB8CnwgOi0tLSB8IDotLS0tOiB8IC0tLTogfAo=</div>
 
 
 </div>

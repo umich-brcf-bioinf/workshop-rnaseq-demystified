@@ -14,7 +14,7 @@
 
 <title>Exercise 02</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -192,8 +192,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -201,16 +201,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -409,26 +402,34 @@ pre {
 <p><br></p>
 <p><strong>15 Minutes</strong></p>
 <p><br></p>
-<p>We just learned about how to use RSEM &amp; STAR, but now we need to align all of the rest of our samples to the reference genome. In this breakout exercise, we’ll build upon some concepts we’ve learned previously.</p>
+<p>We just learned about how to use RSEM &amp; STAR, but now we need to
+align all of the rest of our samples to the reference genome. In this
+breakout exercise, we’ll build upon some concepts we’ve learned
+previously.</p>
 <p><br></p>
 <div id="instructions" class="section level3">
 <h3>Instructions:</h3>
 <p><br></p>
 <ul>
-<li>Work independently in the main room, posting any questions that arise to slack.</li>
+<li>Work independently in the main room, posting any questions that
+arise to slack.</li>
 <li>Recommendations for writing your own code:
 <ul>
 <li>Read function documentation</li>
 <li>Test out ideas - it’s okay to make mistakes and generate errors</li>
-<li>Use a search engine to look up errors or recommended solutions using keywords</li>
+<li>Use a search engine to look up errors or recommended solutions using
+keywords</li>
 </ul></li>
 <li>We’ll review possible solutions after time is up as a group.</li>
 </ul>
 <p><br></p>
 <ul>
-<li>Review what we’ve learned about running RSEM + STAR, to determine an appropriate command for aligning our samples.</li>
-<li>Using what we’ve learned previously, create a script using this command to quickly and easily align the rest of our samples.</li>
-<li>Run the script, view the output, and verify that we have the files we need.</li>
+<li>Review what we’ve learned about running RSEM + STAR, to determine an
+appropriate command for aligning our samples.</li>
+<li>Using what we’ve learned previously, create a script using this
+command to quickly and easily align the rest of our samples.</li>
+<li>Run the script, view the output, and verify that we have the files
+we need.</li>
 </ul>
 <p><br></p>
 </div>

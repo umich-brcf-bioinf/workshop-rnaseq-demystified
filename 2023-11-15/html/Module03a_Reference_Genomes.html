@@ -14,7 +14,7 @@
 
 <title>Reference Genomes</title>
 
-<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -429,6 +429,9 @@ div.tocify {
       <a href="Module10_DEComparisons.html">DE Testing</a>
     </li>
     <li>
+      <a href="Module10a_batchAndCovars.html">Batches and Covariates</a>
+    </li>
+    <li>
       <a href="Module11_DEVisualizations.html">DE Visualization</a>
     </li>
     <li>
@@ -481,24 +484,40 @@ pre {
 </ul>
 <div id="differential-expression-workflow" class="section level1">
 <h1>Differential Expression Workflow</h1>
-<p>Here we will set the stage for the next steps by discussing reference genomes, which are integral to genome alignments and gene/isoform quantification. Along the way we will touch on some things to be aware of.</p>
-<p><img src="images/wayfinder/wayfinder-ReferenceGenomes.png" /> <br> <br> <br> <br></p>
+<p>Here we will set the stage for the next steps by discussing reference
+genomes, which are integral to genome alignments and gene/isoform
+quantification. Along the way we will touch on some things to be aware
+of.</p>
+<p><img src="images/wayfinder/wayfinder-ReferenceGenomes.png" /> <br>
+<br> <br> <br></p>
 </div>
 <div id="reference-genomes" class="section level1">
 <h1>Reference Genomes</h1>
-<p>A reference genome consists of the <strong>reference sequence</strong> and, optionally, any number of <strong>genomic annotations</strong> that describe attributes about that sequence. Examples of annotations include:</p>
+<p>A reference genome consists of the <strong>reference
+sequence</strong> and, optionally, any number of <strong>genomic
+annotations</strong> that describe attributes about that sequence.
+Examples of annotations include:</p>
 <ul>
-<li>Gene models consisting of the location and other information about genes.</li>
-<li>Variants consisting of the location of common or rare genetic variants, their alleles, and frequencies.</li>
-<li>Small RNAs consisting of the location and other information about various types of small RNAs.</li>
+<li>Gene models consisting of the location and other information about
+genes.</li>
+<li>Variants consisting of the location of common or rare genetic
+variants, their alleles, and frequencies.</li>
+<li>Small RNAs consisting of the location and other information about
+various types of small RNAs.</li>
 </ul>
-<p>Of particular relevance to us for this workshop are the reference sequence and gene models.</p>
+<p>Of particular relevance to us for this workshop are the reference
+sequence and gene models.</p>
 <div id="reference-sequence" class="section level2">
 <h2>Reference Sequence</h2>
-<p>Reference sequence is stored in <a href="https://en.wikipedia.org/wiki/FASTA_format">FASTA</a> files. They are similar to FASTQ files in their storage of sequence information, but their format is a little different in a couple ways:</p>
+<p>Reference sequence is stored in <a
+href="https://en.wikipedia.org/wiki/FASTA_format">FASTA</a> files. They
+are similar to FASTQ files in their storage of sequence information, but
+their format is a little different in a couple ways:</p>
 <ol style="list-style-type: decimal">
-<li>Records are separated by lines beginning with <code>&gt;</code> instead of <code>@</code>.</li>
-<li>Only the sequence is stored in a FASTA file, there is no notion of quality attached to the nucleotides.</li>
+<li>Records are separated by lines beginning with <code>&gt;</code>
+instead of <code>@</code>.</li>
+<li>Only the sequence is stored in a FASTA file, there is no notion of
+quality attached to the nucleotides.</li>
 </ol>
 <pre><code>&gt;chrM
 GATCACAGGTCTATCACCCTATTAACCACTCACGGGAGCTCTCCATGCAT
@@ -513,8 +532,13 @@ TTTATCTTTAGGCGGTATGCACTTTTAACAGTCACCCCCCAACTAACACA</code></pre>
 </div>
 <div id="gene-models" class="section level2">
 <h2>Gene Models</h2>
-<p>Well-characterized organisms (e.g. human, mouse, zebrafish) have fairly mature gene models. These are stored in <a href="https://uswest.ensembl.org/info/website/upload/gff.html">GTF</a> format, which gives location and other information about each gene feature. Below are two examples:</p>
-<p><br> <img src="images/gtf_refseq.png" alt="RefSeq GTF" /> <br><br> <img src="images/gtf_ensembl.png" alt="ENSEMBL GTF" /> <br><br></p>
+<p>Well-characterized organisms (e.g. human, mouse, zebrafish) have
+fairly mature gene models. These are stored in <a
+href="https://uswest.ensembl.org/info/website/upload/gff.html">GTF</a>
+format, which gives location and other information about each gene
+feature. Below are two examples:</p>
+<p><br> <img src="images/gtf_refseq.png" alt="RefSeq GTF" /> <br><br>
+<img src="images/gtf_ensembl.png" alt="ENSEMBL GTF" /> <br><br></p>
 <p>The GTF format stores specific information in each column:</p>
 <table>
 <colgroup>
@@ -562,29 +586,52 @@ TTTATCTTTAGGCGGTATGCACTTTTAACAGTCACCCCCCAACTAACACA</code></pre>
 </tr>
 <tr class="odd">
 <td align="center">9</td>
-<td>Attribute, a semicolon separated list of key/value pairs giving additional information about the feature.</td>
+<td>Attribute, a semicolon separated list of key/value pairs giving
+additional information about the feature.</td>
 </tr>
 </tbody>
 </table>
-<p><br><br> <img src="images/fasta-gtf-gene-models.gif" alt="Animated reference data" /> <br><br></p>
+<p><br><br> <img src="images/fasta-gtf-gene-models.gif"
+alt="Animated reference data" /> <br><br></p>
 <div id="minutiae-very-briefly" class="section level3">
 <h3>Minutiae, Very Briefly</h3>
-<p>Bioinformatics is a relatively new, fast-changing, field and its data standards and formats are no different. Consequently there are some oddities and tedious items of note which we would like to only briefly touch on here.</p>
+<p>Bioinformatics is a relatively new, fast-changing, field and its data
+standards and formats are no different. Consequently there are some
+oddities and tedious items of note which we would like to only briefly
+touch on here.</p>
 </div>
 <div id="genome-builds" class="section level3">
 <h3>Genome Builds</h3>
-<p>On occassion new reference genomes are released, and the genome build number changes. You may be familiar with the UCSC manner of naming human genome builds: hg18, hg19, hg38. ENSEMBL, naturally, has their own way of referring to genome builds: GRCh36, GRCh37, and GRCh38. Notice with the most recent human reference, the numbering now aligns between UCSC and ENSEMBL.</p>
+<p>On occassion new reference genomes are released, and the genome build
+number changes. You may be familiar with the UCSC manner of naming human
+genome builds: hg18, hg19, hg38. ENSEMBL, naturally, has their own way
+of referring to genome builds: GRCh36, GRCh37, and GRCh38. Notice with
+the most recent human reference, the numbering now aligns between UCSC
+and ENSEMBL.</p>
 <p>Different organisms have their own versioning.</p>
 </div>
 <div id="annotation-sources" class="section level3">
 <h3>Annotation Sources</h3>
-<p><a href="https://www.ncbi.nlm.nih.gov/refseq/rsg/">NCBI RefSeq</a>, <a href="https://www.ensembl.org/info/genome/genebuild/index.html">ENSEMBL</a>, and <a href="https://academic.oup.com/bioinformatics/article/22/9/1036/200093">UCSC Known Genes</a> are the three primary gene annotation databases (different organisms have their own databases). We will not go into exactly how the gene annotations are different, but we note that the are, and <a href="https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-015-1308-8">others have examined the consequences of this</a>.</p>
+<p><a href="https://www.ncbi.nlm.nih.gov/refseq/rsg/">NCBI RefSeq</a>,
+<a
+href="https://www.ensembl.org/info/genome/genebuild/index.html">ENSEMBL</a>,
+and <a
+href="https://academic.oup.com/bioinformatics/article/22/9/1036/200093">UCSC
+Known Genes</a> are the three primary gene annotation databases
+(different organisms have their own databases). We will not go into
+exactly how the gene annotations are different, but we note that the
+are, and <a
+href="https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-015-1308-8">others
+have examined the consequences of this</a>.</p>
 </div>
 <div id="gene-ids" class="section level3">
 <h3>Gene IDs</h3>
-<p>The two GTF examples above highlight different ways of referring to the same gene. In the first GTF we see:</p>
+<p>The two GTF examples above highlight different ways of referring to
+the same gene. In the first GTF we see:</p>
 <ul>
-<li>DDX11L1, the gene symbol, controlled by the <a href="https://www.genenames.org/">Human Gene Nomenclature Committee (HUGO)</a>.</li>
+<li>DDX11L1, the gene symbol, controlled by the <a
+href="https://www.genenames.org/">Human Gene Nomenclature Committee
+(HUGO)</a>.</li>
 <li>NR_046018, the RefSeq transcript ID</li>
 </ul>
 <p>And in the second GTF we see:</p>
@@ -593,44 +640,88 @@ TTTATCTTTAGGCGGTATGCACTTTTAACAGTCACCCCCCAACTAACACA</code></pre>
 <li>DDX11L1, the gene symbol, thankfully the same</li>
 <li>ENST00000456328, the ENSEMBL transcript ID</li>
 </ul>
-<p>Translating between different gene IDs is possible, as we will see in Day Two with <code>biomaRt</code>. But in terms of <strong>best practice</strong> it is generally a good idea to avoid using the gene symbol as the primary gene identifier because not everyone refers to the same gene by the same symbol.</p>
+<p>Translating between different gene IDs is possible, as we will see in
+Day Two with <code>biomaRt</code>. But in terms of <strong>best
+practice</strong> it is generally a good idea to avoid using the gene
+symbol as the primary gene identifier because not everyone refers to the
+same gene by the same symbol.</p>
 </div>
 </div>
 </div>
 <div id="getting-a-reference-genome" class="section level1">
 <h1>Getting a Reference Genome</h1>
-<p>The <a href="https://support.illumina.com/sequencing/sequencing_software/igenome.html">Illumina iGenomes</a> resource is one of the easiest, and most comprehensive, ways to download a reference genome. iGenomes includes both the reference sequence and gene models.</p>
-<p>Reference genomes can be <strong>very large</strong>, depending on the organism, and so we will not download one to the Amazon instance we are using for this workshop. We’ve included instructions for downloading these, in case you want to download these to the server where you intend to later do a similar RNA-seq analysis (e.g. on High-Performance Compute, GreatLakes).</p>
+<p>The <a
+href="https://support.illumina.com/sequencing/sequencing_software/igenome.html">Illumina
+iGenomes</a> resource is one of the easiest, and most comprehensive,
+ways to download a reference genome. iGenomes includes both the
+reference sequence and gene models.</p>
+<p>Reference genomes can be <strong>very large</strong>, depending on
+the organism, and so we will not download one to the Amazon instance we
+are using for this workshop. We’ve included instructions for downloading
+these, in case you want to download these to the server where you intend
+to later do a similar RNA-seq analysis (e.g. on High-Performance
+Compute, GreatLakes).</p>
 <details>
 <summary>
 How would I download references with iGenomes?
 </summary>
-<p>As noted, it’s not recommended to download the iGenomes references to the AWS instance. However, if you wanted to know in general how you would do that, the process is described here.</p>
-<p>First go to the <a href="https://support.illumina.com/sequencing/sequencing_software/igenome.html">iGenomes</a> page, find the build you want from the source you want, right click the genome build you want to download, and select “Copy link location”:</p>
-<div class="figure">
-<img src="images/genome_copy_link.png" alt="" />
-<p class="caption">iGenomes image for copying link location</p>
+<p>As noted, it’s not recommended to download the iGenomes references to
+the AWS instance. However, if you wanted to know in general how you
+would do that, the process is described here.</p>
+<p>First go to the <a
+href="https://support.illumina.com/sequencing/sequencing_software/igenome.html">iGenomes</a>
+page, find the build you want from the source you want, right click the
+genome build you want to download, and select “Copy link location”:</p>
+<div class="float">
+<img src="images/genome_copy_link.png"
+alt="iGenomes image for copying link location" />
+<div class="figcaption">iGenomes image for copying link location</div>
 </div>
-<p>Then on the remote server you would go to the directory you’d like to download the genome to and type (that URL is what we copied):</p>
+<p>Then on the remote server you would go to the directory you’d like to
+download the genome to and type (that URL is what we copied):</p>
 <pre><code>$ wget http://igenomes.illumina.com.s3-website-us-east-1.amazonaws.com/Homo_sapiens/NCBI/GRCh38/Homo_sapiens_NCBI_GRCh38.tar.gz</code></pre>
-<p>After the download finishes (it may take a while as it is tens of GB large), you can unpack it with:</p>
+<p>After the download finishes (it may take a while as it is tens of GB
+large), you can unpack it with:</p>
 <pre><code>$ tar -xf Homo_sapiens_NCBI_GRCh38.tar.gz</code></pre>
 </details>
 <div id="which-reference-is-right-for-me" class="section level2">
 <h2>Which Reference is Right for Me?</h2>
-<p>The key is to be consistent in your research. Switching from ENSEMBL to UCSC will create many headaches because of the change in gene identifiers, and differences in the gene models themselves. Often people choose the one they’re most comfortable with, which is often a function of historical accident. The key is not to overthink it.</p>
-<p>Another important note is not to mix the sources. If you download reference sequence from UCSC, don’t use an ENSEMBL GTF (and vice versa). One of the quirky differences between the two databases is that ENSEMBL refers to chromosome only by their number, i.e. <code>1</code>, whereas UCSC refers to chromsomes as <code>chr1</code>. This makes reference FASTAs from one source incompatible with gene builds from another.</p>
+<p>The key is to be consistent in your research. Switching from ENSEMBL
+to UCSC will create many headaches because of the change in gene
+identifiers, and differences in the gene models themselves. Often people
+choose the one they’re most comfortable with, which is often a function
+of historical accident. The key is not to overthink it.</p>
+<p>Another important note is not to mix the sources. If you download
+reference sequence from UCSC, don’t use an ENSEMBL GTF (and vice versa).
+One of the quirky differences between the two databases is that ENSEMBL
+refers to chromosome only by their number, i.e. <code>1</code>, whereas
+UCSC refers to chromsomes as <code>chr1</code>. This makes reference
+FASTAs from one source incompatible with gene builds from another.</p>
 <p><br> <br></p>
 <hr />
-<p>These materials have been adapted and extended from materials created by the <a href="http://bioinformatics.sph.harvard.edu/">Harvard Chan Bioinformatics Core (HBC)</a>. These are open access materials distributed under the terms of the <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution license (CC BY 4.0)</a>, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</p>
+<p>These materials have been adapted and extended from materials created
+by the <a href="http://bioinformatics.sph.harvard.edu/">Harvard Chan
+Bioinformatics Core (HBC)</a>. These are open access materials
+distributed under the terms of the <a
+href="http://creativecommons.org/licenses/by/4.0/">Creative Commons
+Attribution license (CC BY 4.0)</a>, which permits unrestricted use,
+distribution, and reproduction in any medium, provided the original
+author and source are credited.</p>
 <br/> <br/>
 <hr/>
-<table>
+<table style="width:100%;">
+<colgroup>
+<col width="28%" />
+<col width="42%" />
+<col width="28%" />
+</colgroup>
 <thead>
 <tr class="header">
-<th align="left"><a href="Module02b_Trimming.html">Previous lesson</a></th>
+<th align="left"><a href="Module02b_Trimming.html">Previous
+lesson</a></th>
 <th align="center"><a href="#top">Top of this lesson</a></th>
-<th align="right"><a href="Module03b_Alignment.html">Next lesson</a></th>
+<th align="right"><a href="Module03b_Alignment.html">Next
+lesson</a></th>
 </tr>
 </thead>
 <tbody>

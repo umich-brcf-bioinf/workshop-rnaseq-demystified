@@ -52,6 +52,8 @@ navbar:
       menu:
         - text: "DE Testing"
           href: Module10_DEComparisons.html
+        - text: "Batches and Covariates"
+          href: Module10a_batchAndCovars.html
         - text: "DE Visualization"
           href: Module11_DEVisualizations.html
         - text: "DE Annotation"

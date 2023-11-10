@@ -1,0 +1,180 @@
+---
+title: "Covariates and Batch correction"
+author: "UM Bioinformatics Core"
+date: "`r Sys.Date()`"
+output:
+        html_document:
+            includes:
+                in_header: header.html
+            theme: paper
+            toc: true
+            toc_depth: 4
+            toc_float: true
+            number_sections: false
+            fig_caption: true
+            markdown: GFM
+            code_download: true
+---
+
+<style type="text/css">
+body, td {
+   font-size: 18px;
+}
+code.r{
+  font-size: 12px;
+}
+pre {
+  font-size: 12px
+}
+</style>
+
+```{r, include = FALSE}
+source("../bin/chunk-options.R")
+knitr_fig_path("10a-")
+```
+
+<Have section follow the fitting a DE of standard model>
+
+In this module, we will learn:
+
+* How to identify possible "confounding" factors
+* How batches or other covariates may impact your data
+
+<br>
+
+```{r Modules, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+library(DESeq2)
+library(tidyr)
+library(dplyr)
+# load("rdata/RunningData.RData")
+```
+
+
+# Differential Expression Workflow {.unlisted .unnumbered}
+
+Although we've successfully generated DE results, there are instances where patterns in our PCA plots or additional discussions with our collaborators cause us to revise our DE model(s).
+
+![](./images/wayfinder/wayfinder-batchAndCovars.png){width=75%}
+
+In this case, we weren't aware of any [covariates](https://methods-sagepub-com.proxy.lib.umich.edu/reference/encyc-of-research-design/n85.xml) that should be considered in our comparisons based on the [information available](https://www.ncbi.nlm.nih.gov/Traces/study/?acc=PRJNA488955&o=acc_s%3Aa) [publicly for these data](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119365). However, let's look back at our initial PCA plot and see if there are any concerning patterns:
+
+```{r PCArlog3}
+pca_plot = plotPCA(rld, intgroup = c('condition'), ntop = 500)
+pca_plot
+```
+
+We do see a high amount of variance (58%) along PC1 that doesn't seem to correspond to the experimental treatment. If we saw this pattern for a "real" dataset, we'd request additional information about the samples 
+
+# How to model batch effects with DESeq2
+
+Differences between samples can be due to biological **covariates** such as sex or patient of origin. Differences between samples can also be due to technical reasons, such as collection on different days or different sequencing runs. Groups of samples with different technical handling are called **batches** and differences due to the handling of samples are called **batch effects**. 
+
+Any relevant technical batches or biological covariates should be added as [additional columns](https://support.bioconductor.org/p/75309/) in the sample information table and [added to a design formula](https://support.bioconductor.org/p/98700/). We can include batch effects and covariates in the same way in our design model, as long as the groups do not overlap, or **confound**, the biological treatment groups.
+
+Let's assume that after reviewing the above PCA plot, we reached out to our collaborators and they indicated that the samples were collected on three different days. We can add that information to our samplesheet and then create another `DESeq2` object that includes those labels and a model with an [additional term](https://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) to account for possible batch effects due to date of collection.
+
+```{r Confounders}
+samplesheet_batch = samplesheet_ready
+samplesheet_batch$batch = factor(c(rep(c("Day1", "Day2", "Day3"), 2)), 
+                                 levels = c("Day1", "Day2", "Day3"))
+
+dds_batch = DESeqDataSetFromMatrix(countData = count_table,
+                      colData = samplesheet_batch,
+                      design = ~ batch + condition)
+```
+
+Note that we first created a new column called "batch" and added date of collection labels to our sample sheet and then initialized the `DESeq2` object with that sample information and a model that includes an additional term that matches the "batch" column name.
+
+While we don't have time to delve into model options in detail, more complex model designs including adding "interaction terms" between multiple group labels, are helpfully described in [this support thread](https://support.bioconductor.org/p/98628/) as well as in the [DESeq2 vignette](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#interactions).
+
+<details>
+    <summary>*Click for example of model design check*</summary>
+    When including multiple terms in our model it's helpful to check the corresponding design matrix to ensure that our batches are not confounded, which would cause `DESeq2` to return a `model not full rank` error when attempting to fit the model. We can do that using the `model.matrix` function, providing our intended model and our sample information. 
+
+```{r TestInteractions}
+model.matrix(~ condition + batch, samplesheet_batch)
+```
+  When we look at the outputs, we can see that all of the returned columns have values (`1`) included. If our model was not full rank, then we would see a columns with no values (all `0`) returned.
+</details>
+<br>
+
+Just like in our initial analysis, we'll also want to filter our data.
+```{r FilterData}
+keep = rowSums(counts(dds_batch)) >= 10
+dds_batch_filtered = dds_batch[keep,]
+```
+
+Now that we've initialized a `DESeq2` object that includes our batch labels and filtered the data, we can generate the `rlog` normalized count data and have that meta-data included:
+
+```{r BatchNormalization}
+rld_batch = rlog(dds_batch_filtered, blind = TRUE)
+head(rld_batch)
+```
+
+Now that we have the additional labels added and normalized our data, we can generate a new PCA plot to see if the the batches explain any of the variance along PC1:
+
+```{r BatchPCA}
+pca_plot_batch = plotPCA(rld_batch, intgroup = c('batch'), ntop = 500) + ggtitle("Batch labeled - iron deficiency data")
+pca_plot_batch
+```
+
+From this plot, we can see that the dates of collection are primarily separated along PC1, suggesting that this variation might be batch effects. For data with multiple technical or biological covariates, we might need to generate PCA plots for each of the additional labels to determine what labels might be relevant to that dataset. However, based on the PCA plot for these data, we can proceed with fitting our model and generating DE results that account for these batches.
+
+# Fit a model that includes a covariate 
+
+To fit our updated model, just like for our initial analysis, we use the `DESeq` function:
+
+```{r FitModelCovariate, message=FALSE}
+dds_batch_fitted = DESeq(dds_batch_filtered)
+resultsNames(dds_batch_fitted) 
+```
+Notice that we have two additional sets of results that include the `batch` labels. While this indicates that the term we included for `batch` was fit, these results would not be biologically interesting.
+
+Let's look at these results from our comparison of interest:
+```{r setBatchResults}
+resultsBatch_deficient_vs_control = results(dds_batch_fitted, name = 'condition_deficient_vs_control')
+head(resultsBatch_deficient_vs_control) # results from model with term for batch
+head(results_deficient_vs_control) # results from model with no term
+```
+We can see that while the structure of the results table is the same, the returned statistics are slightly different. However, since we *didn't* actually talk to a collaborator to identify if batch could explain the % of variance observed within our treatment groups, we'll save these results to file but will proceed with visualizing the results of our initial model.
+
+```{r WriteFitModelObject}
+save(dds_batch_fitted,
+          file="outputs/Robjs/dds_batch_fitted.Robj")
+```
+
+
+
+---
+
+# Summary
+
+In this section, we:
+
+* Discussed technical batches and biological covariates
+* Fitted a DESeq2 model that includes batch
+* Generated tables of differential expression results for our batch model - i.e. fold changes and adjusted pvalues for each gene in dataset
+* Saved our fitted model and results with batch to file
+
+Now that we've generated multiple differential comparisons, we can determine how many genes are differentially expressed between our conditions and how to visualize our results.
+
+---
+
+
+---
+
+# Sources
+
+* HBC DGE training module, part 1: https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html
+* https://biohpc.cornell.edu/doc/RNA-Seq-2020-exercise2.html
+
+---
+
+These materials have been adapted and extended from materials listed above. These are open access materials distributed under the terms of the [Creative Commons Attribution license (CC BY 4.0)](http://creativecommons.org/licenses/by/4.0/), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.
+
+<br/>
+<br/>
+<hr/>
+| [Previous lesson](Module09_SampleQCViz.html) | [Top of this lesson](#top) | [Next lesson](Module11_DEVisualizations.html) |
+| :--- | :----: | ---: |
+

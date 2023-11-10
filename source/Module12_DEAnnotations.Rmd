@@ -59,7 +59,7 @@ library(RColorBrewer)
 
 Here we will generate summary figures for our results and annotate our DE tables.
 
-![](./images/wayfinder/wayfinder-DEVisualizations.png){width=75%}
+![](./images/wayfinder/wayfinder-DEAnnotation.png){width=75%}
 
 ---
 

@@ -138,7 +138,13 @@ resultsBatch_deficient_vs_control = results(dds_batch_fitted, name = 'condition_
 head(resultsBatch_deficient_vs_control) # results from model with term for batch
 head(results_deficient_vs_control) # results from model with no term
 ```
-We can see that while the structure of the results table is the same, the returned statistics are slightly different. We can see that 
+We can see that while the structure of the results table is the same, the returned statistics are slightly different. However, since we *didn't* actually talk to a collaborator to identify if batch could explain the % of variance observed within our treatment groups, we'll save these results to file but will proceed with visualizing the results of our initial model.
+
+```{r WriteFitModelObject}
+save(dds_batch_fitted,
+          file="outputs/Robjs/dds_batch_fitted.Robj")
+```
+
 
 
 ---

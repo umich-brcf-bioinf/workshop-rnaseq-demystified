@@ -84,9 +84,9 @@ Several common normalization methods exist to account for these differences:
 | EdgeR's **trimmed mean of M values (TMM)** [[2](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-3-r25)] | uses a weighted trimmed mean of the log expression ratios between samples | sequencing depth, RNA composition | gene count comparisons between samples and for **DE analysis**; **NOT for within sample comparisons** |
 
 
-
-
 **Check-in: Questions about normalizations?**
+
+
 
 ## DESeq2 normalizations
 

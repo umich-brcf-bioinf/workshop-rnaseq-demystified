@@ -250,7 +250,7 @@ Generally, for human and mouse experiments the recommendation is 30-40 million r
 
 <br>
 
-How many reads were generated per sample in our data? We can use the `summarize_all` function from the dplyr package to determine the number of reads or "depth" per sample.
+How many reads were generated per sample in our data? We can use the `summarize_all` function from the `dplyr` package to determine the total number of reads or "depth" per sample.
 
 ```{r SummarizeReads, eval=TRUE}
 count_table %>% summarize_all(sum)

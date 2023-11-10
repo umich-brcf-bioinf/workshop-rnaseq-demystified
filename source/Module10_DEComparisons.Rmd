@@ -197,7 +197,7 @@ Each p-value reported in the table is the result of a single test for a single g
 
 ### The multiple hypothesis problem
 
-For example, if we consider running the Wald test for 20 genes instead of just three, we might see something like this where `Gene N` has a p-value below our threshold of 0.05. If we see this pattern, do we expect that `Gene N` is actually differentially expresed (e.g. a true positive)?
+For example, if we consider running the Wald test for 20 genes instead of just three, we might see something like this where `Gene N` has a p-value below our threshold of 0.05. If we see this pattern, do we expect that `Gene N` is actually differentially expressed (e.g. a true positive)?
 
 <br>
 ![](./images/FDR-1.png){width=75%}
@@ -215,7 +215,7 @@ What if we tested 10,000 genes? We would expect to see 500 genes with p-values <
 ![](./images/FDR-3.png){width=75%}
 <br>
 
-**So if we are testing 20,000 genes for differential expression, we would expect to see ~1,000 significant genes (5%) just by chance.**
+**So if we are testing 20,000 genes for differential expression, we would expect to see ~1,000 genes (5%) with statistical significance, just by chance.**
 <br>
 
 ### The FDR solution

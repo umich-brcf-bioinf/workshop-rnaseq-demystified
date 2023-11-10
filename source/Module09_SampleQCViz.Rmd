@@ -64,7 +64,7 @@ Prior to testing for differential expression between our comparisons of interest
 
 # Quality Control Visualizations
 
-We have already examined quality control assessment at the sequencing level with `FastQC` and `MultiQC`. Today we will examine sample-level and gene-level quality control for our expression data.
+We have already examined quality control assessment at the sequencing level with `FastQC` and `MultiQC`. Now, we will examine sample-level and gene-level quality control for our expression data.
 
 To do this, we will first assess the similarity of our samples by using principal component analysis (PCA). This will allow us to determine how well patterns in the data fit our expectations from the experiments design and examine possible sources of variation.
 

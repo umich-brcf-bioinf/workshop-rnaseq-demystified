@@ -56,9 +56,9 @@ Although we've successfully generated DE results, there are instances where patt
 
 <*TODO* - Update wayfinder to  circle back to QC>
 
-![](./images/wayfinder/wayfinder-DEComparisons.png){width=75%}
+![](./images/wayfinder/wayfinder-batchAndCovars.png){width=75%}
 
-In this case, we weren't aware of any [covariates](https://methods-sagepub-com.proxy.lib.umich.edu/reference/encyc-of-research-design/n85.xml) that should be considered in our comparisons. However, let's look back at our initial PCA plot and see if there are any concerning patterns:
+In this case, we weren't aware of any [covariates](https://methods-sagepub-com.proxy.lib.umich.edu/reference/encyc-of-research-design/n85.xml) that should be considered in our comparisons based on the [information available](https://www.ncbi.nlm.nih.gov/Traces/study/?acc=PRJNA488955&o=acc_s%3Aa) [publicly for these data](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119365). However, let's look back at our initial PCA plot and see if there are any concerning patterns:
 
 ```{r PCArlog3}
 pca_plot = plotPCA(rld, intgroup = c('condition'), ntop = 500)
@@ -73,7 +73,7 @@ Differences between samples can be due to biological **covariates** such as sex 
 
 Any relevant technical batches or biological covariates should be added as [additional columns](https://support.bioconductor.org/p/75309/) in the sample information table and [added to a design formula](https://support.bioconductor.org/p/98700/). We can include batch effects and covariates in the same way in our design model, as long as the groups do not overlap, or **confound**, the biological treatment groups.
 
-Let's assume that after reviewing the above PCA plot, we reached out to our collaborators and they indicated that the samples were collected on three different days. We can add that information to our samplesheet and then create another `DESeq2` object that includes those labels and a model to account for possible batch effects due to date of collection.
+Let's assume that after reviewing the above PCA plot, we reached out to our collaborators and they indicated that the samples were collected on three different days. We can add that information to our samplesheet and then create another `DESeq2` object that includes those labels and a model with an [additional term](https://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) to account for possible batch effects due to date of collection.
 
 ```{r Confounders}
 samplesheet_batch = samplesheet_ready
@@ -89,25 +89,34 @@ Note that we first created a new column called "batch" and added date of collect
 
 While we don't have time to delve into model options in detail, more complex model designs including adding "interaction terms" between multiple group labels, are helpfully described in [this support thread](https://support.bioconductor.org/p/98628/) as well as in the [DESeq2 vignette](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#interactions).
 
-Before we proceed further, let's check the corresponding design matrix to ensure that our batches are not confounded, which would cause DESeq2 to fail to fit our model.
+<details>
+    <summary>*Click for example of model design check*</summary>
+    When including multiple terms in our model it's helpful to check the corresponding design matrix to ensure that our batches are not confounded, which would cause `DESeq2` to return a `model not full rank` error when attempting to fit the model. We can do that using the `model.matrix` function, providing our intended model and our sample information. 
 
 ```{r TestInteractions}
 model.matrix(~ condition + batch, samplesheet_batch)
 ```
-
+  When we look at the outputs, we can see that all of the returned columns have values (`1`) included. If our model was not full rank, then we would see a columns with no values (all `0`) returned.
+</details>
 <br>
 
-Just like in our initial analysis, now that we've initialized a `DESeq2` object that includes our batch labels, we can generate the `rlog` normalized count data and have that meta-data included:
+Just like in our initial analysis, we'll also want to filter our data.
+```{r FilterData}
+keep = rowSums(counts(dds_batch)) >= 10
+dds_batch_filtered = dds_batch[keep,]
+```
+
+Now that we've initialized a `DESeq2` object that includes our batch labels and filtered the data, we can generate the `rlog` normalized count data and have that meta-data included:
 
 ```{r BatchNormalization}
-rld_batch = rlog(dds_batch, blind = TRUE)
+rld_batch = rlog(dds_batch_filtered, blind = TRUE)
 head(rld_batch)
 ```
 
 Now that we have the additional labels added and normalized our data, we can generate a new PCA plot to see if the the batches explain any of the variance along PC1:
 
 ```{r BatchPCA}
-pca_plot_batch = plotPCA(rld_batch, intgroup = c('batch'), ntop = 500)
+pca_plot_batch = plotPCA(rld_batch, intgroup = c('batch'), ntop = 500) + ggtitle("Batch labeled - iron deficiency data")
 pca_plot_batch
 ```
 
@@ -115,29 +124,21 @@ From this plot, we can see that the dates of collection are primarily separated 
 
 # Fit a model that includes a covariate 
 
-To fit our updated model, just like for our intitial analysis, we use the `DESeq` function:
+To fit our updated model, just like for our initial analysis, we use the `DESeq` function:
 
-```{r FitModelCovariate}
-dds_batch_fitted = DESeq(dds_batch)
+```{r FitModelCovariate, message=FALSE}
+dds_batch_fitted = DESeq(dds_batch_filtered)
 resultsNames(dds_batch_fitted) 
 ```
-Notice that we have two additional sets of results that include the `batch` labels. <What this means is that ...>
+Notice that we have two additional sets of results that include the `batch` labels. While this indicates that the term we included for `batch` was fit, these results would not be biologically interesting.
 
-Let's look at these results before we compare between the two models.
-
+Let's look at these results from our comparison of interest:
 ```{r setBatchResults}
 resultsBatch_deficient_vs_control = results(dds_batch_fitted, name = 'condition_deficient_vs_control')
-head(resultsBatch_deficient_vs_control)
-
+head(resultsBatch_deficient_vs_control) # results from model with term for batch
+head(results_deficient_vs_control) # results from model with no term
 ```
-
-Before we proceed with generating summaries and visualizations like volcano plots, let's `save` our fitted DESeq R object for batch to file:
-
-```{r WriteFitModelObject}
-save(dds_batch_fitted,
-          file="outputs/Robjs/dds_batch_fitted.Robj")
-```
-
+We can see that while the structure of the results table is the same, the returned statistics are slightly different. We can see that 
 
 
 ---

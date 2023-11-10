@@ -14,7 +14,7 @@
 
 <title>Alignment QC and Quantification</title>
 
-<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -429,6 +429,9 @@ div.tocify {
       <a href="Module10_DEComparisons.html">DE Testing</a>
     </li>
     <li>
+      <a href="Module10a_batchAndCovars.html">Batches and Covariates</a>
+    </li>
+    <li>
       <a href="Module11_DEVisualizations.html">DE Visualization</a>
     </li>
     <li>
@@ -477,16 +480,27 @@ pre {
 <li>about the MultiQC tool and its capabilities</li>
 <li>how to run multiQC on a remote system</li>
 <li>how MultiQC gathers information for QC purposes</li>
-<li>how MultiQC presents the results of cutadapt trimming and STAR alignment</li>
+<li>how MultiQC presents the results of cutadapt trimming and STAR
+alignment</li>
 <li>how to combine gene-level results into a count matrix</li>
 </ul>
 <div id="differential-expression-workflow" class="section level1">
 <h1>Differential Expression Workflow</h1>
-<p>Here we will take the results from the previous module and operate on them a bit further. This will wrap up the preceding exercises, leaving us well-poised to begin differential expression, which we will discuss today and tomorrow.</p>
-<p><img src="images/wayfinder/wayfinder-Alignment_QC_and_Quantification.png" /> <br> <br> <br> <br></p>
+<p>Here we will take the results from the previous module and operate on
+them a bit further. This will wrap up the preceding exercises, leaving
+us well-poised to begin differential expression, which we will discuss
+today and tomorrow.</p>
+<p><img
+src="images/wayfinder/wayfinder-Alignment_QC_and_Quantification.png" />
+<br> <br> <br> <br></p>
 <div id="alignment-statistics-with-multiqc" class="section level2">
 <h2>Alignment Statistics with MultiQC</h2>
-<p>After aligning reads it is often helpful to know how many reads were uniquely aligned, mapped to multiple loci, or not mapped at all. The <code>sample_NLog.final.out</code> file which is output alongside the alignments in <code>sample_N.temp/</code> folder (we used the <code>--keep-intermediate-files</code> flag), reports this information:</p>
+<p>After aligning reads it is often helpful to know how many reads were
+uniquely aligned, mapped to multiple loci, or not mapped at all. The
+<code>sample_NLog.final.out</code> file which is output alongside the
+alignments in <code>sample_N.temp/</code> folder (we used the
+<code>--keep-intermediate-files</code> flag), reports this
+information:</p>
 <pre><code>                                 Started job on |   Oct 02 13:09:23
                              Started mapping on |   Oct 02 13:09:51
                                     Finished on |   Oct 02 13:12:47
@@ -528,12 +542,23 @@ pre {
 </div>
 <div id="multiqc" class="section level1">
 <h1>MultiQC</h1>
-<p>While the information is incredibly useful, it can be tedious to look at the report for each sample separately, while keeping track of what trends emerge. It would be much easier to look at all the data compiled into a single report. <a href="https://multiqc.info/">MultiQC</a> is a tool that does exactly this.</p>
-<p>MultiQC is designed to interpret and aggregate reports from <a href="https://multiqc.info/#supported-tools">various tools</a> and output a single report as an HTML document.</p>
+<p>While the information is incredibly useful, it can be tedious to look
+at the report for each sample separately, while keeping track of what
+trends emerge. It would be much easier to look at all the data compiled
+into a single report. <a href="https://multiqc.info/">MultiQC</a> is a
+tool that does exactly this.</p>
+<p>MultiQC is designed to interpret and aggregate reports from <a
+href="https://multiqc.info/#supported-tools">various tools</a> and
+output a single report as an HTML document.</p>
 <div id="multiqc-details" class="section level2">
 <h2>MultiQC Details</h2>
-<p>MultiQC’s main output is the report file in HTML format. This can be viewed in a web browser. Additionally, it creates a <code>data</code> directory with text files containing the data that MultiQC gathered during its execution - this same data is what is shown in the report.</p>
-<p>Given an output directory out_multiqc, we should see something like the following:</p>
+<p>MultiQC’s main output is the report file in HTML format. This can be
+viewed in a web browser. Additionally, it creates a <code>data</code>
+directory with text files containing the data that MultiQC gathered
+during its execution - this same data is what is shown in the
+report.</p>
+<p>Given an output directory out_multiqc, we should see something like
+the following:</p>
 <pre><code># directory of multiqc data files
 out_multiqc/multiqc_data/multiqc.log
 out_multiqc/multiqc_data/multiqc_data.json
@@ -542,19 +567,27 @@ out_multiqc/multiqc_data/multiqc_rsem.txt
 out_multiqc/multiqc_data/multiqc_sources.txt
 # multiqc report
 out_multiqc/multiqc_report.html</code></pre>
-<p>In a moment we will run <code>multiqc</code>, and it will detect these reports from STAR and include them in the report.</p>
-<p>If we then open the MultiQC report (HTML), the newly included STAR section will look something like the following:</p>
+<p>In a moment we will run <code>multiqc</code>, and it will detect
+these reports from STAR and include them in the report.</p>
+<p>If we then open the MultiQC report (HTML), the newly included STAR
+section will look something like the following:</p>
 <center>
-<p><img src="images/multiqc_star.png" alt="Example of STAR alignment statistics in MultiQC." /> Example of STAR alignment statistics in MultiQC.</p>
-<p>Source: <a href="https://multiqc.info/examples/rna-seq/multiqc_report.html#star">MultiQC example report</a></p>
+<p><img src="images/multiqc_star.png"
+alt="Example of STAR alignment statistics in MultiQC." /> Example of
+STAR alignment statistics in MultiQC.</p>
+<p>Source: <a
+href="https://multiqc.info/examples/rna-seq/multiqc_report.html#star">MultiQC
+example report</a></p>
 </center>
 <p><br> <br></p>
 </div>
 <div id="multiqc-exercise" class="section level2">
 <h2>MultiQC Exercise:</h2>
 <ol style="list-style-type: decimal">
-<li>Note the contents of our analysis directory, and those of the subdirectories we’ve created for each task</li>
-<li>Construct a MultiQC command and execute it on the entire analysis directory</li>
+<li>Note the contents of our analysis directory, and those of the
+subdirectories we’ve created for each task</li>
+<li>Construct a MultiQC command and execute it on the entire analysis
+directory</li>
 <li>Verify that the MultiQC report was created</li>
 </ol>
 <pre><code># Ensure that we&#39;re in our analysis directory, note the contents
@@ -566,38 +599,65 @@ multiqc --help
 multiqc --outdir out_multiqc_all .
 # Verify that the output files are present
 ls -l out_multiqc_all</code></pre>
-<p>We just learned how to view all of our QC details in one report with the help of MultiQC. MultiQC is extremely helpful, and we’ll notice how it will ingest various files from the different steps of our pipeline, and create several modules of summary figures for each of them. <br> <br></p>
+<p>We just learned how to view all of our QC details in one report with
+the help of MultiQC. MultiQC is extremely helpful, and we’ll notice how
+it will ingest various files from the different steps of our pipeline,
+and create several modules of summary figures for each of them. <br>
+<br></p>
 </div>
-<div id="transfer-multiqc-reports-with-scp-exercise" class="section level2">
+<div id="transfer-multiqc-reports-with-scp-exercise"
+class="section level2">
 <h2>Transfer MultiQC Reports With <code>scp</code> Exercise</h2>
-<p>Before starting our file transfer exercise, we should make sure that we are on the same page. Follow the link below:</p>
-<p><a href="Module04_breakout03_ex.html">Link to report transfer exercise</a></p>
+<p>Before starting our file transfer exercise, we should make sure that
+we are on the same page. Follow the link below:</p>
+<p><a href="Module04_breakout03_ex.html">Link to report transfer
+exercise</a></p>
 <p><br> <br></p>
 </div>
 <div id="creating-the-count-matrix" class="section level2">
 <h2>Creating the count matrix</h2>
-<p>We have viewed some of the gene expression quantification results individually. It can be useful to combine these expression values into a count matrix. This is helpful when gathering expression-level QC metrics, as well as for input into a differential gene expression program such as DESeq2.</p>
-<p>There are many ways to combine these results into a count matrix. For this workshop, we’ll use a small python script to <code>combine.py</code> that we’ve made for this purpose. To understand the process a bit more, let’s review the <code>.genes.results</code> files that we want to combine and discuss some details of the script. Finally, we’ll end with an exercise creating a count matrix.</p>
-<p>If we review the *.genes.results files, we can see various columns of data output from RSEM that we discussed in the last module.</p>
+<p>We have viewed some of the gene expression quantification results
+individually. It can be useful to combine these expression values into a
+count matrix. This is helpful when gathering expression-level QC
+metrics, as well as for input into a differential gene expression
+program such as DESeq2.</p>
+<p>There are many ways to combine these results into a count matrix. For
+this workshop, we’ll use a small python script to
+<code>combine.py</code> that we’ve made for this purpose. To understand
+the process a bit more, let’s review the <code>.genes.results</code>
+files that we want to combine and discuss some details of the script.
+Finally, we’ll end with an exercise creating a count matrix.</p>
+<p>If we review the *.genes.results files, we can see various columns of
+data output from RSEM that we discussed in the last module.</p>
 <pre><code># Review of *.genes.results file contents
 gene_id                 transcript_id(s)                        length  effective_length        expected_count  TPM     FPKM
 ENSMUSG00000000001      ENSMUST00000000001                      3262.00 3116.28                 601.00          45.50   36.70
 ENSMUSG00000000003      ENSMUST00000000003,ENSMUST00000114041   799.50  653.78                  0.00            0.00    0.00</code></pre>
-<p>We’ll take the <code>expected_count</code> column from each sample’s data, and combine these so that we have an aggregated data matrix with a row for each gene and a column for each sample.</p>
-<p>The input for this step will be the directory of *.genes.results files from RSEM, and the output will be a tab-separated count matrix file which we can use for count-level QC and differential expression analysis.</p>
-<p><br><br> <img src="images/combine_counts.png" alt="Creating the count matrix" /> <br><br></p>
+<p>We’ll take the <code>expected_count</code> column from each sample’s
+data, and combine these so that we have an aggregated data matrix with a
+row for each gene and a column for each sample.</p>
+<p>The input for this step will be the directory of *.genes.results
+files from RSEM, and the output will be a tab-separated count matrix
+file which we can use for count-level QC and differential expression
+analysis.</p>
+<p><br><br> <img src="images/combine_counts.png"
+alt="Creating the count matrix" /> <br><br></p>
 <details>
 <summary>
 Contents of combine.py script
 </summary>
-<a href="https://gist.github.com/twsaari/12c5aa2773292c09c1809d5a3db66903">Here</a> are the contents of the python script we’ll use, <code>combine.py</code>:
+<a
+href="https://gist.github.com/twsaari/12c5aa2773292c09c1809d5a3db66903">Here</a>
+are the contents of the python script we’ll use,
+<code>combine.py</code>:
 </details>
 </div>
 <div id="count-matrix-exercise" class="section level2">
 <h2>Count Matrix Exercise:</h2>
 <ol style="list-style-type: decimal">
 <li>View the help file of <code>combine.py</code></li>
-<li>Construct / execute a command to combine our results into a count matrix</li>
+<li>Construct / execute a command to combine our results into a count
+matrix</li>
 <li>View the resulting count matrix</li>
 </ol>
 <pre><code># View the help file of combine.py
@@ -608,15 +668,29 @@ combine.py --input_path &quot;out_rsem/*.genes.results&quot; --output_file combi
 less -S combined_counts.txt</code></pre>
 <p><br> <br></p>
 <hr />
-<p>These materials have been adapted and extended from materials created by the <a href="http://bioinformatics.sph.harvard.edu/">Harvard Chan Bioinformatics Core (HBC)</a>. These are open access materials distributed under the terms of the <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution license (CC BY 4.0)</a>, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</p>
+<p>These materials have been adapted and extended from materials created
+by the <a href="http://bioinformatics.sph.harvard.edu/">Harvard Chan
+Bioinformatics Core (HBC)</a>. These are open access materials
+distributed under the terms of the <a
+href="http://creativecommons.org/licenses/by/4.0/">Creative Commons
+Attribution license (CC BY 4.0)</a>, which permits unrestricted use,
+distribution, and reproduction in any medium, provided the original
+author and source are credited.</p>
 <br/> <br/>
 <hr/>
-<table>
+<table style="width:100%;">
+<colgroup>
+<col width="28%" />
+<col width="42%" />
+<col width="28%" />
+</colgroup>
 <thead>
 <tr class="header">
-<th align="left"><a href="Module03b_Alignment.html">Previous lesson</a></th>
+<th align="left"><a href="Module03b_Alignment.html">Previous
+lesson</a></th>
 <th align="center"><a href="#top">Top of this lesson</a></th>
-<th align="right"><a href="Module05_Additional_Details.html">Next lesson</a></th>
+<th align="right"><a href="Module05_Additional_Details.html">Next
+lesson</a></th>
 </tr>
 </thead>
 <tbody>

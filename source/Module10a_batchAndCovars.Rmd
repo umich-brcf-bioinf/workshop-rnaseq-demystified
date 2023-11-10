@@ -54,8 +54,6 @@ library(dplyr)
 
 Although we've successfully generated DE results, there are instances where patterns in our PCA plots or additional discussions with our collaborators cause us to revise our DE model(s).
 
-<*TODO* - Update wayfinder to  circle back to QC>
-
 ![](./images/wayfinder/wayfinder-batchAndCovars.png){width=75%}
 
 In this case, we weren't aware of any [covariates](https://methods-sagepub-com.proxy.lib.umich.edu/reference/encyc-of-research-design/n85.xml) that should be considered in our comparisons based on the [information available](https://www.ncbi.nlm.nih.gov/Traces/study/?acc=PRJNA488955&o=acc_s%3Aa) [publicly for these data](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119365). However, let's look back at our initial PCA plot and see if there are any concerning patterns:

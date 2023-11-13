@@ -118,8 +118,8 @@ for 90 days.
 | ![](images/Module00_headshots/headshot_cgates.jpg) | ![](images/Module00_headshots/headshot_mbradenb.jpg) | ![](images/Module00_headshots/headshot_trsaari.jpg) |
 |:-:|:-:|:-:|:-:|
 | **Chris** | **Marci** | **Travis** |
-![](images/Module00_headshots/headshot_damki.jpg) |
-| **Dana** |
+![](images/Module00_headshots/headshot_damki.jpg) | ![](images/Module00_headshots/headshot_daisyfu.jpg) | ![](images/Module00_headshots/headshot_mkdohert.jpg) |
+| **Dana** | **Daisy** | **Matt** |
 
 <br/>
 

@@ -72,7 +72,7 @@ TTTATCTTTAGGCGGTATGCACTTTTAACAGTCACCCCCCAACTAACACA
 
 ## Gene Models
 
-Well-characterized organisms (e.g. human, mouse, zebrafish) have fairly mature gene models. These are stored in [GTF](https://uswest.ensembl.org/info/website/upload/gff.html) format, which gives location and other information about each gene feature. Below are two examples:
+Well-characterized organisms (e.g. human, mouse, zebrafish) have fairly mature gene models. These are stored in [GTF](https://useast.ensembl.org/info/website/upload/gff.html){target="_blank"} format, which gives location and other information about each gene feature. Below are two examples:
 
 <br>
 ![RefSeq GTF](images/gtf_refseq.png)

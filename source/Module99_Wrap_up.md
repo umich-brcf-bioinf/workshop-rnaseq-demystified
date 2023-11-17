@@ -60,7 +60,7 @@ for 90 days.
 ## Looking ahead
 
 #### Workshop environment
-- BASH/RStudio workshop compute environment will be available until 8/31.
+- BASH/RStudio workshop compute environment will be available until 11/30.
   - _Please save all your R scripts now_ so that we can "right-size" the compute environment immediately following today's workshop session.
 - You can download files from the workshop environment from your terminal/command line window as below. 
   (You will need to substitute your actual workshop username and type workshop password when prompted.)

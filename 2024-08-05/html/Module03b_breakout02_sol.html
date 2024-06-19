@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="UM Bioinformatics Core" />
+
+
+<title>Exercise 02 Solution</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link rel="shortcut icon" href="favicon-16x16.png" />
+<!--
+Favicon from
+https://twemoji.twitter.com/
+https://favicon.io/emoji-favicons/dna/
+-->
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">RNA-Seq Demystified</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="Module00_Introduction.html">Intro</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sequence QC
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module01_Warming_Up.html">Warming up</a>
+    </li>
+    <li>
+      <a href="Module02a_Sequence_QC.html">Sequence QC</a>
+    </li>
+    <li>
+      <a href="Module02b_Trimming.html">Trimming</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Alignment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module03a_Reference_Genomes.html">Reference Genomes</a>
+    </li>
+    <li>
+      <a href="Module03b_Alignment.html">Alignment</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Quantification
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module04_Alignment_QC_and_Quantification.html">Alignment QC and Quantification</a>
+    </li>
+    <li>
+      <a href="Module05_Additional_Details.html">Optional: Additional details</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Groups/Model
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module06_DEAnalysisSetup.html">DE Introduction</a>
+    </li>
+    <li>
+      <a href="Module07_DESeq2Init.html">DE Initialization</a>
+    </li>
+    <li>
+      <a href="Module08_DESeq2DE.html">DE Normalization and Modeling</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Expression plots
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module09_SampleQCViz.html">Sample QC</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Diff Expression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module10_DEComparisons.html">DE Testing</a>
+    </li>
+    <li>
+      <a href="Module10a_batchAndCovars.html">Batches and Covariates</a>
+    </li>
+    <li>
+      <a href="Module11_DEVisualizations.html">DE Visualization</a>
+    </li>
+    <li>
+      <a href="Module12_DEAnnotations.html">DE Annotation</a>
+    </li>
+    <li>
+      <a href="R_bonus_content.html">Bonus content</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="Module99_Wrap_up.html">Wrap up</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Exercise 02 Solution</h1>
+<h4 class="author">UM Bioinformatics Core</h4>
+
+</div>
+
+
+<style type="text/css">
+body{ /* Normal  */
+      font-size: 14pt;
+  }
+pre {
+  font-size: 12pt
+}
+</style>
+<p><br></p>
+<div id="aligning-all-samples-exercise" class="section level2">
+<h2>Aligning All Samples Exercise</h2>
+<p><br></p>
+<p><strong>15 Minutes</strong></p>
+<p><br></p>
+<p>We just learned about how to use RSEM &amp; STAR, but now we need to
+align all of the rest of our samples to the reference genome. In this
+breakout exercise, we’ll build upon some concepts we’ve learned
+previously.</p>
+<p><br></p>
+<div id="instructions" class="section level3">
+<h3>Instructions:</h3>
+<p><br></p>
+<ul>
+<li>Work independently in the main room, posting any questions that
+arise to slack.</li>
+<li>Recommendations for writing your own code:
+<ul>
+<li>Read function documentation</li>
+<li>Test out ideas - it’s okay to make mistakes and generate errors</li>
+<li>Use a search engine to look up errors or recommended solutions using
+keywords</li>
+</ul></li>
+<li>We’ll review possible solutions after time is up as a group.</li>
+</ul>
+<p><br></p>
+<ul>
+<li>Review what we’ve learned about running RSEM + STAR, to determine an
+appropriate command for aligning our samples.</li>
+<li>Using what we’ve learned previously, create a script using this
+command to quickly and easily align the rest of our samples.</li>
+<li>Run the script, view the output, and verify that we have the files
+we need.</li>
+</ul>
+<p><br></p>
+</div>
+<div id="solution---aligning-all-samples-exercise"
+class="section level3">
+<h3>Solution - Aligning All Samples Exercise</h3>
+<p><br></p>
+<p>Based on our earlier breakout exercise, using a for-loop with our
+bash variable would look something like this:</p>
+<pre><code>for SAMPLE in sample_B sample_C sample_D sample_E sample_F
+do
+    rsem-calculate-expression --star --num-threads 1 --star-gzipped-read-file \
+    --star-output-genome-bam --keep-intermediate-files \
+    out_trimmed/${SAMPLE}_R1.trimmed.fastq.gz \
+    ../refs/GRCm38.102.chr19reduced \
+    out_rsem/${SAMPLE}
+done</code></pre>
+<p>Place the appropriate code into a file using the <code>nano</code>
+editor to create the script, then execute the script.</p>
+<pre><code># Use the nano editor to create a script
+nano aligning_B-F.sh # Insert commands into editor, then close the file
+# Run the script
+bash aligning_B-F.sh</code></pre>
+<p>Optional: Add execute permissions to the script before executing.</p>
+<p>If going this route, you can call the script directly, without
+calling bash.</p>
+<p>Note that since the script is in the current directory, you’ll have
+to provide that additional contextual information when calling it
+(e.g. <code>./</code> to represent the current directory).</p>
+<pre><code># Add execute permissions
+chmod +x aligning_B-F.sh
+# Run the script
+./aligning_B-F.sh</code></pre>
+<p><br></p>
+<blockquote>
+<p>Helper Hints: When using a for-loop approach, it can be helpful to
+slowly build up to the end result, sometimes using a “dry-run” command
+as a test case, to get learners to be more cognizant of what their code
+will do.</p>
+<ul>
+<li>Echoing filenames is an easy place to start.</li>
+<li>Iterating over a single sample might also be helpful when
+testing.</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>Example echoing filenames:</p>
+</blockquote>
+<pre><code>for SAMPLE in sample_B sample_C sample_D sample_E sample_F
+do
+    echo &quot;in_file: out_trimmed/${SAMPLE}_R1.trimmed.fastq.gz&quot;
+    echo &quot;out_prefix: out_rsem/${SAMPLE}&quot;
+done</code></pre>
+<blockquote>
+<p>Example iterating over a single sample (sample_A, which we’ve already
+aligned prior to the breakout exercise)</p>
+</blockquote>
+<pre><code>for SAMPLE in sample_A
+do
+    rsem-calculate-expression --star --num-threads 1 --star-gzipped-read-file \
+    --star-output-genome-bam --keep-intermediate-files \
+    out_trimmed/${SAMPLE}_R1.trimmed.fastq.gz \
+    ../refs/GRCm38.102.chr19reduced \
+    out_rsem/${SAMPLE}
+done</code></pre>
+<p><br></p>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRXhlcmNpc2UgMDIgU29sdXRpb24iCmF1dGhvcjogIlVNIEJpb2luZm9ybWF0aWNzIENvcmUiCm91dHB1dDoKICAgICAgICBodG1sX2RvY3VtZW50OgogICAgICAgICAgICBpbmNsdWRlczoKICAgICAgICAgICAgICAgIGluX2hlYWRlcjogaGVhZGVyLmh0bWwKICAgICAgICAgICAgdGhlbWU6IHBhcGVyCiAgICAgICAgICAgIGZpZ19jYXB0aW9uOiB0cnVlCiAgICAgICAgICAgIG1hcmtkb3duOiBHRk0KICAgICAgICAgICAgY29kZV9kb3dubG9hZDogdHJ1ZQotLS0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KYm9keXsgLyogTm9ybWFsICAqLwogICAgICBmb250LXNpemU6IDE0cHQ7CiAgfQpwcmUgewogIGZvbnQtc2l6ZTogMTJwdAp9Cjwvc3R5bGU+Cgo8YnI+CgojIyBBbGlnbmluZyBBbGwgU2FtcGxlcyBFeGVyY2lzZQoKPGJyPgoKKioxNSBNaW51dGVzKioKCjxicj4KCldlIGp1c3QgbGVhcm5lZCBhYm91dCBob3cgdG8gdXNlIFJTRU0gJiBTVEFSLCBidXQgbm93IHdlIG5lZWQgdG8gYWxpZ24gYWxsIG9mIHRoZSByZXN0IG9mIG91ciBzYW1wbGVzIHRvIHRoZSByZWZlcmVuY2UgZ2Vub21lLiBJbiB0aGlzIGJyZWFrb3V0IGV4ZXJjaXNlLCB3ZSdsbCBidWlsZCB1cG9uIHNvbWUgY29uY2VwdHMgd2UndmUgbGVhcm5lZCBwcmV2aW91c2x5LgoKPGJyPgoKIyMjIEluc3RydWN0aW9uczoKCjxicj4KCi0gV29yayBpbmRlcGVuZGVudGx5IGluIHRoZSBtYWluIHJvb20sIHBvc3RpbmcgYW55IHF1ZXN0aW9ucyB0aGF0IGFyaXNlIHRvIHNsYWNrLgotIFJlY29tbWVuZGF0aW9ucyBmb3Igd3JpdGluZyB5b3VyIG93biBjb2RlOgogIC0gUmVhZCBmdW5jdGlvbiBkb2N1bWVudGF0aW9uCiAgLSBUZXN0IG91dCBpZGVhcyAtIGl0J3Mgb2theSB0byBtYWtlIG1pc3Rha2VzIGFuZCBnZW5lcmF0ZSBlcnJvcnMKICAtIFVzZSBhIHNlYXJjaCBlbmdpbmUgdG8gbG9vayB1cCBlcnJvcnMgb3IgcmVjb21tZW5kZWQgc29sdXRpb25zIHVzaW5nIGtleXdvcmRzCi0gV2UnbGwgcmV2aWV3IHBvc3NpYmxlIHNvbHV0aW9ucyBhZnRlciB0aW1lIGlzIHVwIGFzIGEgZ3JvdXAuCgo8YnI+CgotIFJldmlldyB3aGF0IHdlJ3ZlIGxlYXJuZWQgYWJvdXQgcnVubmluZyBSU0VNICsgU1RBUiwgdG8gZGV0ZXJtaW5lIGFuIGFwcHJvcHJpYXRlIGNvbW1hbmQgZm9yIGFsaWduaW5nIG91ciBzYW1wbGVzLgotIFVzaW5nIHdoYXQgd2UndmUgbGVhcm5lZCBwcmV2aW91c2x5LCBjcmVhdGUgYSBzY3JpcHQgdXNpbmcgdGhpcyBjb21tYW5kIHRvIHF1aWNrbHkgYW5kIGVhc2lseSBhbGlnbiB0aGUgcmVzdCBvZiBvdXIgc2FtcGxlcy4KLSBSdW4gdGhlIHNjcmlwdCwgdmlldyB0aGUgb3V0cHV0LCBhbmQgdmVyaWZ5IHRoYXQgd2UgaGF2ZSB0aGUgZmlsZXMgd2UgbmVlZC4KCjxicj4KCiMjIyBTb2x1dGlvbiAtIEFsaWduaW5nIEFsbCBTYW1wbGVzIEV4ZXJjaXNlCgo8YnI+CgpCYXNlZCBvbiBvdXIgZWFybGllciBicmVha291dCBleGVyY2lzZSwgdXNpbmcgYSBmb3ItbG9vcCB3aXRoIG91ciBiYXNoIHZhcmlhYmxlIHdvdWxkIGxvb2sgc29tZXRoaW5nIGxpa2UgdGhpczoKCiAgICBmb3IgU0FNUExFIGluIHNhbXBsZV9CIHNhbXBsZV9DIHNhbXBsZV9EIHNhbXBsZV9FIHNhbXBsZV9GCiAgICBkbwogICAgICAgIHJzZW0tY2FsY3VsYXRlLWV4cHJlc3Npb24gLS1zdGFyIC0tbnVtLXRocmVhZHMgMSAtLXN0YXItZ3ppcHBlZC1yZWFkLWZpbGUgXAogICAgICAgIC0tc3Rhci1vdXRwdXQtZ2Vub21lLWJhbSAtLWtlZXAtaW50ZXJtZWRpYXRlLWZpbGVzIFwKICAgICAgICBvdXRfdHJpbW1lZC8ke1NBTVBMRX1fUjEudHJpbW1lZC5mYXN0cS5neiBcCiAgICAgICAgLi4vcmVmcy9HUkNtMzguMTAyLmNocjE5cmVkdWNlZCBcCiAgICAgICAgb3V0X3JzZW0vJHtTQU1QTEV9CiAgICBkb25lCgpQbGFjZSB0aGUgYXBwcm9wcmlhdGUgY29kZSBpbnRvIGEgZmlsZSB1c2luZyB0aGUgYG5hbm9gIGVkaXRvciB0byBjcmVhdGUgdGhlIHNjcmlwdCwgdGhlbiBleGVjdXRlIHRoZSBzY3JpcHQuCgogICAgIyBVc2UgdGhlIG5hbm8gZWRpdG9yIHRvIGNyZWF0ZSBhIHNjcmlwdAogICAgbmFubyBhbGlnbmluZ19CLUYuc2ggIyBJbnNlcnQgY29tbWFuZHMgaW50byBlZGl0b3IsIHRoZW4gY2xvc2UgdGhlIGZpbGUKICAgICMgUnVuIHRoZSBzY3JpcHQKICAgIGJhc2ggYWxpZ25pbmdfQi1GLnNoCgpPcHRpb25hbDogQWRkIGV4ZWN1dGUgcGVybWlzc2lvbnMgdG8gdGhlIHNjcmlwdCBiZWZvcmUgZXhlY3V0aW5nLgoKSWYgZ29pbmcgdGhpcyByb3V0ZSwgeW91IGNhbiBjYWxsIHRoZSBzY3JpcHQgZGlyZWN0bHksIHdpdGhvdXQgY2FsbGluZyBiYXNoLgoKTm90ZSB0aGF0IHNpbmNlIHRoZSBzY3JpcHQgaXMgaW4gdGhlIGN1cnJlbnQgZGlyZWN0b3J5LCB5b3UnbGwgaGF2ZSB0byBwcm92aWRlIHRoYXQgYWRkaXRpb25hbCBjb250ZXh0dWFsIGluZm9ybWF0aW9uIHdoZW4gY2FsbGluZyBpdCAoZS5nLiBgLi9gIHRvIHJlcHJlc2VudCB0aGUgY3VycmVudCBkaXJlY3RvcnkpLgoKICAgICMgQWRkIGV4ZWN1dGUgcGVybWlzc2lvbnMKICAgIGNobW9kICt4IGFsaWduaW5nX0ItRi5zaAogICAgIyBSdW4gdGhlIHNjcmlwdAogICAgLi9hbGlnbmluZ19CLUYuc2gKCjxicj4KCj4gSGVscGVyIEhpbnRzOiBXaGVuIHVzaW5nIGEgZm9yLWxvb3AgYXBwcm9hY2gsIGl0IGNhbiBiZSBoZWxwZnVsIHRvIHNsb3dseSBidWlsZCB1cCB0byB0aGUgZW5kIHJlc3VsdCwgc29tZXRpbWVzIHVzaW5nIGEgImRyeS1ydW4iIGNvbW1hbmQgYXMgYSB0ZXN0IGNhc2UsIHRvIGdldCBsZWFybmVycyB0byBiZSBtb3JlIGNvZ25pemFudCBvZiB3aGF0IHRoZWlyIGNvZGUgd2lsbCBkby4KPgo+ICAgIC0gRWNob2luZyBmaWxlbmFtZXMgaXMgYW4gZWFzeSBwbGFjZSB0byBzdGFydC4KPiAgICAtIEl0ZXJhdGluZyBvdmVyIGEgc2luZ2xlIHNhbXBsZSBtaWdodCBhbHNvIGJlIGhlbHBmdWwgd2hlbiB0ZXN0aW5nLgoKPiBFeGFtcGxlIGVjaG9pbmcgZmlsZW5hbWVzOgoKICAgIGZvciBTQU1QTEUgaW4gc2FtcGxlX0Igc2FtcGxlX0Mgc2FtcGxlX0Qgc2FtcGxlX0Ugc2FtcGxlX0YKICAgIGRvCiAgICAgICAgZWNobyAiaW5fZmlsZTogb3V0X3RyaW1tZWQvJHtTQU1QTEV9X1IxLnRyaW1tZWQuZmFzdHEuZ3oiCiAgICAgICAgZWNobyAib3V0X3ByZWZpeDogb3V0X3JzZW0vJHtTQU1QTEV9IgogICAgZG9uZQoKPiBFeGFtcGxlIGl0ZXJhdGluZyBvdmVyIGEgc2luZ2xlIHNhbXBsZSAoc2FtcGxlX0EsIHdoaWNoIHdlJ3ZlIGFscmVhZHkgYWxpZ25lZCBwcmlvciB0byB0aGUgYnJlYWtvdXQgZXhlcmNpc2UpCgogICAgZm9yIFNBTVBMRSBpbiBzYW1wbGVfQQogICAgZG8KICAgICAgICByc2VtLWNhbGN1bGF0ZS1leHByZXNzaW9uIC0tc3RhciAtLW51bS10aHJlYWRzIDEgLS1zdGFyLWd6aXBwZWQtcmVhZC1maWxlIFwKICAgICAgICAtLXN0YXItb3V0cHV0LWdlbm9tZS1iYW0gLS1rZWVwLWludGVybWVkaWF0ZS1maWxlcyBcCiAgICAgICAgb3V0X3RyaW1tZWQvJHtTQU1QTEV9X1IxLnRyaW1tZWQuZmFzdHEuZ3ogXAogICAgICAgIC4uL3JlZnMvR1JDbTM4LjEwMi5jaHIxOXJlZHVjZWQgXAogICAgICAgIG91dF9yc2VtLyR7U0FNUExFfQogICAgZG9uZQoKPGJyPgo=</div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Module03b_breakout02_sol.md");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

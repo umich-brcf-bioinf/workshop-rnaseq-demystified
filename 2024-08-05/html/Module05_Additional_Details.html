@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="UM Bioinformatics Core" />
+
+
+<title>Additional Details</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link rel="shortcut icon" href="favicon-16x16.png" />
+<!--
+Favicon from
+https://twemoji.twitter.com/
+https://favicon.io/emoji-favicons/dna/
+-->
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">RNA-Seq Demystified</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="Module00_Introduction.html">Intro</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sequence QC
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module01_Warming_Up.html">Warming up</a>
+    </li>
+    <li>
+      <a href="Module02a_Sequence_QC.html">Sequence QC</a>
+    </li>
+    <li>
+      <a href="Module02b_Trimming.html">Trimming</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Alignment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module03a_Reference_Genomes.html">Reference Genomes</a>
+    </li>
+    <li>
+      <a href="Module03b_Alignment.html">Alignment</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Quantification
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module04_Alignment_QC_and_Quantification.html">Alignment QC and Quantification</a>
+    </li>
+    <li>
+      <a href="Module05_Additional_Details.html">Optional: Additional details</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Groups/Model
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module06_DEAnalysisSetup.html">DE Introduction</a>
+    </li>
+    <li>
+      <a href="Module07_DESeq2Init.html">DE Initialization</a>
+    </li>
+    <li>
+      <a href="Module08_DESeq2DE.html">DE Normalization and Modeling</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Expression plots
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module09_SampleQCViz.html">Sample QC</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Diff Expression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Module10_DEComparisons.html">DE Testing</a>
+    </li>
+    <li>
+      <a href="Module10a_batchAndCovars.html">Batches and Covariates</a>
+    </li>
+    <li>
+      <a href="Module11_DEVisualizations.html">DE Visualization</a>
+    </li>
+    <li>
+      <a href="Module12_DEAnnotations.html">DE Annotation</a>
+    </li>
+    <li>
+      <a href="R_bonus_content.html">Bonus content</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="Module99_Wrap_up.html">Wrap up</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Additional Details</h1>
+<h4 class="author">UM Bioinformatics Core</h4>
+
+</div>
+
+
+<style type="text/css">
+body{ /* Normal  */
+      font-size: 14pt;
+  }
+pre {
+  font-size: 12pt
+}
+</style>
+<p>For this workshop, we’ve provided a few things to ensure that our
+experience goes smoothly. In this module, we will discuss in more detail
+each the things needed to perform an RNAseq analysis on your own.</p>
+<div class="float">
+<img src="images/building-blocks.png" alt="Building Blocks" />
+<div class="figcaption">Building Blocks</div>
+</div>
+<div id="the-compute-environment" class="section level1">
+<h1>The Compute Environment</h1>
+<p>Here we’re referring to all of the hardware, software, and
+configuration details of the system where we perform our analysis.</p>
+<div id="hardware" class="section level2">
+<h2>Hardware</h2>
+<ul>
+<li>CPU</li>
+<li>Memory</li>
+<li>Storage</li>
+</ul>
+<div id="cpu" class="section level3">
+<h3>CPU</h3>
+<p>CPU stands for Central Processing Unit. In shorthand, people often
+refer to “the processor”. This retrieves and executes instructions, and
+is one of the core components of a computing system.</p>
+<p>Single vs Multi-Threaded</p>
+<p>Many of the most heavily-used bioinformatics software can use
+multiple threads. This way they can do parallel processing, which can
+drastically cut down the time to receive results.</p>
+<p>There are also plenty of single-threaded bioinformatics programs.
+Simple python scripts, niche tools, etc. will often not need parallel
+processing. In these cases, the cost/benefit tradeoff may be too
+great.</p>
+<p>Multi-threaded programs we’ve used:</p>
+<ul>
+<li>Cutadapt</li>
+<li>STAR / RSEM</li>
+</ul>
+<p>Single-threaded programs we’ve used:</p>
+<ul>
+<li>FastQC</li>
+<li>MultiQC</li>
+</ul>
+<details>
+<summary>
+What about clock speed?
+</summary>
+<p>You may be familiar with clock speed of a processor from your
+experience while buying personal computers. You may’ve seen specs listed
+such as <code>3.3 GHz</code>, which refers to the CPU’s clock speed.</p>
+Clock speeds on all modern processors are sufficient for basically all
+bioinformatics software. Clock speed is generally not a major
+consideration in choices today.
+</details>
+<p><br> <br></p>
+</div>
+<div id="memory" class="section level3">
+<h3>Memory</h3>
+<p>Here we’re referring to Random Access Memory, or RAM. RAM provides a
+limited amount of very fast storage that a process will use within a
+short time frame.</p>
+<p>The memory requirements of various tools vary widely, and many
+bioinformatics programs require fairly high amounts. This is true for
+aligners. In the case of the STAR aligner, a very large data structure
+is loaded into RAM. This allows extremely fast and accurate alignments
+e.g. to a vertebrate genome, but requires very large amounts of RAM.</p>
+<p>Cutadapt, fastQC, and multiQC have more modest memory requirements,
+so we won’t have to consider memory as much in those cases.</p>
+</div>
+<div id="storage" class="section level3">
+<h3>Storage</h3>
+<p>Here we’re referring to disk storage, or persistent storage. This
+stores large amounts of data for the long term - the information remains
+even when there is no power to the device. You may sometimes use the
+phrase “save [the file] to your hard drive”, which is referring to
+persistent storage.</p>
+<p>Consider:</p>
+<ul>
+<li>Storage for input files, output files</li>
+<li>Storage during processing</li>
+</ul>
+<p>Some input and output files can be quite large. Additionally, several
+large intermediates are produced during processing, requiring (sometimes
+considerable) additional storage.</p>
+</div>
+</div>
+<div id="software" class="section level2">
+<h2>Software</h2>
+<p>The software we’ve been using is free, open-source, and openly
+licensed. We can inspect the source code, use the program as we wish,
+modify it, contribute to it, etc. This is the case for many
+bioinformatics tools. We can appreciate the benefits of community-driven
+software.</p>
+<p>There are tools available for various kinds of bioinformatics tasks.
+Today we’ve focused on a few important tasks for RNA sequencing, and
+used a subset of quality tools for this purpose. Here is a summary of
+the tasks we’ve performed and the tools we’ve used today.</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Task</th>
+<th>Tool</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Quality Control</td>
+<td><a
+href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/">FastQC</a></td>
+</tr>
+<tr class="even">
+<td align="center">Quality Control</td>
+<td><a href="https://multiqc.info/docs/">MultiQC</a></td>
+</tr>
+<tr class="odd">
+<td align="center">Read Trimming</td>
+<td><a
+href="https://cutadapt.readthedocs.io/en/stable/">Cutadapt</a></td>
+</tr>
+<tr class="even">
+<td align="center">Alignment</td>
+<td><a
+href="https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf">STAR</a></td>
+</tr>
+<tr class="odd">
+<td align="center">Gene Quantification</td>
+<td><a href="http://deweylab.github.io/RSEM/">RSEM</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="system-configuration" class="section level2">
+<h2>System Configuration</h2>
+<div id="operating-system" class="section level3">
+<h3>Operating System</h3>
+<p>The Operating System (OS) is a software layer that handles
+communication between the hardware devices and with the end user.</p>
+<p>In this workshop we’ve used a Linux operating system. Linux is free
+and open source. It’s widely used in bioinformatics; as you’ve learned,
+it can be very powerful.</p>
+<details>
+<summary>
+Examples of Operating Systems?
+</summary>
+<p>Examples:</p>
+<ul>
+<li>Microsoft - <a
+href="https://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a></li>
+<li>Apple - <a href="https://en.wikipedia.org/wiki/MacOS">MacOS</a></li>
+<li><a
+href="https://en.wikipedia.org/wiki/Free_and_open-source_software">FOSS</a>
+- <a href="http://www.gnu.org">GNU</a> / <a
+href="https://en.wikipedia.org/wiki/Linux">LINUX</a></li>
+<li>Google - <a
+href="https://en.wikipedia.org/wiki/Android_(operating_system)">Android</a></li>
+<li>Apple - <a href="https://en.wikipedia.org/wiki/IOS">iOS</a></li>
+</ul>
+<p>Some software is specific to an operating system - developers may
+focus their time and attention on developing for certain configurations
+over others, depending on the niche or goal. Often, releases may be
+limited to certain OS / hardware configurations.</p>
+</details>
+<p><br> <br></p>
+</div>
+<div id="local-vs-remote" class="section level3">
+<h3>Local vs Remote</h3>
+<p>In this workshop, we’ve used remote computing systems for our
+analysis. We’ve seen how we can connect to a remote computer and use it
+for our purposes. You’re likely most familiar with local computing,
+using a machine that is physically in the same room as you. However, now
+we can recognize some benefits of remote computing.</p>
+<details>
+<summary>
+Why Use Remote Computing?
+</summary>
+<p>Remote computing is sensible in many situations - for economies of
+scale it’s best to have many machines in physical locations that are
+built and designed for that purpose. This is what it means if you’ve
+heard of cloud computing - a type of remote computing, often with
+convenience services or products built on top of the remote machines. By
+using remote computing, we can rent powerful hardware that would not be
+practical for us to buy. We can also scale this up or down to our exact
+needs, providing great flexibility.</p>
+</details>
+<details>
+<summary>
+How to Efficiently Manage Remote Computing Resources
+</summary>
+<p>This is a broad topic - job scheduling is a common method for
+allocating shared compute resources. Consider a job as an individual
+call to a piece of software. There are many ways to manage resources at
+the job level.</p>
+<p>Resource management and job scheduling at the UMich HPC is handled by
+SLURM. Quite a large topic of its own, you can read more about these
+resources <a
+href="https://arc.umich.edu/greatlakes/slurm-user-guide/">here</a>.</p>
+<p>Another large topic which we won’t dive into, are workflow managers.
+These allow similar job management capabilities, but are more flexible
+since they are not tied to a specific type of system. <a
+href="https://snakemake.readthedocs.io/en/stable/">Snakemake</a> is an
+example of this.</p>
+<p>Today we’ve been aiming for simplicity and transparency, so managed
+our jobs manually and sequentially. In other words, we wrote and
+submitted the commands by hand, in order, for illustrative purposes. You
+can imagine that for large-scale processing, it is incredibly useful to
+allow software to automate some of these processes for us.</p>
+</details>
+<p><br> <br></p>
+</div>
+<div id="software-management" class="section level3">
+<h3>Software Management</h3>
+<p>There are many methods for managing software. As a system accumulates
+changes over time, and as the resulting software installations become
+more complex (esp. across multi-user systems), the need for software
+management systems becomes more apparent.</p>
+<p>Today we’ve been using <a
+href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a>.
+This provides a good balance of simplicity, flexibility, and utility for
+software management.</p>
+<p>Conda is an open-source, cross-platform, package management and
+environment management software. It’s widely used for packaging and
+distributing software, particularly in the python community. Note: it is
+also used for software of many different software languages; it is
+language-agnostic.</p>
+<p>Miniconda is a minimal installation of conda, that provides a
+lightweight option to get started with.</p>
+<p><br> <br></p>
+</div>
+</div>
+</div>
+<div id="summary" class="section level1">
+<h1>Summary</h1>
+<p>Things that we have learned:</p>
+<ul>
+<li>Important aspects of hardware, software, and compute environments to
+consider</li>
+<li>Important file formats and their contents</li>
+<li>Reference files necessary / where to find</li>
+<li>How to use FastQC, assess quality of reads</li>
+<li>How to transfer files from remote to local computer</li>
+<li>How to prepare a reference for alignment and quantification with
+RSEM + STAR</li>
+<li>How to combine expression results across samples into a count
+matrix</li>
+<li>How to use MultiQC to summarize large volumes of QC data.</li>
+</ul>
+<p><br> <br></p>
+<div class="float">
+<img src="images/results-summary.png" alt="Results Summary" />
+<div class="figcaption">Results Summary</div>
+</div>
+<p><br> <br></p>
+</div>
+<div id="conda-exercises" class="section level1">
+<h1>Conda Exercises</h1>
+<p>Environment recap:</p>
+<p>By default you will usually have a single compute environment - one
+set up specifically for your user. You’ll have a set of programs, some
+configuration details, etc. that are set up according to your
+preferences.</p>
+<p>As mentioned above, when doing data analysis tasks, it can become
+onerous to create and maintain one environment that satisfies all of
+your needs. It is good practice to create separate environments
+according to the specific needs of a project. A metaphor would be
+putting on different outfits for different occasions or tasks in your
+life.</p>
+<p>Conda is a tool that we’ve used for managing our software environment
+for this workshop. We’re all currently using the same conda environment
+that we (the instructors) built ahead of time.</p>
+<p>Conda must-know:</p>
+<ul>
+<li>A tool for managing software environments</li>
+<li>Create an environment</li>
+<li>Activate and deactivate an environment</li>
+</ul>
+<div id="conda-activate-deactivate-exercise" class="section level2">
+<h2>Conda Activate / Deactivate Exercise</h2>
+<ol style="list-style-type: decimal">
+<li>Learn about the <code>which</code> command - use to reveal the path
+to a specific software</li>
+<li>Try <code>which python</code></li>
+<li>Deactivate our current shared environment with
+<code>conda deactivate</code></li>
+<li>Try <code>which python</code> again - Is it different now?</li>
+<li>Activate the environment again with
+<code>conda activate /workshop/conda/rsd</code></li>
+</ol>
+</div>
+<div id="conda-create-simple-exercise" class="section level2">
+<h2>Conda Create Simple Exercise</h2>
+<ol style="list-style-type: decimal">
+<li>Check which python version we have in our current environment</li>
+<li>Create a simple conda environment named <code>py36</code> that
+contains python 3.6 - use the <code>bioconda</code> channel</li>
+<li>Activate the new <code>py36</code> environment and verify that you
+now have python 3.6</li>
+<li>Deactivate our <code>py36</code> environment</li>
+</ol>
+<pre><code># Check which python version we&#39;re using in our current environment
+python --version
+# Create a conda environment with python version 3.6, using the bioconda channel
+conda create -n py36 -c bioconda python=3.6
+# Activate our new conda environment
+conda activate py36
+# Check our python version now (it should be 3.6)
+python --version
+# Deactivate our environment
+conda deactivate</code></pre>
+<p><br></p>
+</div>
+<div id="conda-create-exercise" class="section level2">
+<h2>Conda Create Exercise</h2>
+<p>Before starting our conda exercise, we should make sure that we are
+on the same page. Follow the link below:</p>
+<p><a href="Module05_breakout04_ex.html">Conda create exercise</a></p>
+<p><br> <br></p>
+<hr />
+<p>These materials have been adapted and extended from materials created
+by the <a href="http://bioinformatics.sph.harvard.edu/">Harvard Chan
+Bioinformatics Core (HBC)</a>. These are open access materials
+distributed under the terms of the <a
+href="http://creativecommons.org/licenses/by/4.0/">Creative Commons
+Attribution license (CC BY 4.0)</a>, which permits unrestricted use,
+distribution, and reproduction in any medium, provided the original
+author and source are credited.</p>
+<br/> <br/>
+<hr/>
+<table style="width:100%;">
+<colgroup>
+<col width="28%" />
+<col width="42%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"><a
+href="Module04_Alignment_QC_and_Quantification.html">Previous
+lesson</a></th>
+<th align="center"><a href="#top">Top of this lesson</a></th>
+<th align="right"><a href="Module06_DEAnalysisSetup.html">Next
+lesson</a></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiQWRkaXRpb25hbCBEZXRhaWxzIgphdXRob3I6ICJVTSBCaW9pbmZvcm1hdGljcyBDb3JlIgpvdXRwdXQ6CiAgICAgICAgaHRtbF9kb2N1bWVudDoKICAgICAgICAgICAgaW5jbHVkZXM6CiAgICAgICAgICAgICAgICBpbl9oZWFkZXI6IGhlYWRlci5odG1sCiAgICAgICAgICAgIHRoZW1lOiBwYXBlcgogICAgICAgICAgICB0b2M6IHRydWUKICAgICAgICAgICAgdG9jX2RlcHRoOiA0CiAgICAgICAgICAgIHRvY19mbG9hdDogdHJ1ZQogICAgICAgICAgICBudW1iZXJfc2VjdGlvbnM6IGZhbHNlCiAgICAgICAgICAgIGZpZ19jYXB0aW9uOiB0cnVlCiAgICAgICAgICAgIG1hcmtkb3duOiBHRk0KICAgICAgICAgICAgY29kZV9kb3dubG9hZDogdHJ1ZQotLS0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KYm9keXsgLyogTm9ybWFsICAqLwogICAgICBmb250LXNpemU6IDE0cHQ7CiAgfQpwcmUgewogIGZvbnQtc2l6ZTogMTJwdAp9Cjwvc3R5bGU+CgpGb3IgdGhpcyB3b3Jrc2hvcCwgd2UndmUgcHJvdmlkZWQgYSBmZXcgdGhpbmdzIHRvIGVuc3VyZSB0aGF0IG91ciBleHBlcmllbmNlIGdvZXMgc21vb3RobHkuIEluIHRoaXMgbW9kdWxlLCB3ZSB3aWxsIGRpc2N1c3MgaW4gbW9yZSBkZXRhaWwgZWFjaCB0aGUgdGhpbmdzIG5lZWRlZCB0byBwZXJmb3JtIGFuIFJOQXNlcSBhbmFseXNpcyBvbiB5b3VyIG93bi4KCiFbQnVpbGRpbmcgQmxvY2tzXShpbWFnZXMvYnVpbGRpbmctYmxvY2tzLnBuZykKCgojIFRoZSBDb21wdXRlIEVudmlyb25tZW50CgpIZXJlIHdlJ3JlIHJlZmVycmluZyB0byBhbGwgb2YgdGhlIGhhcmR3YXJlLCBzb2Z0d2FyZSwgYW5kIGNvbmZpZ3VyYXRpb24gZGV0YWlscyBvZiB0aGUgc3lzdGVtIHdoZXJlIHdlIHBlcmZvcm0gb3VyIGFuYWx5c2lzLgoKIyMgSGFyZHdhcmUKCi0gQ1BVCi0gTWVtb3J5Ci0gU3RvcmFnZQoKIyMjIENQVQoKQ1BVIHN0YW5kcyBmb3IgQ2VudHJhbCBQcm9jZXNzaW5nIFVuaXQuIEluIHNob3J0aGFuZCwgcGVvcGxlIG9mdGVuIHJlZmVyIHRvICJ0aGUgcHJvY2Vzc29yIi4gVGhpcyAgcmV0cmlldmVzIGFuZCBleGVjdXRlcyBpbnN0cnVjdGlvbnMsIGFuZCBpcyBvbmUgb2YgdGhlIGNvcmUgY29tcG9uZW50cyBvZiBhIGNvbXB1dGluZyBzeXN0ZW0uCgpTaW5nbGUgdnMgTXVsdGktVGhyZWFkZWQKCk1hbnkgb2YgdGhlIG1vc3QgaGVhdmlseS11c2VkIGJpb2luZm9ybWF0aWNzIHNvZnR3YXJlIGNhbiB1c2UgbXVsdGlwbGUgdGhyZWFkcy4gVGhpcyB3YXkgdGhleSBjYW4gZG8gcGFyYWxsZWwgcHJvY2Vzc2luZywgd2hpY2ggY2FuIGRyYXN0aWNhbGx5IGN1dCBkb3duIHRoZSB0aW1lIHRvIHJlY2VpdmUgcmVzdWx0cy4KClRoZXJlIGFyZSBhbHNvIHBsZW50eSBvZiBzaW5nbGUtdGhyZWFkZWQgYmlvaW5mb3JtYXRpY3MgcHJvZ3JhbXMuIFNpbXBsZSBweXRob24gc2NyaXB0cywgbmljaGUgdG9vbHMsIGV0Yy4gd2lsbCBvZnRlbiBub3QgbmVlZCBwYXJhbGxlbCBwcm9jZXNzaW5nLiBJbiB0aGVzZSBjYXNlcywgdGhlIGNvc3QvYmVuZWZpdCB0cmFkZW9mZiBtYXkgYmUgdG9vIGdyZWF0LgoKTXVsdGktdGhyZWFkZWQgcHJvZ3JhbXMgd2UndmUgdXNlZDoKCi0gQ3V0YWRhcHQKLSBTVEFSIC8gUlNFTQoKU2luZ2xlLXRocmVhZGVkIHByb2dyYW1zIHdlJ3ZlIHVzZWQ6CgotIEZhc3RRQwotIE11bHRpUUMKCjxkZXRhaWxzPgo8c3VtbWFyeT5XaGF0IGFib3V0IGNsb2NrIHNwZWVkPzwvc3VtbWFyeT4KCllvdSBtYXkgYmUgZmFtaWxpYXIgd2l0aCBjbG9jayBzcGVlZCBvZiBhIHByb2Nlc3NvciBmcm9tIHlvdXIgZXhwZXJpZW5jZSB3aGlsZSBidXlpbmcgcGVyc29uYWwgY29tcHV0ZXJzLiBZb3UgbWF5J3ZlIHNlZW4gc3BlY3MgbGlzdGVkIHN1Y2ggYXMgYDMuMyBHSHpgLCB3aGljaCByZWZlcnMgdG8gdGhlIENQVSdzIGNsb2NrIHNwZWVkLgoKQ2xvY2sgc3BlZWRzIG9uIGFsbCBtb2Rlcm4gcHJvY2Vzc29ycyBhcmUgc3VmZmljaWVudCBmb3IgYmFzaWNhbGx5IGFsbCBiaW9pbmZvcm1hdGljcyBzb2Z0d2FyZS4gQ2xvY2sgc3BlZWQgaXMgZ2VuZXJhbGx5IG5vdCBhIG1ham9yIGNvbnNpZGVyYXRpb24gaW4gY2hvaWNlcyB0b2RheS4KPC9kZXRhaWxzPgoKPGJyPgo8YnI+CgojIyMgTWVtb3J5CgpIZXJlIHdlJ3JlIHJlZmVycmluZyB0byBSYW5kb20gQWNjZXNzIE1lbW9yeSwgb3IgUkFNLiBSQU0gcHJvdmlkZXMgYSBsaW1pdGVkIGFtb3VudCBvZiB2ZXJ5IGZhc3Qgc3RvcmFnZSB0aGF0IGEgcHJvY2VzcyB3aWxsIHVzZSB3aXRoaW4gYSBzaG9ydCB0aW1lIGZyYW1lLgoKVGhlIG1lbW9yeSByZXF1aXJlbWVudHMgb2YgdmFyaW91cyB0b29scyB2YXJ5IHdpZGVseSwgYW5kIG1hbnkgYmlvaW5mb3JtYXRpY3MgcHJvZ3JhbXMgcmVxdWlyZSBmYWlybHkgaGlnaCBhbW91bnRzLiBUaGlzIGlzIHRydWUgZm9yIGFsaWduZXJzLiBJbiB0aGUgY2FzZSBvZiB0aGUgU1RBUiBhbGlnbmVyLCBhIHZlcnkgbGFyZ2UgZGF0YSBzdHJ1Y3R1cmUgaXMgbG9hZGVkIGludG8gUkFNLiBUaGlzIGFsbG93cyBleHRyZW1lbHkgZmFzdCBhbmQgYWNjdXJhdGUgYWxpZ25tZW50cyBlLmcuIHRvIGEgdmVydGVicmF0ZSBnZW5vbWUsIGJ1dCByZXF1aXJlcyB2ZXJ5IGxhcmdlIGFtb3VudHMgb2YgUkFNLgoKQ3V0YWRhcHQsIGZhc3RRQywgYW5kIG11bHRpUUMgaGF2ZSBtb3JlIG1vZGVzdCBtZW1vcnkgcmVxdWlyZW1lbnRzLCBzbyB3ZSB3b24ndCBoYXZlIHRvIGNvbnNpZGVyIG1lbW9yeSBhcyBtdWNoIGluIHRob3NlIGNhc2VzLgoKIyMjIFN0b3JhZ2UKCkhlcmUgd2UncmUgcmVmZXJyaW5nIHRvIGRpc2sgc3RvcmFnZSwgb3IgcGVyc2lzdGVudCBzdG9yYWdlLiBUaGlzIHN0b3JlcyBsYXJnZSBhbW91bnRzIG9mIGRhdGEgZm9yIHRoZSBsb25nIHRlcm0gLSB0aGUgaW5mb3JtYXRpb24gcmVtYWlucyBldmVuIHdoZW4gdGhlcmUgaXMgbm8gcG93ZXIgdG8gdGhlIGRldmljZS4gWW91IG1heSBzb21ldGltZXMgdXNlIHRoZSBwaHJhc2UgInNhdmUgW3RoZSBmaWxlXSB0byB5b3VyIGhhcmQgZHJpdmUiLCB3aGljaCBpcyByZWZlcnJpbmcgdG8gcGVyc2lzdGVudCBzdG9yYWdlLgoKQ29uc2lkZXI6CgotIFN0b3JhZ2UgZm9yIGlucHV0IGZpbGVzLCBvdXRwdXQgZmlsZXMKLSBTdG9yYWdlIGR1cmluZyBwcm9jZXNzaW5nCgpTb21lIGlucHV0IGFuZCBvdXRwdXQgZmlsZXMgY2FuIGJlIHF1aXRlIGxhcmdlLiBBZGRpdGlvbmFsbHksIHNldmVyYWwgbGFyZ2UgaW50ZXJtZWRpYXRlcyBhcmUgcHJvZHVjZWQgZHVyaW5nIHByb2Nlc3NpbmcsIHJlcXVpcmluZyAoc29tZXRpbWVzIGNvbnNpZGVyYWJsZSkgYWRkaXRpb25hbCBzdG9yYWdlLgoKIyMgU29mdHdhcmUKClRoZSBzb2Z0d2FyZSB3ZSd2ZSBiZWVuIHVzaW5nIGlzIGZyZWUsIG9wZW4tc291cmNlLCBhbmQgb3Blbmx5IGxpY2Vuc2VkLiBXZSBjYW4gaW5zcGVjdCB0aGUgc291cmNlIGNvZGUsIHVzZSB0aGUgcHJvZ3JhbSBhcyB3ZSB3aXNoLCBtb2RpZnkgaXQsIGNvbnRyaWJ1dGUgdG8gaXQsIGV0Yy4gVGhpcyBpcyB0aGUgY2FzZSBmb3IgbWFueSBiaW9pbmZvcm1hdGljcyB0b29scy4gV2UgY2FuIGFwcHJlY2lhdGUgdGhlIGJlbmVmaXRzIG9mIGNvbW11bml0eS1kcml2ZW4gc29mdHdhcmUuCgpUaGVyZSBhcmUgdG9vbHMgYXZhaWxhYmxlIGZvciB2YXJpb3VzIGtpbmRzIG9mIGJpb2luZm9ybWF0aWNzIHRhc2tzLiBUb2RheSB3ZSd2ZSBmb2N1c2VkIG9uIGEgZmV3IGltcG9ydGFudCB0YXNrcyBmb3IgUk5BIHNlcXVlbmNpbmcsIGFuZCB1c2VkIGEgc3Vic2V0IG9mIHF1YWxpdHkgdG9vbHMgZm9yIHRoaXMgcHVycG9zZS4gSGVyZSBpcyBhIHN1bW1hcnkgb2YgdGhlIHRhc2tzIHdlJ3ZlIHBlcmZvcm1lZCBhbmQgdGhlIHRvb2xzIHdlJ3ZlIHVzZWQgdG9kYXkuCgp8IFRhc2sgfCBUb29sIHwKfCA6LS06IHwgLS0tLSB8CnwgUXVhbGl0eSBDb250cm9sIHwgW0Zhc3RRQ10oaHR0cHM6Ly93d3cuYmlvaW5mb3JtYXRpY3MuYmFicmFoYW0uYWMudWsvcHJvamVjdHMvZmFzdHFjL0hlbHAvKSB8CnwgUXVhbGl0eSBDb250cm9sIHwgW011bHRpUUNdKGh0dHBzOi8vbXVsdGlxYy5pbmZvL2RvY3MvKSB8CnwgUmVhZCBUcmltbWluZyB8IFtDdXRhZGFwdF0oaHR0cHM6Ly9jdXRhZGFwdC5yZWFkdGhlZG9jcy5pby9lbi9zdGFibGUvKSB8CnwgQWxpZ25tZW50IHwgW1NUQVJdKGh0dHBzOi8vZ2l0aHViLmNvbS9hbGV4ZG9iaW4vU1RBUi9ibG9iL21hc3Rlci9kb2MvU1RBUm1hbnVhbC5wZGYpIHwKfCBHZW5lIFF1YW50aWZpY2F0aW9uIHwgW1JTRU1dKGh0dHA6Ly9kZXdleWxhYi5naXRodWIuaW8vUlNFTS8pIHwKCiMjIFN5c3RlbSBDb25maWd1cmF0aW9uCgojIyMgT3BlcmF0aW5nIFN5c3RlbQoKVGhlIE9wZXJhdGluZyBTeXN0ZW0gKE9TKSBpcyBhIHNvZnR3YXJlIGxheWVyIHRoYXQgaGFuZGxlcyBjb21tdW5pY2F0aW9uIGJldHdlZW4gdGhlIGhhcmR3YXJlIGRldmljZXMgYW5kIHdpdGggdGhlIGVuZCB1c2VyLgoKSW4gdGhpcyB3b3Jrc2hvcCB3ZSd2ZSB1c2VkIGEgTGludXggb3BlcmF0aW5nIHN5c3RlbS4gTGludXggaXMgZnJlZSBhbmQgb3BlbiBzb3VyY2UuIEl0J3Mgd2lkZWx5IHVzZWQgaW4gYmlvaW5mb3JtYXRpY3M7IGFzIHlvdSd2ZSBsZWFybmVkLCBpdCBjYW4gYmUgdmVyeSBwb3dlcmZ1bC4KCjxkZXRhaWxzPgo8c3VtbWFyeT5FeGFtcGxlcyBvZiBPcGVyYXRpbmcgU3lzdGVtcz88L3N1bW1hcnk+CgpFeGFtcGxlczoKCi0gTWljcm9zb2Z0IC0gW1dpbmRvd3NdKGh0dHBzOi8vZW4ud2lraXBlZGlhLm9yZy93aWtpL01pY3Jvc29mdF9XaW5kb3dzKQotIEFwcGxlIC0gW01hY09TXShodHRwczovL2VuLndpa2lwZWRpYS5vcmcvd2lraS9NYWNPUykKLSBbRk9TU10oaHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvRnJlZV9hbmRfb3Blbi1zb3VyY2Vfc29mdHdhcmUpIC0gW0dOVV0oaHR0cDovL3d3dy5nbnUub3JnKSAvIFtMSU5VWF0oaHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvTGludXgpCi0gR29vZ2xlIC0gW0FuZHJvaWRdKGh0dHBzOi8vZW4ud2lraXBlZGlhLm9yZy93aWtpL0FuZHJvaWRfKG9wZXJhdGluZ19zeXN0ZW0pKQotIEFwcGxlIC0gW2lPU10oaHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvSU9TKQoKU29tZSBzb2Z0d2FyZSBpcyBzcGVjaWZpYyB0byBhbiBvcGVyYXRpbmcgc3lzdGVtIC0gZGV2ZWxvcGVycyBtYXkgZm9jdXMgdGhlaXIgdGltZSBhbmQgYXR0ZW50aW9uIG9uIGRldmVsb3BpbmcgZm9yIGNlcnRhaW4gY29uZmlndXJhdGlvbnMgb3ZlciBvdGhlcnMsIGRlcGVuZGluZyBvbiB0aGUgbmljaGUgb3IgZ29hbC4gT2Z0ZW4sIHJlbGVhc2VzIG1heSBiZSBsaW1pdGVkIHRvIGNlcnRhaW4gT1MgLyBoYXJkd2FyZSBjb25maWd1cmF0aW9ucy4KCjwvZGV0YWlscz4KCjxicj4KPGJyPgoKIyMjIExvY2FsIHZzIFJlbW90ZQoKSW4gdGhpcyB3b3Jrc2hvcCwgd2UndmUgdXNlZCByZW1vdGUgY29tcHV0aW5nIHN5c3RlbXMgZm9yIG91ciBhbmFseXNpcy4gV2UndmUgc2VlbiBob3cgd2UgY2FuIGNvbm5lY3QgdG8gYSByZW1vdGUgY29tcHV0ZXIgYW5kIHVzZSBpdCBmb3Igb3VyIHB1cnBvc2VzLiBZb3UncmUgbGlrZWx5IG1vc3QgZmFtaWxpYXIgd2l0aCBsb2NhbCBjb21wdXRpbmcsIHVzaW5nIGEgbWFjaGluZSB0aGF0IGlzIHBoeXNpY2FsbHkgaW4gdGhlIHNhbWUgcm9vbSBhcyB5b3UuIEhvd2V2ZXIsIG5vdyB3ZSBjYW4gcmVjb2duaXplIHNvbWUgYmVuZWZpdHMgb2YgcmVtb3RlIGNvbXB1dGluZy4KCjxkZXRhaWxzPgo8c3VtbWFyeT5XaHkgVXNlIFJlbW90ZSBDb21wdXRpbmc/PC9zdW1tYXJ5PgoKUmVtb3RlIGNvbXB1dGluZyBpcyBzZW5zaWJsZSBpbiBtYW55IHNpdHVhdGlvbnMgLSBmb3IgZWNvbm9taWVzIG9mIHNjYWxlIGl0J3MgYmVzdCB0byBoYXZlIG1hbnkgbWFjaGluZXMgaW4gcGh5c2ljYWwgbG9jYXRpb25zIHRoYXQgYXJlIGJ1aWx0IGFuZCBkZXNpZ25lZCBmb3IgdGhhdCBwdXJwb3NlLiBUaGlzIGlzIHdoYXQgaXQgbWVhbnMgaWYgeW91J3ZlIGhlYXJkIG9mIGNsb3VkIGNvbXB1dGluZyAtIGEgdHlwZSBvZiByZW1vdGUgY29tcHV0aW5nLCBvZnRlbiB3aXRoIGNvbnZlbmllbmNlIHNlcnZpY2VzIG9yIHByb2R1Y3RzIGJ1aWx0IG9uIHRvcCBvZiB0aGUgcmVtb3RlIG1hY2hpbmVzLiBCeSB1c2luZyByZW1vdGUgY29tcHV0aW5nLCB3ZSBjYW4gcmVudCBwb3dlcmZ1bCBoYXJkd2FyZSB0aGF0IHdvdWxkIG5vdCBiZSBwcmFjdGljYWwgZm9yIHVzIHRvIGJ1eS4gV2UgY2FuIGFsc28gc2NhbGUgdGhpcyB1cCBvciBkb3duIHRvIG91ciBleGFjdCBuZWVkcywgcHJvdmlkaW5nIGdyZWF0IGZsZXhpYmlsaXR5LgoKPC9kZXRhaWxzPgoKPGRldGFpbHM+CjxzdW1tYXJ5PkhvdyB0byBFZmZpY2llbnRseSBNYW5hZ2UgUmVtb3RlIENvbXB1dGluZyBSZXNvdXJjZXM8L3N1bW1hcnk+CgpUaGlzIGlzIGEgYnJvYWQgdG9waWMgLSBqb2Igc2NoZWR1bGluZyBpcyBhIGNvbW1vbiBtZXRob2QgZm9yIGFsbG9jYXRpbmcgc2hhcmVkIGNvbXB1dGUgcmVzb3VyY2VzLiBDb25zaWRlciBhIGpvYiBhcyBhbiBpbmRpdmlkdWFsIGNhbGwgdG8gYSBwaWVjZSBvZiBzb2Z0d2FyZS4gVGhlcmUgYXJlIG1hbnkgd2F5cyB0byBtYW5hZ2UgcmVzb3VyY2VzIGF0IHRoZSBqb2IgbGV2ZWwuCgpSZXNvdXJjZSBtYW5hZ2VtZW50IGFuZCBqb2Igc2NoZWR1bGluZyBhdCB0aGUgVU1pY2ggSFBDIGlzIGhhbmRsZWQgYnkgU0xVUk0uIFF1aXRlIGEgbGFyZ2UgdG9waWMgb2YgaXRzIG93biwgeW91IGNhbiByZWFkIG1vcmUgYWJvdXQgdGhlc2UgcmVzb3VyY2VzIFtoZXJlXShodHRwczovL2FyYy51bWljaC5lZHUvZ3JlYXRsYWtlcy9zbHVybS11c2VyLWd1aWRlLykuCgpBbm90aGVyIGxhcmdlIHRvcGljIHdoaWNoIHdlIHdvbid0IGRpdmUgaW50bywgYXJlIHdvcmtmbG93IG1hbmFnZXJzLiBUaGVzZSBhbGxvdyBzaW1pbGFyIGpvYiBtYW5hZ2VtZW50IGNhcGFiaWxpdGllcywgYnV0IGFyZSBtb3JlIGZsZXhpYmxlIHNpbmNlIHRoZXkgYXJlIG5vdCB0aWVkIHRvIGEgc3BlY2lmaWMgdHlwZSBvZiBzeXN0ZW0uIFtTbmFrZW1ha2VdKGh0dHBzOi8vc25ha2VtYWtlLnJlYWR0aGVkb2NzLmlvL2VuL3N0YWJsZS8pIGlzIGFuIGV4YW1wbGUgb2YgdGhpcy4KClRvZGF5IHdlJ3ZlIGJlZW4gYWltaW5nIGZvciBzaW1wbGljaXR5IGFuZCB0cmFuc3BhcmVuY3ksIHNvIG1hbmFnZWQgb3VyIGpvYnMgbWFudWFsbHkgYW5kIHNlcXVlbnRpYWxseS4gSW4gb3RoZXIgd29yZHMsIHdlIHdyb3RlIGFuZCBzdWJtaXR0ZWQgdGhlIGNvbW1hbmRzIGJ5IGhhbmQsIGluIG9yZGVyLCBmb3IgaWxsdXN0cmF0aXZlIHB1cnBvc2VzLiBZb3UgY2FuIGltYWdpbmUgdGhhdCBmb3IgbGFyZ2Utc2NhbGUgcHJvY2Vzc2luZywgaXQgaXMgaW5jcmVkaWJseSB1c2VmdWwgdG8gYWxsb3cgc29mdHdhcmUgdG8gYXV0b21hdGUgc29tZSBvZiB0aGVzZSBwcm9jZXNzZXMgZm9yIHVzLgoKPC9kZXRhaWxzPgoKPGJyPgo8YnI+CgojIyMgU29mdHdhcmUgTWFuYWdlbWVudAoKVGhlcmUgYXJlIG1hbnkgbWV0aG9kcyBmb3IgbWFuYWdpbmcgc29mdHdhcmUuIEFzIGEgc3lzdGVtIGFjY3VtdWxhdGVzIGNoYW5nZXMgb3ZlciB0aW1lLCBhbmQgYXMgdGhlIHJlc3VsdGluZyBzb2Z0d2FyZSBpbnN0YWxsYXRpb25zIGJlY29tZSBtb3JlIGNvbXBsZXggKGVzcC4gYWNyb3NzIG11bHRpLXVzZXIgc3lzdGVtcyksIHRoZSBuZWVkIGZvciBzb2Z0d2FyZSBtYW5hZ2VtZW50IHN5c3RlbXMgYmVjb21lcyBtb3JlIGFwcGFyZW50LgoKVG9kYXkgd2UndmUgYmVlbiB1c2luZyBbbWluaWNvbmRhXShodHRwczovL2RvY3MuY29uZGEuaW8vZW4vbGF0ZXN0L21pbmljb25kYS5odG1sKS4gVGhpcyBwcm92aWRlcyBhIGdvb2QgYmFsYW5jZSBvZiBzaW1wbGljaXR5LCBmbGV4aWJpbGl0eSwgYW5kIHV0aWxpdHkgZm9yIHNvZnR3YXJlIG1hbmFnZW1lbnQuCgpDb25kYSBpcyBhbiBvcGVuLXNvdXJjZSwgY3Jvc3MtcGxhdGZvcm0sIHBhY2thZ2UgbWFuYWdlbWVudCBhbmQgZW52aXJvbm1lbnQgbWFuYWdlbWVudCBzb2Z0d2FyZS4gSXQncyB3aWRlbHkgdXNlZCBmb3IgcGFja2FnaW5nIGFuZCBkaXN0cmlidXRpbmcgc29mdHdhcmUsIHBhcnRpY3VsYXJseSBpbiB0aGUgcHl0aG9uIGNvbW11bml0eS4gTm90ZTogaXQgaXMgYWxzbyB1c2VkIGZvciBzb2Z0d2FyZSBvZiBtYW55IGRpZmZlcmVudCBzb2Z0d2FyZSBsYW5ndWFnZXM7IGl0IGlzIGxhbmd1YWdlLWFnbm9zdGljLgoKTWluaWNvbmRhIGlzIGEgbWluaW1hbCBpbnN0YWxsYXRpb24gb2YgY29uZGEsIHRoYXQgcHJvdmlkZXMgYSBsaWdodHdlaWdodCBvcHRpb24gdG8gZ2V0IHN0YXJ0ZWQgd2l0aC4KCgo8YnI+Cjxicj4KCgojIFN1bW1hcnkKClRoaW5ncyB0aGF0IHdlIGhhdmUgbGVhcm5lZDoKCi0gSW1wb3J0YW50IGFzcGVjdHMgb2YgaGFyZHdhcmUsIHNvZnR3YXJlLCBhbmQgY29tcHV0ZSBlbnZpcm9ubWVudHMgdG8gY29uc2lkZXIKLSBJbXBvcnRhbnQgZmlsZSBmb3JtYXRzIGFuZCB0aGVpciBjb250ZW50cwotIFJlZmVyZW5jZSBmaWxlcyBuZWNlc3NhcnkgLyB3aGVyZSB0byBmaW5kCi0gSG93IHRvIHVzZSBGYXN0UUMsIGFzc2VzcyBxdWFsaXR5IG9mIHJlYWRzCi0gSG93IHRvIHRyYW5zZmVyIGZpbGVzIGZyb20gcmVtb3RlIHRvIGxvY2FsIGNvbXB1dGVyCi0gSG93IHRvIHByZXBhcmUgYSByZWZlcmVuY2UgZm9yIGFsaWdubWVudCBhbmQgcXVhbnRpZmljYXRpb24gd2l0aCBSU0VNICsgU1RBUgotIEhvdyB0byBjb21iaW5lIGV4cHJlc3Npb24gcmVzdWx0cyBhY3Jvc3Mgc2FtcGxlcyBpbnRvIGEgY291bnQgbWF0cml4Ci0gSG93IHRvIHVzZSBNdWx0aVFDIHRvIHN1bW1hcml6ZSBsYXJnZSB2b2x1bWVzIG9mIFFDIGRhdGEuCgo8YnI+Cjxicj4KCiFbUmVzdWx0cyBTdW1tYXJ5XShpbWFnZXMvcmVzdWx0cy1zdW1tYXJ5LnBuZykKCjxicj4KPGJyPgoKCiMgQ29uZGEgRXhlcmNpc2VzCgpFbnZpcm9ubWVudCByZWNhcDoKCkJ5IGRlZmF1bHQgeW91IHdpbGwgdXN1YWxseSBoYXZlIGEgc2luZ2xlIGNvbXB1dGUgZW52aXJvbm1lbnQgLSBvbmUgc2V0IHVwIHNwZWNpZmljYWxseSBmb3IgeW91ciB1c2VyLiBZb3UnbGwgaGF2ZSBhIHNldCBvZiBwcm9ncmFtcywgc29tZSBjb25maWd1cmF0aW9uIGRldGFpbHMsIGV0Yy4gdGhhdCBhcmUgc2V0IHVwIGFjY29yZGluZyB0byB5b3VyIHByZWZlcmVuY2VzLgoKQXMgbWVudGlvbmVkIGFib3ZlLCB3aGVuIGRvaW5nIGRhdGEgYW5hbHlzaXMgdGFza3MsIGl0IGNhbiBiZWNvbWUgb25lcm91cyB0byBjcmVhdGUgYW5kIG1haW50YWluIG9uZSBlbnZpcm9ubWVudCB0aGF0IHNhdGlzZmllcyBhbGwgb2YgeW91ciBuZWVkcy4gSXQgaXMgZ29vZCBwcmFjdGljZSB0byBjcmVhdGUgc2VwYXJhdGUgZW52aXJvbm1lbnRzIGFjY29yZGluZyB0byB0aGUgc3BlY2lmaWMgbmVlZHMgb2YgYSBwcm9qZWN0LiBBIG1ldGFwaG9yIHdvdWxkIGJlIHB1dHRpbmcgb24gZGlmZmVyZW50IG91dGZpdHMgZm9yIGRpZmZlcmVudCBvY2Nhc2lvbnMgb3IgdGFza3MgaW4geW91ciBsaWZlLgoKQ29uZGEgaXMgYSB0b29sIHRoYXQgd2UndmUgdXNlZCBmb3IgbWFuYWdpbmcgb3VyIHNvZnR3YXJlIGVudmlyb25tZW50IGZvciB0aGlzIHdvcmtzaG9wLiBXZSdyZSBhbGwgY3VycmVudGx5IHVzaW5nIHRoZSBzYW1lIGNvbmRhIGVudmlyb25tZW50IHRoYXQgd2UgKHRoZSBpbnN0cnVjdG9ycykgYnVpbHQgYWhlYWQgb2YgdGltZS4KCkNvbmRhIG11c3Qta25vdzoKCi0gQSB0b29sIGZvciBtYW5hZ2luZyBzb2Z0d2FyZSBlbnZpcm9ubWVudHMKLSBDcmVhdGUgYW4gZW52aXJvbm1lbnQKLSBBY3RpdmF0ZSBhbmQgZGVhY3RpdmF0ZSBhbiBlbnZpcm9ubWVudAoKIyMgQ29uZGEgQWN0aXZhdGUgLyBEZWFjdGl2YXRlIEV4ZXJjaXNlCgoxLiBMZWFybiBhYm91dCB0aGUgYHdoaWNoYCBjb21tYW5kIC0gdXNlIHRvIHJldmVhbCB0aGUgcGF0aCB0byBhIHNwZWNpZmljIHNvZnR3YXJlCjIuIFRyeSBgd2hpY2ggcHl0aG9uYAozLiBEZWFjdGl2YXRlIG91ciBjdXJyZW50IHNoYXJlZCBlbnZpcm9ubWVudCB3aXRoIGBjb25kYSBkZWFjdGl2YXRlYAo0LiBUcnkgYHdoaWNoIHB5dGhvbmAgYWdhaW4gLSBJcyBpdCBkaWZmZXJlbnQgbm93Pwo1LiBBY3RpdmF0ZSB0aGUgZW52aXJvbm1lbnQgYWdhaW4gd2l0aCBgY29uZGEgYWN0aXZhdGUgL3dvcmtzaG9wL2NvbmRhL3JzZGAKCgojIyBDb25kYSBDcmVhdGUgU2ltcGxlIEV4ZXJjaXNlCgoxLiBDaGVjayB3aGljaCBweXRob24gdmVyc2lvbiB3ZSBoYXZlIGluIG91ciBjdXJyZW50IGVudmlyb25tZW50CjIuIENyZWF0ZSBhIHNpbXBsZSBjb25kYSBlbnZpcm9ubWVudCBuYW1lZCBgcHkzNmAgdGhhdCBjb250YWlucyBweXRob24gMy42IC0gdXNlIHRoZSBgYmlvY29uZGFgIGNoYW5uZWwKMy4gQWN0aXZhdGUgdGhlIG5ldyBgcHkzNmAgZW52aXJvbm1lbnQgYW5kIHZlcmlmeSB0aGF0IHlvdSBub3cgaGF2ZSBweXRob24gMy42CjQuIERlYWN0aXZhdGUgb3VyIGBweTM2YCBlbnZpcm9ubWVudAoKYGBgCiMgQ2hlY2sgd2hpY2ggcHl0aG9uIHZlcnNpb24gd2UncmUgdXNpbmcgaW4gb3VyIGN1cnJlbnQgZW52aXJvbm1lbnQKcHl0aG9uIC0tdmVyc2lvbgojIENyZWF0ZSBhIGNvbmRhIGVudmlyb25tZW50IHdpdGggcHl0aG9uIHZlcnNpb24gMy42LCB1c2luZyB0aGUgYmlvY29uZGEgY2hhbm5lbApjb25kYSBjcmVhdGUgLW4gcHkzNiAtYyBiaW9jb25kYSBweXRob249My42CiMgQWN0aXZhdGUgb3VyIG5ldyBjb25kYSBlbnZpcm9ubWVudApjb25kYSBhY3RpdmF0ZSBweTM2CiMgQ2hlY2sgb3VyIHB5dGhvbiB2ZXJzaW9uIG5vdyAoaXQgc2hvdWxkIGJlIDMuNikKcHl0aG9uIC0tdmVyc2lvbgojIERlYWN0aXZhdGUgb3VyIGVudmlyb25tZW50CmNvbmRhIGRlYWN0aXZhdGUKYGBgCgo8YnI+CgojIyBDb25kYSBDcmVhdGUgRXhlcmNpc2UKCkJlZm9yZSBzdGFydGluZyBvdXIgY29uZGEgZXhlcmNpc2UsIHdlIHNob3VsZCBtYWtlIHN1cmUgdGhhdCB3ZSBhcmUgb24gdGhlIHNhbWUgcGFnZS4gRm9sbG93IHRoZSBsaW5rIGJlbG93OgoKW0NvbmRhIGNyZWF0ZSBleGVyY2lzZV0oTW9kdWxlMDVfYnJlYWtvdXQwNF9leC5odG1sKQoKPGJyPgo8YnI+CgotLS0KClRoZXNlIG1hdGVyaWFscyBoYXZlIGJlZW4gYWRhcHRlZCBhbmQgZXh0ZW5kZWQgZnJvbSBtYXRlcmlhbHMgY3JlYXRlZCBieSB0aGUgW0hhcnZhcmQgQ2hhbiBCaW9pbmZvcm1hdGljcyBDb3JlIChIQkMpXShodHRwOi8vYmlvaW5mb3JtYXRpY3Muc3BoLmhhcnZhcmQuZWR1LykuIFRoZXNlIGFyZSBvcGVuIGFjY2VzcyBtYXRlcmlhbHMgZGlzdHJpYnV0ZWQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBbQ3JlYXRpdmUgQ29tbW9ucyBBdHRyaWJ1dGlvbiBsaWNlbnNlIChDQyBCWSA0LjApXShodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9saWNlbnNlcy9ieS80LjAvKSwgd2hpY2ggcGVybWl0cyB1bnJlc3RyaWN0ZWQgdXNlLCBkaXN0cmlidXRpb24sIGFuZCByZXByb2R1Y3Rpb24gaW4gYW55IG1lZGl1bSwgcHJvdmlkZWQgdGhlIG9yaWdpbmFsIGF1dGhvciBhbmQgc291cmNlIGFyZSBjcmVkaXRlZC4KCjxici8+Cjxici8+Cjxoci8+CnwgW1ByZXZpb3VzIGxlc3Nvbl0oTW9kdWxlMDRfQWxpZ25tZW50X1FDX2FuZF9RdWFudGlmaWNhdGlvbi5odG1sKSB8IFtUb3Agb2YgdGhpcyBsZXNzb25dKCN0b3ApIHwgW05leHQgbGVzc29uXShNb2R1bGUwNl9ERUFuYWx5c2lzU2V0dXAuaHRtbCkgfAp8IDotLS0gfCA6LS0tLTogfCAtLS06IHwK</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Module05_Additional_Details.md");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

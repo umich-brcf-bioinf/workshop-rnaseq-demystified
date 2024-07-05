@@ -11,11 +11,11 @@
 
 <meta name="author" content="UM Bioinformatics Core" />
 
-<meta name="date" content="2023-11-10" />
+<meta name="date" content="2024-07-05" />
 
 <title>R - Bonus Content</title>
 
-<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -464,7 +464,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">R - Bonus Content</h1>
 <h4 class="author">UM Bioinformatics Core</h4>
-<h4 class="date">2023-11-10</h4>
+<h4 class="date">2024-07-05</h4>
 
 </div>
 
@@ -539,7 +539,8 @@ tidy_norm = tidy_norm %&gt;% left_join(samplesheet_tbl, by = &#39;sample&#39;)</
         y = &#39;log2 Counts&#39;) +
     theme_bw() + theme(axis.text.x = element_text(angle = 90))
 raw_boxplot</code></pre>
-<pre><code>Warning: Removed 226538 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+<pre><code>Warning: Removed 226538 rows containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
 <p><img src="fig/R_bonus_contentRawBoxplot-1.png" width="816" style="display: block; margin: auto;" /></p>
 <blockquote>
 <h1 id="question" class="unlisted unnumbered">Question</h1>
@@ -660,51 +661,61 @@ class="uri">https://training.galaxyproject.org/training-material/topics/transcri
 <div id="session-info" class="section level1">
 <h1>Session Info</h1>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>R version 4.2.0 (2022-04-22)
-Platform: x86_64-apple-darwin17.0 (64-bit)
-Running under: macOS 13.5.2
+<pre><code>R version 4.4.1 (2024-06-14)
+Platform: x86_64-apple-darwin20
+Running under: macOS Ventura 13.6.7
 
 Matrix products: default
-LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
 
 locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: America/Detroit
+tzcode source: internal
 
 attached base packages:
 [1] stats4    stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] lubridate_1.9.2             forcats_1.0.0               stringr_1.5.0              
- [4] purrr_1.0.2                 readr_2.1.4                 tibble_3.2.1               
- [7] tidyverse_2.0.0             biomaRt_2.52.0              knitr_1.43                 
-[10] rmarkdown_2.24              data.table_1.14.8           RColorBrewer_1.1-3         
-[13] pheatmap_1.0.12             ggrepel_0.9.3               dplyr_1.1.2                
-[16] tidyr_1.3.0                 ggplot2_3.4.3               DESeq2_1.36.0              
-[19] SummarizedExperiment_1.26.1 Biobase_2.56.0              MatrixGenerics_1.8.1       
-[22] matrixStats_1.0.0           GenomicRanges_1.48.0        GenomeInfoDb_1.32.4        
-[25] IRanges_2.30.1              S4Vectors_0.34.0            BiocGenerics_0.42.0        
+ [1] lubridate_1.9.3             forcats_1.0.0               stringr_1.5.1              
+ [4] purrr_1.0.2                 readr_2.1.5                 tibble_3.2.1               
+ [7] tidyverse_2.0.0             biomaRt_2.60.1              data.table_1.15.4          
+[10] RColorBrewer_1.1-3          pheatmap_1.0.12             ggrepel_0.9.5              
+[13] dplyr_1.1.4                 tidyr_1.3.1                 ggplot2_3.5.1              
+[16] DESeq2_1.44.0               SummarizedExperiment_1.34.0 Biobase_2.64.0             
+[19] MatrixGenerics_1.16.0       matrixStats_1.3.0           GenomicRanges_1.56.1       
+[22] GenomeInfoDb_1.40.1         IRanges_2.38.0              S4Vectors_0.42.0           
+[25] BiocGenerics_0.50.0         knitr_1.47                  rmarkdown_2.27             
 
 loaded via a namespace (and not attached):
- [1] bitops_1.0-7           bit64_4.0.5            filelock_1.0.2         progress_1.2.2        
- [5] httr_1.4.7             tools_4.2.0            bslib_0.5.1            utf8_1.2.3            
- [9] R6_2.5.1               DBI_1.1.3              colorspace_2.1-0       withr_2.5.0           
-[13] tidyselect_1.2.0       prettyunits_1.1.1      bit_4.0.5              curl_5.0.2            
-[17] compiler_4.2.0         cli_3.6.1              xml2_1.3.5             DelayedArray_0.22.0   
-[21] labeling_0.4.2         sass_0.4.7             scales_1.2.1           genefilter_1.78.0     
-[25] rappdirs_0.3.3         digest_0.6.33          XVector_0.36.0         pkgconfig_2.0.3       
-[29] htmltools_0.5.6        dbplyr_2.3.3           fastmap_1.1.1          highr_0.10            
-[33] rlang_1.1.1            rstudioapi_0.15.0      RSQLite_2.3.1          jquerylib_0.1.4       
-[37] generics_0.1.3         farver_2.1.1           jsonlite_1.8.7         BiocParallel_1.30.4   
-[41] RCurl_1.98-1.12        magrittr_2.0.3         GenomeInfoDbData_1.2.8 Matrix_1.5-3          
-[45] Rcpp_1.0.11            munsell_0.5.0          fansi_1.0.4            lifecycle_1.0.3       
-[49] stringi_1.7.12         yaml_2.3.7             zlibbioc_1.42.0        BiocFileCache_2.4.0   
-[53] grid_4.2.0             blob_1.2.4             parallel_4.2.0         crayon_1.5.2          
-[57] lattice_0.21-8         Biostrings_2.64.1      splines_4.2.0          annotate_1.74.0       
-[61] hms_1.1.3              KEGGREST_1.36.3        locfit_1.5-9.8         pillar_1.9.0          
-[65] geneplotter_1.74.0     codetools_0.2-19       XML_3.99-0.14          glue_1.6.2            
-[69] evaluate_0.21          tzdb_0.4.0             png_0.1-8              vctrs_0.6.3           
-[73] gtable_0.3.3           cachem_1.0.8           xfun_0.40              xtable_1.8-4          
-[77] survival_3.5-7         AnnotationDbi_1.58.0   memoise_2.0.1          timechange_0.2.0      </code></pre>
+ [1] DBI_1.2.3               httr2_1.0.1             rlang_1.1.4            
+ [4] magrittr_2.0.3          compiler_4.4.1          RSQLite_2.3.7          
+ [7] png_0.1-8               vctrs_0.6.5             pkgconfig_2.0.3        
+[10] crayon_1.5.3            fastmap_1.2.0           dbplyr_2.5.0           
+[13] XVector_0.44.0          labeling_0.4.3          utf8_1.2.4             
+[16] tzdb_0.4.0              UCSC.utils_1.0.0        bit_4.0.5              
+[19] xfun_0.45               zlibbioc_1.50.0         cachem_1.1.0           
+[22] jsonlite_1.8.8          progress_1.2.3          blob_1.2.4             
+[25] highr_0.11              DelayedArray_0.30.1     BiocParallel_1.38.0    
+[28] parallel_4.4.1          prettyunits_1.2.0       R6_2.5.1               
+[31] bslib_0.7.0             stringi_1.8.4           jquerylib_0.1.4        
+[34] Rcpp_1.0.12             timechange_0.3.0        Matrix_1.7-0           
+[37] tidyselect_1.2.1        rstudioapi_0.16.0       abind_1.4-5            
+[40] yaml_2.3.8              codetools_0.2-20        curl_5.2.1             
+[43] lattice_0.22-6          withr_3.0.0             KEGGREST_1.44.1        
+[46] evaluate_0.24.0         BiocFileCache_2.12.0    xml2_1.3.6             
+[49] Biostrings_2.72.1       pillar_1.9.0            BiocManager_1.30.23    
+[52] filelock_1.0.3          generics_0.1.3          hms_1.1.3              
+[55] munsell_0.5.1           scales_1.3.0            glue_1.7.0             
+[58] tools_4.4.1             locfit_1.5-9.10         grid_4.4.1             
+[61] AnnotationDbi_1.66.0    colorspace_2.1-0        GenomeInfoDbData_1.2.12
+[64] cli_3.6.3               rappdirs_0.3.3          fansi_1.0.6            
+[67] S4Arrays_1.4.1          gtable_0.3.5            sass_0.4.9             
+[70] digest_0.6.36           SparseArray_1.4.8       farver_2.1.2           
+[73] memoise_2.0.1           htmltools_0.5.8.1       lifecycle_1.0.4        
+[76] httr_1.4.7              bit64_4.0.5            </code></pre>
 <hr />
 <p>These materials have been adapted and extended from materials listed
 above. These are open access materials distributed under the terms of

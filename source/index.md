@@ -4,7 +4,7 @@ author: "UM Bioinformatics Core Workshop Team"
 output:
         html_document:
             includes:
-                in_header: header.html
+                in_header: index_header.html
             theme: paper
             toc: false
             number_sections: false

@@ -57,7 +57,7 @@ Here we will setup the inputs needed to initialize DESeq2 before testing for dif
 
 As introduced at the beginning of the workshop, we have downloaded and prepared data from an existing publication [(Zhang et al., 2019)](https://elifesciences.org/articles/46976), wherein one goal is to understand the gene expression differences in wild-type mice that that were "iron replete" and fed a control diet (we label these "control") and "iron deficient" (we label these "deficient").
 
-![](images/Module00_top_down.jpg)
+![](images/Module07_top_down.jpg)
 
 ## Read Sample Table
 

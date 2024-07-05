@@ -1,22 +1,30 @@
-# if (!requireNamespace("BiocManager", quietly = TRUE))
-#     install.packages("BiocManager")
-# BiocManager::install(c("biomaRt","DESeq2"), update=FALSE, ask=FALSE)
-# #
-# missing <- setdiff(c("tidyr", "ggplot2", "pheatmap", "ggrepel", "formattable", "RColorBrewer", "matrixStats", "dplyr", "biomaRt", "DESeq2"), rownames(installed.packages()))
-#
+# required_packages = c("data.table",
+#                       "tidyr", 
+#                       "pheatmap",
+#                       "formattable",
+#                       "RColorBrewer",
+#                       "matrixStats",
+#                       "dplyr",
+#                       "ggplot2",
+#                       "ggrepel",
+#                       "tidyverse",
+#                       "DESeq2",
+#                       "biomaRt")
+# 
+# if (!requireNamespace("BiocManager", quietly = TRUE)) {
+#   install.packages("BiocManager")
+#   requireNamespace("BiocManager", quietly = TRUE)
+# }
+# BiocManager::install(required_packages, update=FALSE, ask=FALSE)
+# 
+# missing <- setdiff(required_packages, rownames(installed.packages()))
 # if (!length(missing)) {
 #   cat("Ready for Computational Foundations workshop\n")
 #   } else {
 #     cat("PROBLEM: could not install:", missing, "\n")
 #   }
-# install.packages("pheatmap")
-# install.packages("ggrepel")
-# install.packages("formattable")
-# install.packages("tidyr")
-# install.packages("RColorBrewer")
-# install.packages("matrixStats")
-# install.packages("dplyr")
 # }
+# BiocManager::install(missing, update=FALSE, ask=FALSE)
 
 library(rmarkdown)
 

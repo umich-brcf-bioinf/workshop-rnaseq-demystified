@@ -11,11 +11,11 @@
 
 <meta name="author" content="UM Bioinformatics Core" />
 
-<meta name="date" content="2023-11-10" />
+<meta name="date" content="2024-07-05" />
 
 <title>Covariates and Batch correction</title>
 
-<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -464,7 +464,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Covariates and Batch correction</h1>
 <h4 class="author">UM Bioinformatics Core</h4>
-<h4 class="date">2023-11-10</h4>
+<h4 class="date">2024-07-05</h4>
 
 </div>
 
@@ -503,8 +503,9 @@ available</a> <a
 href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119365">publicly
 for these data</a>. However, let’s look back at our initial PCA plot and
 see if there are any concerning patterns:</p>
-<pre class="r"><code>pca_plot = plotPCA(rld, intgroup = c(&#39;condition&#39;), ntop = 500)
-pca_plot</code></pre>
+<pre class="r"><code>pca_plot = plotPCA(rld, intgroup = c(&#39;condition&#39;), ntop = 500)</code></pre>
+<pre><code>using ntop=500 top features by variance</code></pre>
+<pre class="r"><code>pca_plot</code></pre>
 <p><img src="fig/10a-PCArlog3-1.png" width="816" style="display: block; margin: auto;" /></p>
 <p>We do see a high amount of variance (58%) along PC1 that doesn’t seem
 to correspond to the experimental treatment. If we saw this pattern for
@@ -599,15 +600,17 @@ head(rld_batch)</code></pre>
 dim: 6 6 
 metadata(1): version
 assays(1): &#39;&#39;
-rownames(6): ENSMUSG00000000001 ENSMUSG00000000028 ... ENSMUSG00000000049 ENSMUSG00000000056
+rownames(6): ENSMUSG00000000001 ENSMUSG00000000028 ... ENSMUSG00000000049
+  ENSMUSG00000000056
 rowData names(7): baseMean baseVar ... dispFit rlogIntercept
 colnames(6): sample_A sample_B ... sample_E sample_F
 colData names(4): genotype condition batch sizeFactor</code></pre>
 <p>Now that we have the additional labels added and normalized our data,
 we can generate a new PCA plot to see if the the batches explain any of
 the variance along PC1:</p>
-<pre class="r"><code>pca_plot_batch = plotPCA(rld_batch, intgroup = c(&#39;batch&#39;), ntop = 500) + ggtitle(&quot;Batch labeled - iron deficiency data&quot;)
-pca_plot_batch</code></pre>
+<pre class="r"><code>pca_plot_batch = plotPCA(rld_batch, intgroup = c(&#39;batch&#39;), ntop = 500) + ggtitle(&quot;Batch labeled - iron deficiency data&quot;)</code></pre>
+<pre><code>using ntop=500 top features by variance</code></pre>
+<pre class="r"><code>pca_plot_batch</code></pre>
 <p><img src="fig/10a-BatchPCA-1.png" width="816" style="display: block; margin: auto;" /></p>
 <p>From this plot, we can see that the dates of collection are primarily
 separated along PC1, suggesting that this variation might be batch
@@ -623,8 +626,8 @@ and generating DE results that account for these batches.</p>
 the <code>DESeq</code> function:</p>
 <pre class="r"><code>dds_batch_fitted = DESeq(dds_batch_filtered)
 resultsNames(dds_batch_fitted) </code></pre>
-<pre><code>[1] &quot;Intercept&quot;                      &quot;batch_Day2_vs_Day1&quot;             &quot;batch_Day3_vs_Day1&quot;            
-[4] &quot;condition_deficient_vs_control&quot;</code></pre>
+<pre><code>[1] &quot;Intercept&quot;                      &quot;batch_Day2_vs_Day1&quot;            
+[3] &quot;batch_Day3_vs_Day1&quot;             &quot;condition_deficient_vs_control&quot;</code></pre>
 <p>Notice that we have two additional sets of results that include the
 <code>batch</code> labels. While this indicates that the term we
 included for <code>batch</code> was fit, these results would not be
@@ -646,15 +649,15 @@ ENSMUSG00000000056 19653.54030      -0.204334  0.180015 -1.135096 0.2563350  0.7
 <pre class="r"><code>head(results_deficient_vs_control) # results from model with no term</code></pre>
 <pre><code>log2 fold change (MLE): condition deficient vs control 
 Wald test p-value: condition deficient vs control 
-DataFrame with 6 rows and 7 columns
-                      baseMean log2FoldChange     lfcSE      stat    pvalue      padj     call
-                     &lt;numeric&gt;      &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;factor&gt;
-ENSMUSG00000000001  1489.83039       0.297760  0.210310  1.415815  0.156830  0.868573       NS
-ENSMUSG00000000028  1748.93544       0.226421  0.176795  1.280695  0.200301  0.902900       NS
-ENSMUSG00000000031  2151.87715       0.457635  0.764579  0.598545  0.549476  0.995391       NS
-ENSMUSG00000000037    24.91672       0.579130  0.561259  1.031840  0.302147  0.950613       NS
-ENSMUSG00000000049     7.78377      -0.899483  1.553063 -0.579167  0.562476  0.998043       NS
-ENSMUSG00000000056 19653.54030      -0.174048  0.203529 -0.855151  0.392468  0.982479       NS</code></pre>
+DataFrame with 6 rows and 6 columns
+                      baseMean log2FoldChange     lfcSE      stat    pvalue      padj
+                     &lt;numeric&gt;      &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
+ENSMUSG00000000001  1489.83039       0.297760  0.210310  1.415815  0.156830  0.868573
+ENSMUSG00000000028  1748.93544       0.226421  0.176795  1.280695  0.200301  0.902900
+ENSMUSG00000000031  2151.87715       0.457635  0.764579  0.598545  0.549476  0.995391
+ENSMUSG00000000037    24.91672       0.579130  0.561259  1.031840  0.302147  0.950613
+ENSMUSG00000000049     7.78377      -0.899483  1.553063 -0.579167  0.562476  0.998043
+ENSMUSG00000000056 19653.54030      -0.174048  0.203529 -0.855151  0.392468  0.982479</code></pre>
 <p>We can see that while the structure of the results table is the same,
 the returned statistics are slightly different. However, since we
 <em>didn’t</em> actually talk to a collaborator to identify if batch

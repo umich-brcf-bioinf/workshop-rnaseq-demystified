@@ -44,11 +44,9 @@ connect to enable gene expression analysis from bulk RNA-Seq data.
 
 ## Housekeeping
 
-- Please take our optional <a class="external" href="https://forms.gle/rTDtL5ExtvhGryVs6" target="_blank">post-workshop survey</a> (5-10 minutes)
+- Please take our optional <a class="external" href="https://forms.gle/JQg4tn1B4jAVxkz29" target="_blank">post-workshop survey</a> (5-10 minutes)
 
-- 11/27 11-12 ET: <a class="external" href="https://forms.gle/Rfx1TQ64gw2TnizB9" target="_blank">Virtual office hours</a>
-
-- We will email you a link to the final session recordings by next week.
+- We will email you a link to the final session recordings next week.
 
 - The website/notes for this workshop will be available.
 
@@ -60,7 +58,7 @@ for 90 days.
 ## Looking ahead
 
 #### Workshop environment
-- BASH/RStudio workshop compute environment will be available until 11/30.
+- BASH/RStudio workshop compute environment will be available until 8/31.
   - _Please save all your R scripts now_ so that we can "right-size" the compute environment immediately following today's workshop session.
 - You can download files from the workshop environment from your terminal/command line window as below. 
   (You will need to substitute your actual workshop username and type workshop password when prompted.)
@@ -104,7 +102,7 @@ for 90 days.
   - Learning bioinformatic analyses more like a process than a task. Resources 
     to consider:
     - UM Bioinformatics Core links to <a href="https://brcf.medicine.umich.edu/cores/bioinformatics-core/training/" target="_blank">training resources/workshops</a>
-    - Notes on Bash and R from the recent <a href="https://umich-brcf-bioinf.github.io/2023-07-31-umich-computational-foundations/html/" target="_blank">Computational Foundations Workshop</a>.<br/>
+    - Notes on Bash and R from the recent <a href="https://umich-brcf-bioinf.github.io/workshop-computational-foundations/main/html/" target="_blank">Computational Foundations Workshop</a>.<br/>
     - For more intro lessons and workshops in Bash / Git / R / Python : <a href="https://software-carpentry.org/lessons/" target="_blank">Software Carpentry</a> and the <a href="https://umcarpentries.org/" target="_blank">UM Software Carpentry Group</a>.
     - For more info on NGS analysis, we can highly recommend training materials from the <a href="https://hbctraining.github.io/main/" target="_blank">Harvard Chan Bioinformatics Core</a>.
 
@@ -112,14 +110,14 @@ for 90 days.
 
 ## Thank you
 
-![Sponsors](images/Module00_sponsor_logos.png)
+![Sponsors](images/Module00_Introduction/sponsor_logos.png)
 
 ## Thank you to/from the workshop team
-| ![](images/Module00_headshots/headshot_cgates.jpg) | ![](images/Module00_headshots/headshot_mbradenb.jpg) | ![](images/Module00_headshots/headshot_trsaari.jpg) |
+| ![](images/Module00_Introduction/headshots/headshot_cgates.jpg) | ![](images/Module00_Introduction/headshots/headshot_mbradenb.jpg) | ![](images/Module00_Introduction/headshots/headshot_trsaari.jpg) |
 |:-:|:-:|:-:|:-:|
 | **Chris** | **Marci** | **Travis** |
-![](images/Module00_headshots/headshot_damki.jpg) | ![](images/Module00_headshots/headshot_daisyfu.jpg) | ![](images/Module00_headshots/headshot_mkdohert.jpg) |
-| **Dana** | **Daisy** | **Matt** |
+![](images/Module00_Introduction/headshots/headshot_damki.jpg) | ![](images/Module00_Introduction/headshots/headshot_rcavalca.jpg) |
+| **Dana** | **Raymond** |
 
 <br/>
 

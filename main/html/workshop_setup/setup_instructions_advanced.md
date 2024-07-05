@@ -140,24 +140,34 @@ If you can't install or launch git-bash, or if it returns an
     This step takes about 15 minutes, so now is a good time to get
     coffee/tea while RStudio cooks.)*
 
->  install.packages(\"tidyr\")\
-    install.packages(\"ggplot2\")\
-    install.packages(\"pheatmap\")\
-    install.packages(\"ggrepel\")\
-    install.packages(\"formattable\")\
-    install.packages(\"RColorBrewer\")\
-    install.packages(\"matrixStats\")\
-    install.packages(\"dplyr\")\
-    if (!requireNamespace(\"BiocManager\", quietly = TRUE))\
-    install.packages(\"BiocManager\")\
-    BiocManager::install(\"biomaRt\", ask=FALSE)\
-    BiocManager::install(\"DESeq2\", ask=FALSE)\
-    missing \<- setdiff(c(\"tidyr\", \"ggplot2\", \"pheatmap\",
-    \"ggrepel\", \"formattable\", \"RColorBrewer\", \"matrixStats\",
-    \"dplyr\", \"biomaRt\", \"DESeq2\"),
-    rownames(installed.packages()))\
-    if (!length(missing)) { cat(\"Ready for Computational Foundations workshop\\n\")}
-    else {cat(\"PROBLEM: could not install:\", missing, \"\\n\")}
+```
+required_packages = c("data.table",
+                      "tidyr", 
+                      "pheatmap",
+                      "formattable",
+                      "RColorBrewer",
+                      "matrixStats",
+                      "dplyr",
+                      "ggplot2",
+                      "ggrepel",
+                      "tidyverse",
+                      "DESeq2",
+                      "biomaRt")
+
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+  install.packages("BiocManager")
+  requireNamespace("BiocManager", quietly = TRUE)
+}
+BiocManager::install(required_packages, update=FALSE, ask=FALSE)
+
+missing <- setdiff(required_packages, rownames(installed.packages()))
+if (!length(missing)) {
+  cat("Ready for Computational Foundations workshop\n")
+  } else {
+    cat("PROBLEM: could not install:", missing, "\n")
+  }
+}
+```
 
 8.  The Console output should conclude with the text:\
     **Ready for Computational Foundations workshop**.
@@ -262,24 +272,34 @@ If you can't install or launch git-bash, or if it returns an
     window. This step takes about 15 minutes, so now is a good time to
     get coffee/tea while RStudio cooks.)*
 
->   install.packages(\"tidyr\")\
-    install.packages(\"ggplot2\")\
-    install.packages(\"pheatmap\")\
-    install.packages(\"ggrepel\")\
-    install.packages(\"formattable\")\
-    install.packages(\"RColorBrewer\")\
-    install.packages(\"matrixStats\")\
-    install.packages(\"dplyr\")\
-    if (!requireNamespace(\"BiocManager\", quietly = TRUE))\
-    install.packages(\"BiocManager\")\
-    BiocManager::install(c(\"biomaRt\",\"DESeq2\"), update=FALSE,
-    ask=FALSE)\
-    missing \<- setdiff(c(\"tidyr\", \"ggplot2\", \"pheatmap\",
-    \"ggrepel\", \"formattable\", \"RColorBrewer\", \"matrixStats\",
-    \"dplyr\", \"biomaRt\", \"DESeq2\"),
-    rownames(installed.packages()))\
-    if (!length(missing)) { cat(\"Ready for Computational Foundations workshop\\n\")}
-    else {cat(\"PROBLEM: could not install:\", missing, \"\\n\")}
+```
+required_packages = c("data.table",
+                      "tidyr", 
+                      "pheatmap",
+                      "formattable",
+                      "RColorBrewer",
+                      "matrixStats",
+                      "dplyr",
+                      "ggplot2",
+                      "ggrepel",
+                      "tidyverse",
+                      "DESeq2",
+                      "biomaRt")
+
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+  install.packages("BiocManager")
+  requireNamespace("BiocManager", quietly = TRUE)
+}
+BiocManager::install(required_packages, update=FALSE, ask=FALSE)
+
+missing <- setdiff(required_packages, rownames(installed.packages()))
+if (!length(missing)) {
+  cat("Ready for Computational Foundations workshop\n")
+  } else {
+    cat("PROBLEM: could not install:", missing, "\n")
+  }
+}
+```
 
 8.  The Console output should conclude with the text
   **Ready for Computational Foundations workshop**

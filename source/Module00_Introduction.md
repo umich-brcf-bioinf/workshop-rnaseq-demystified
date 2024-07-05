@@ -49,11 +49,11 @@ pre {
 
 
 ## About the workshop team
-| ![](images/Module00_headshots/headshot_cgates.jpg) | ![](images/Module00_headshots/headshot_mbradenb.jpg) | ![](images/Module00_headshots/headshot_trsaari.jpg) |
+| ![](images/Module00_Introduction/headshots/headshot_cgates.jpg) | ![](images/Module00_Introduction/headshots/headshot_mbradenb.jpg) | ![](images/Module00_Introduction/headshots/headshot_trsaari.jpg) |
 |:-:|:-:|:-:|:-:|
 | **Chris** | **Marci** | **Travis** |
-![](images/Module00_headshots/headshot_damki.jpg) | ![](images/Module00_headshots/headshot_daisyfu.jpg) | ![](images/Module00_headshots/headshot_mkdohert.jpg) |
-| **Dana** | **Daisy** | **Matt** |
+![](images/Module00_Introduction/headshots/headshot_damki.jpg) | ![](images/Module00_Introduction/headshots/headshot_rcavalca.jpg) |
+| **Dana** | **Raymond** |
 
 <br/>
 
@@ -87,10 +87,10 @@ pre {
   following the workshop.
 
 
-## <img src="images/Module00_zoom_logo.png" alt="Zoom" width=120/>
+## <img src="images/Module00_Introduction/zoom_logo.png" alt="Zoom" width=120/>
 
 - Zoom controls are at the bottom of the Zoom window:
-![Zoom controls](images/Module00_zoom_controls.png?s)
+![Zoom controls](images/Module00_Introduction/zoom_controls.png)
 
 - To minimize distractions, we encourage participants to keep their audio muted
   (unless actively asking a question).
@@ -99,21 +99,19 @@ pre {
 - You can enable transcription subtitles for your view.
 - We will be using Breakout Rooms occasionally for ad-hoc 1-1 helper support.
   We will review this in detail together in a few minutes.
-- Zoom's "non-verbal controls" are a useful way to interact
-  - Depending on your version of Zoom you can access these either
-    - in the **Reactions** button on you main Zoom window
-    - at the bottom of the **Participant** pane
+- Zoom's "Reactions" are a useful way to interact. You can access these from 
+  the **React** button.
 
-![Zoom non verbals](images/Module00_zoom_nonverbals.png)
+![Zoom reactions](images/Module00_Introduction/zoom_reactions.png)
 
-  - **Raise Hand** to request clarification or ask a question. (Same an in-person workshop.)
+  - **Raise Hand** to request clarification or ask a question. (Same as an in-person workshop.)
   - Instructors will use **Green check** and **Red X** to poll the group
     at checkpoints along the way.
 <br/>
 <br/>
 
 ### Exercise: Use Zoom non-verbals
-  - Everyone use Zoom to raise your hand. <img src="images/Module00_zoom_raise_hand.png" width=50/>
+  - Everyone use Zoom to raise your hand. <img src="images/Module00_Introduction/zoom_raise_hand.png" width=50/>
 <br/>
 <br/>
 
@@ -124,22 +122,22 @@ breakout room.
 
   - Zoom: Click Breakout Rooms
   - Find the room corresponding to the first letter of your last name
-  - Hover over the number to the right and click **Join**.
+  - Click **Join** (to the right of the room name).
   - When you have completed introductions, you can leave the breakout room to rejoin the main room.
 
-  ![Breakout rooms](images/Module00_zoom_breakout_room.png)
+  ![Breakout rooms](images/Module00_Introduction/zoom_breakout_room.png)
 <br/>
 <br/>
 
 
-## <img src="images/Module00_slack_logo.png" alt="Slack" width=120/>
+## <img src="images/Module00_Introduction/slack_logo.png" alt="Slack" width=120/>
 
 - **Slack** can be used to communicate to the group or to individuals and has a
   few features/behaviors that we prefer over Zoom's Chat functionality.
 
-![Posting messages to Slack](images/Module00_slack.png)
+![Posting messages to Slack](images/Module00_Introduction/slack.png)
 
-  - Slack messages will be posted to the **2023-11-rnaseq-demystified** channel.  
+  - Slack messages will be posted to the **2024-08-rnaseq-demystified** channel.  
     Click on the channel in the left pane (1) to select this channel.
   - You can type in the **message field** (2); click **send** (3) to
     post your message to everyone.
@@ -155,12 +153,12 @@ In your RNA-Seq experiment, what do/did you hope to find?
 
 
 ## Review of Key communication patterns
-| | <img src="images/Module00_zoom_logo.png" alt="Zoom" width=120/> | <img src="images/Module00_Slack_logo.png" alt="Slack" width=120/> |
+| | <img src="images/Module00_Introduction/zoom_logo.png" alt="Zoom" width=120/> | <img src="images/Module00_Introduction/Slack_logo.png" alt="Slack" width=120/> |
 |-|:-:|-|
-| "I have an urgent question" | <img src="images/Module00_zoom_raise_hand.png" width=50/> | **Post a question** |
+| "I have an urgent question" | <img src="images/Module00_Introduction/zoom_raise_hand.png" width=50/> | **Post a question** |
 | "I have a general question" | | **Post a question** |
 | "I'm stuck / I need a hand" | | **Post a note** |
-| Instructor check-in | <img src="images/Module00_zoom_green_check.png" width=50/> -or- <img src="images/Module00_zoom_red_x.png" width=50/> | |
+| Instructor check-in | <img src="images/Module00_Introduction/zoom_green_check.png" width=50/> -or- <img src="images/Module00_Introduction/zoom_red_x.png" width=50/> | |
 | Instructor Slack question | | **Respond in Slack thread** |
 <br/>
 <br/>
@@ -175,11 +173,11 @@ In your RNA-Seq experiment, what do/did you hope to find?
 It is important that you can see:
 
  - Zoom (instructor's shared screen + reactions)
- - Your terminal/command window (days 1) or R/Studio (days 2-3)
+ - Your terminal/command window (day 1) or R/Studio (days 2-3)
  - Slack
  - Lesson plan web page
 
-![arranged screens](images/Module00_arranged_screens.png?)
+![arranged screens](images/Module00_Introduction/arranged_screens.png)
 <br/>
 <br/>
 
@@ -197,7 +195,7 @@ It is important that you can see:
 
 # Thank you to our sponsors/contributors
 
-![](images/Module00_sponsor_logos.png)
+![](images/Module00_Introduction/sponsor_logos.png)
 
 ## [UM BRCF Bioinformatics Core](https://brcf.medicine.umich.edu/bioinformatics){target="_blank"}
 

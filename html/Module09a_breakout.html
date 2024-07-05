@@ -11,11 +11,11 @@
 
 <meta name="author" content="UM Bioinformatics Core" />
 
-<meta name="date" content="2023-11-10" />
+<meta name="date" content="2024-07-05" />
 
 <title>Independent Exercise - Customize a PCA plot</title>
 
-<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -465,7 +465,7 @@ div.tocify {
 <h1 class="title toc-ignore">Independent Exercise - Customize a PCA
 plot</h1>
 <h4 class="author">UM Bioinformatics Core</h4>
-<h4 class="date">2023-11-10</h4>
+<h4 class="date">2024-07-05</h4>
 
 </div>
 
@@ -522,8 +522,9 @@ have time:</p>
 <p>Here is a copy of the code we just tested together to 1) pull the
 underlying data from the PCA function and 2) change the theme of our PCA
 plot to black and white.</p>
-<pre class="r"><code>pcaData &lt;- plotPCA(rld, intgroup=c(&quot;condition&quot;), returnData=TRUE)
-percentVar &lt;- round(100 * attr(pcaData, &quot;percentVar&quot;)) # store PC axes (% variance)
+<pre class="r"><code>pcaData &lt;- plotPCA(rld, intgroup=c(&quot;condition&quot;), returnData=TRUE)</code></pre>
+<pre><code>using ntop=500 top features by variance</code></pre>
+<pre class="r"><code>percentVar &lt;- round(100 * attr(pcaData, &quot;percentVar&quot;)) # store PC axes (% variance)
 
 # create custom plot object
 PCACustom &lt;- ggplot(pcaData, aes(PC1, PC2, color=condition)) +

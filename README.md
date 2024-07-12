@@ -1,5 +1,7 @@
 This is the custom curriculum for the UM Bioinformatics Core RNA-Seq Demystified Workshop. 
 
+
+
 * This workshop content is licensed under a [Creative Commons Attribution 4 License](https://creativecommons.org/licenses/by/4.0/).
 
 * Sections of the workshop content have been adapted and extended from materials created by the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/) and [Childhood Cancer Data Lab/Alex's Lemonade Stand Foundation](https://alexslemonade.github.io/training-modules/). These are open access materials distributed under the terms of the [Creative Commons Attribution license (CC BY 4.0)](http://creativecommons.org/licenses/by/4.0/), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.

@@ -31,7 +31,7 @@ body, td {
 ## Schedule
 
 #### Day 1 (Chris & Travis)
-| Time | Topic : Details |
+| Time | Topic |
 | :---  | :---- |
 |  9:00 | [Introductions and Startup](Module00_Introduction.html) |
 |  9:30 | **Sequence QC:** |

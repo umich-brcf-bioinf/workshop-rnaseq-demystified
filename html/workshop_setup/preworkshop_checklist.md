@@ -19,7 +19,7 @@ body{ /* Normal  */
 <br/>
 
 1. The computer setup and shared compute server is the same as for the Computational Foundations Workshop so if you attended Computational Foundations, you are all set. Otherwise:
-  - You can follow this link for <a href="setup_instructions.html" target="_blank">instructions to set up your computer</a>. Also, a separate email with the subject **"UM BioinfCore Workshop Login"** will detail your individual username and password to access the shared server. (Note that this email is sometimes flagged as spam, so if you don't see it in your Inbox please check your spam folder.)_
+  - You can follow this link for <a href="setup_instructions.html" target="_blank">instructions to set up your computer</a>. Also, a separate email with the subject **"UM BioinfCore Workshop Login"** will detail your individual username and password to access the shared server. (Note that this email is sometimes flagged as spam, so if you don't see it in your Inbox please check your spam folder.)
   - We will be using the <a href="https://umbioinfcoreworkshops.slack.com" target="_blank">Workshop Slack space</a>, please accept the email invitation to be added to that workspace.<br/>
 
 2. (optional) If you have not already, we invite you to take the [Pre-workshop survey](https://forms.gle/WnRFCwBnQM69TAVb8){target="_blank"}<br/>

@@ -120,7 +120,7 @@ Let's create an R script file:
 The new script **diffex.R** is now in the `scripts` folder. You can see that by clicking the `scripts` folder in the "Files" pane. And you can go back up to the main project folder by clicking the `..` to the right of the up arrow in the "Files" pane. By convention, R scripts end with the file extension **.R**.
 
 
-## File organization & reproducible research
+## File organization for reproducible research
 
 Part of any successful bioinformatics analysis is documentation and data stewardship, which are important aspects of "reproducible research" (see: [Nobel, 2009](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000424)).
 
@@ -193,10 +193,9 @@ Since calculating variance is key to the statistical approach used for DESeq2, i
 Several packages have already been installed on the server, so we can load them into our R session now. To do that we'll use the `library` function to load the required packages.
 
 ```{r Modules, message=FALSE, warning= FALSE, eval=TRUE}
+# load libraries
 library(DESeq2)
-library(ggplot2)
-library(tidyr)
-library(dplyr)
+library(tidyverse)
 library(matrixStats)
 library(ggrepel)
 library(pheatmap)
@@ -227,6 +226,7 @@ count_table = read.table("../data/R_data/gene_expected_count.txt", header = TRUE
 ```
 
 ```{r DataTable2, eval=FALSE}
+# read in count data
 count_table = read.table("data/gene_expected_count.txt", header = TRUE, row.names = 1)
 ```
 
@@ -234,7 +234,7 @@ count_table = read.table("data/gene_expected_count.txt", header = TRUE, row.name
 head(count_table, n=2) # look at the top of the table
 ```
 
-Now that the file is read into R, note that we've created a data frame that includes 'gene ids' in ENSEMBL format as rownames and count data from six different samples.
+By loading in the count data, we've created a data frame with 'gene ids' in ENSEMBL format as rownames and six columns of count data for our samples.
 
 How many genes were included in our reference? We can get a sense of the size of our data with the `str` function.
 ```{r DataTableCheck2, eval=TRUE}
@@ -244,7 +244,7 @@ str(count_table) # look at the size & structure of the table
 
 One important consideration for RNA-seq data is how many genes we measured in our data and how well we measured them. Both are impacted by sequencing depth or the number of reads generated per sample.
 
-Generally, for human and mouse experiments the recommendation is 30-40 million reads per sample to capture both highly expressed (abundant) and lowly expressed (rarer) transcripts in the sample, assuming ~25,000 protein-coding genes would be expected for a polyA (mRNA targeting) library prep. However, as the image from Illumina below shows, sequencing depth has less of an impact than number of replicates in detecting differentially expressed genes (DEGs).
+For human and mouse experiments, the recommendation is sequencing 30-40 million reads per sample to capture both highly expressed (abundant) and lowly expressed (rarer) transcripts in the sample, as ~25,000 protein-coding genes are expected with a polyA (mRNA targeting) library prep for these species. However, as the image below from Illumina shows, sequencing depth has less of an impact than number of replicates in detecting differentially expressed genes (DEGs).
 
 ![Illumina's differential expression recovery across replicate number and sequencing depth](images/de_replicates_img.png){width=50%}
 
@@ -260,7 +260,7 @@ count_table %>% summarize_all(sum)
 
 How did we know to use the `summarize_all` function to sum each column?
 
-R and RStudio have a strong community component so, as mentioned in Computational Foundations, if you are getting an error or wondering how to make a command work or how to perform a specific task, there is likely already a solution out there. Search engines are your friend, which is exactly how we found [that approach](https://stackoverflow.com/questions/28873057/sum-across-multiple-columns-with-dplyr)
+R and RStudio have a strong community component, so if you are getting an error or wondering how to make a command work or how to perform a specific task, there is likely already a solution out there. Search engines are your friend, which is exactly how we found [that approach](https://stackoverflow.com/questions/28873057/sum-across-multiple-columns-with-dplyr)
 
 It can sometimes be a challenge to figure out *what to search for*, so some key parts of a successful search are:
 

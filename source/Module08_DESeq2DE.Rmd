@@ -48,6 +48,7 @@ library(DESeq2)
 # Differential Expression Workflow {.unlisted .unnumbered}
 
 Here we will proceed with count normalizations and fit our DESeq2 model.
+<!-- consider moving fitting until after PCA plots so fit model once --->
 
 ![](./images/wayfinder/wayfinder-DESeq2DE.png){width=75%}
 

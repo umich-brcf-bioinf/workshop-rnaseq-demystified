@@ -1,0 +1,7 @@
+genotype,condition,batch
+wt,control,Day1
+wt,control,Day2
+wt,control,Day2
+wt,deficient,Day1
+wt,deficient,Day2
+wt,deficient,Day2

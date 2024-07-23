@@ -67,24 +67,24 @@ Our next step will be to describe the samples within our R session, so that we m
 colnames(count_table)
 ```
 
-Based on the sample names that are the columns of `count_table`, our samples are blinded, e.g. the sample names don't clearly correspond to treatment groups. We will need to specify which sample IDs connect to which experimental conditions.
+From the columns of `count_table`, we can see our samples are blinded, e.g. the sample names don't clearly correspond to treatment groups. We will need to specify which sample IDs connect to which experimental conditions.
 
 Typically sample phenotype data, including experimental conditions, are stored as Excel or CSV files that we can read into R, and then use when creating a DESeq2 object. If you are unfamilar with CSV files or how to generate them, there are [tutorials](https://www.wikihow.com/Create-a-CSV-File) available to guide you through the process.
 
 > # Tip: Sample naming conventions {.unlisted .unnumbered}
 > Use only alpha-numeric characters (A-Z, a-z, 0-9), and separate parts of the name with underscores (`_`) or dots (`.`). Do not begin sample names with numbers.
 
-We'll load our 'pre-made' sample information sheet, `samplesheet.csv`, to unblind our samples.
+We'll load our 'pre-made' sample information sheet, `samplesheet_batch.csv`, to unblind our samples.
 
 ```{r Samplesheet, echo = FALSE, eval = TRUE}
-samplesheet = read.table("../data/R_data/samplesheet.csv",
+samplesheet_batch = read.table("../data/R_data/samplesheet_batch.csv",
                        sep = ",",
                        header = TRUE,
                        row.names = 1)
 ```
 
 ```{r Samplesheet2, eval = FALSE}
-samplesheet = read.table("data/samplesheet.csv",
+samplesheet_batch = read.table("data/samplesheet.csv",
                        sep = ",",
                        header = TRUE,
                        row.names = 1)
@@ -92,25 +92,25 @@ samplesheet = read.table("data/samplesheet.csv",
 
 Alternatively, we could manually create a sample sheet, ensuring that the sample IDs match our count table.
 
-We can look at the object by typing its name and hitting Enter. Note, for larger experiments, you may want to use `head()`.
+We can look at our sample sheet information with `head()`.
 
 ```{r ShowSamplesheet}
-samplesheet
+head(samplesheet_batch)
 ```
 
 **Checkpoint**: *If you have loaded `samplesheet`, please indicate with the green 'check' button. Otherwise, please use the red 'x' button to have the command repeated*
 
 
-In this example data, all mice are of a wild-type genotype with three samples from control diet mice (labeled as "control") and three samples from iron deficient diet fed mice (labeled as "deficient"). Again, for larger experiments, you may want to examine the coding of the samples and how many group labels are present by looking at the `unique()` values of the relevant columns.
+In this example data, all mice are of a wild-type genotype with three samples from control diet mice (labeled as "control") and three samples from iron deficient diet fed mice (labeled as "deficient"). Again, for larger experiments, you may want to examine the coding of the samples and how many group labels are present using the `unique()` function and the `$` operator to specify the relevant column.
 
 ```{r TreatmentGroupTable}
-unique(samplesheet$condition)
+unique(samplesheet_batch$condition)
 ```
 
 
-### Replicates and sequencing depth in RNA-seq experiments
+### Replicates in RNA-seq experiments
 
-> **Question** In this experiment, we only have samples from three mice per each condition. Do we have enough replicates?
+> **Question** In this experiment, we have samples from three mice per each condition. Do we have enough replicates?
 
 The goal of our analysis is to separate the “interesting” biological contributions from the “uninteresting” technical or other contributions that either cannot be or were not controlled in the experimental design. The more sources of variation, such as samples coming from heterogenous tissues or experiments with incomplete knockdowns, the more replicates (>3) are recommended.
 
@@ -129,18 +129,20 @@ Next, we'll format our table so that we have the appropriate data type (an order
 
 ```{r SamplesheetFactor}
 # tidy version
-samplesheet_ready <- samplesheet %>% mutate(condition = factor(condition, 
+samplesheet_ready <- samplesheet_batch %>% mutate(condition = factor(condition, 
                                           levels = c('control', 'deficient')))
-
-# base version
-samplesheet_ready <- samplesheet
-samplesheet_ready$condition = factor(samplesheet_ready$condition,
-                            levels = c('control', 'deficient'))
 
 unique(samplesheet_ready$condition)
 ```
 
-Notice that we set the levels in a particular order. This is important for setting the "Control" (or "Reference") group as the denominator in the default comparisons when we setup our DESeq2 model.
+```{r echo=FALSE, eval=FALSE}
+# base version - add as dropdown option
+samplesheet_ready <- samplesheet
+samplesheet_ready$condition = factor(samplesheet_ready$condition,
+                            levels = c('control', 'deficient'))
+```
+
+Notice that we set "control" as the first level as the factor. This ensures that the "Control" (or "Reference") group is the denominator in the default comparisons in our DESeq2 model.
 
 Before we proceed, we need to make sure that the sample labels (column names) in the count table match the sample information table (row names), including the order. If the sample labels don't match, then we will see an error and need to correct the labels prior to proceeding. Checking the sample information table is extremely important to ensure that the correct samples are grouped together for comparisons.
 
@@ -169,13 +171,13 @@ Is our count matrix from our RSEM outputs considered a "raw" count matrix by DES
 > If we think back to the RSEM outputs, the 'expected_counts' table may include fractional amounts due to how the alignment tool resolves reads mapping to multiple locuses). However, recent versions of DESeq2 handle this without rounding.
 
 
-To create the `DESeqDataSet` we will need the `count_table` and the `samplesheet`. We will also need a **design formula** to specify our model.
+In addition to the `count_table` and the `samplesheet_ready`. We will also need a **design formula** to specify our model.
 
 ## Making model choices
 
 We'll talk about the design formula more later but for now it's important to understand that the design specifies the relevant column(s) in the metadata table and how they should be used when fitting a model for our data. 
 
-For our dataset we only have one column we are interested in, that is `condition`. This column has two factor levels, which tells DESeq2 that for each gene we want to evaluate gene expression change with respect to these different levels. Although the design formula is required, it is not used at this step.
+For our dataset we only have one column we are interested in, that is `condition`. Although the design formula is required, it is not used at this step.
 
 ```{r DESeq2Object}
 ## Create DESeq object, line by line
@@ -199,9 +201,9 @@ Notice that printing the `dds` object helpfully shows us some helpful informatio
 
 # Pre-filtering
 
-While not necessary, [pre-filtering](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#pre-filtering) helps to not only reduce the size of the DESeq2 object, but also gives you a sense of how many genes were reasonably measured at the sequencing depth generated for your samples.
+While not necessary, [pre-filtering](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#pre-filtering) helps to not only reduce the size of the DESeq2 object, but also gives you a sense of how many genes were reasonably measured for your samples.
 
-Here we will filter out any genes that have less than 10 counts across any of the samples. This is a fairly standard level of filtering, but can filter data less/more depending on quality control metrics from alignments and sequencing depth or total number of samples.
+Here we will filter out any genes that have less than 10 counts across any of the samples. This is a fairly standard level of filtering, but the data could be filtered more less or more depending on quality control metrics from alignments and sequencing depth or total number of samples. Since the DESeq2 object isn't compatible with `tidyverse` functions, we'll take a different approach:
 
 ```{r PreFilter}
 keep = rowSums(counts(dds)) >= 10
@@ -220,7 +222,7 @@ Notice the `dds_filtered` object has less elements than the unfiltered `dds` obj
 In this section, we:
 
 * Loaded the necessary input files into our R session
-* Discussed single variable model design for DESeq2
+* Discussed the importance of biological replicates
 * Initialized a DESeq2 data set
 * Filtered our count data
 

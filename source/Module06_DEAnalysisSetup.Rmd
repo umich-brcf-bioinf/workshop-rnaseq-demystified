@@ -134,6 +134,7 @@ To follow best practices for file organization for reproducible research, we sho
 To organize our files , we'll create some more directories in the `RSD_R` folder which is now our project root and current working directory. We can already see that there a `data/` folder and we just created the `scripts/` folder with the RStudio GUI. Let's create an `outputs/` folder using the `dir.create()` function in R.
 
 ```{r create_dirs, eval = FALSE}
+# create output directory and subdirectories to use for our analysis
 dir.create('outputs')
 dir.create('outputs/figures')
 dir.create('outputs/tables')
@@ -193,7 +194,7 @@ Since calculating variance is key to the statistical approach used for DESeq2, i
 Several packages have already been installed on the server, so we can load them into our R session now. To do that we'll use the `library` function to load the required packages.
 
 ```{r Modules, message=FALSE, warning= FALSE, eval=TRUE}
-# load libraries
+# load libraries that we need to do our analysis
 library(DESeq2)
 library(tidyverse)
 library(matrixStats)
@@ -209,6 +210,7 @@ R/RStudio [AKA Posit] has great resources for getting help, including [code 'che
 
 Since we loaded the libraries into our R session, we can see documentation out using the `?` operator.
 ```{r CheckDocumentaion}
+# look up the help information for one of the packages we will use
 ?`DESeq2-package`
 ```
 
@@ -226,7 +228,7 @@ count_table = read.table("../data/R_data/gene_expected_count.txt", header = TRUE
 ```
 
 ```{r DataTable2, eval=FALSE}
-# read in count data
+# read in provided count data from the `data` directory
 count_table = read.table("data/gene_expected_count.txt", header = TRUE, row.names = 1)
 ```
 
@@ -253,6 +255,7 @@ For human and mouse experiments, the recommendation is sequencing 30-40 million 
 How many reads were generated per sample in our data? We can use the `summarize_all` function from the `dplyr` package to determine the total number of reads or "depth" per sample.
 
 ```{r SummarizeReads, eval=TRUE}
+# use tidyverse functions to summarize the total counts per sample
 count_table %>% summarize_all(sum)
 ```
 

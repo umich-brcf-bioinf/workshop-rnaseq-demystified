@@ -70,7 +70,7 @@ Two common factors that need to be accounted for during normalization are **sequ
 
 > **Note**: The above figure was originally from a [HBC  tutorial](https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html) that also includes a detailed comparison of different normalization (CPM, TPM, FPKM) approaches and their best uses, which are summarized below.
 
-<EDIT to be a dropdown for table of counts>
+<!---EDIT to be a dropdown for table of counts-->
 
 ### Common normalization methods
 
@@ -97,15 +97,12 @@ For data exploration and visualizations, it is helpful to generate an object of 
 
 The rlog transformation produces log2 scaled data that has also been normalized to overall library size as well as variance across genes at different mean expression levels. For larger numbers of samples, there is an alternative transformation method, [vst](http://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#count-data-transformations) that can be used instead for count normalization.
 
-The command to generate the normalized count object has a few parts, including `dds` as an input and providing a value to the option `blind`. 
+The command to generate the normalized count object has a few parts, including `dds` as an input and providing a value to the option `blind` and then we'll look at the results of the transformation by extracting the values with the `assay()` function.
 
 ```{r CountNorm}
+# create object with rlog normalized data 
 rld = rlog(dds_filtered, blind = TRUE)
-```
-
-Next, we'll look at the results of the transformation by extracting the values with the `assay()` function.
-
-```{r CountNormCheck}
+# check contents of new object `rld`
 head(assay(rld), 2)
 ```
 
@@ -115,15 +112,12 @@ We'll come back to these normalized data, but first let's write out both the raw
 
 ### Output count tables
 
-To output the raw counts, we will need to use the `counts` function to access the count table from within its larger `DESeqDataSet` object.
+To output the raw counts, we will need to use the `counts` function to access the count table from within its larger `DESeqDataSet` object. Then we'll output the rlog count table, using the `assay` function to access the normalized count table from within its larger `DESeqDataSet` object.
 
-```{r OutputCountsRaw, eval = FALSE}
+```{r OutputCounts, eval = FALSE}
+# output raw counts to file
 write.csv(counts(dds, normalized = FALSE), file="outputs/tables/DESeq2_raw_counts.csv")
-```
-
-Then we'll output the rlog count table, using the `assay` function to access the normalized count table from within its larger `DESeqDataSet` object.
-
-```{r OutputCountsRlog, eval = FALSE}
+# output rlog normalized counts to file
 write.csv(assay(rld), file="outputs/tables/DESeq2_rlog_normalized_counts.csv")
 ```
 

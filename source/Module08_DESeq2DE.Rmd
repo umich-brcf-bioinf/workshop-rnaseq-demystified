@@ -47,8 +47,8 @@ library(DESeq2)
 
 # Differential Expression Workflow {.unlisted .unnumbered}
 
-Here we will proceed with count normalizations and fit our DESeq2 model.
-<!-- consider moving fitting until after PCA plots so fit model once --->
+Here we will proceed with count normalizations.
+<!-- moved fitting until after PCA plots so fit model once --->
 
 ![](./images/wayfinder/wayfinder-DESeq2DE.png){width=75%}
 
@@ -70,7 +70,7 @@ Two common factors that need to be accounted for during normalization are **sequ
 
 > **Note**: The above figure was originally from a [HBC  tutorial](https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html) that also includes a detailed comparison of different normalization (CPM, TPM, FPKM) approaches and their best uses, which are summarized below.
 
-<!---EDIT to be a dropdown for table of counts-->
+<!---EDIT to dropdown for table of types of normalization -->
 
 ### Common normalization methods
 
@@ -130,6 +130,8 @@ In this section, we:
 * Learned about count normalizations and uses
 * Generated a normalized count table
 * Wrote intermediate data to file
+
+Next, we'll generate sample level quality control visualizations. 
 
 ---
 

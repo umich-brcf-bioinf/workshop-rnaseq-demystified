@@ -35,9 +35,8 @@ knitr_fig_path("11-")
 
 In this module, we will learn:
 
-* How to generate common differential expression visualizations
 * How to choose thresholds for calling differentially expressed genes
-* Options for functional enrichments and other downstream analyses
+* How to generate common differential expression visualizations
 
 <br>
 
@@ -69,14 +68,6 @@ Part of differential expression analysis is generating visualizations and summar
 
 ## Tabular DE summary
 
-To generate a general summary of the DE results, we can use the `summary` function to generate a basic summary by DESeq2.
-
-```{r DESeq2Summary}
-summary(results_deficient_vs_control)
-```
-
-However, this summary is simply a text output that we are unable to manipulate. Moreover, notice that the thresholds are not quite as we would like them.
-
 To create our own summary, we first need to choose thresholds. A standard threshold for the adjusted p-value is less than 0.05. A reasonable threshold for linear fold-change is less than -1.5 or greater than 1.5 (which corresponds to log2 fold-change -0.585 and 0.585, respectively). Including a fold-change threshold ensures that the DE genes have a reasonable effect size as well as statistical significance.
 
 Let's set these thresholds as variables to reuse. This is generally good practice because if you want to change those thresholds later then you only have to change them in one location of your script, which is faster and can reduce the risk of errors from missing some instances in your code.
@@ -107,38 +98,29 @@ Here is one possible answer:
 sum(results_deficient_vs_control$padj < fdr & abs(results_deficient_vs_control$log2FoldChange) >= log2(fc), na.rm = TRUE)
 ```
 
-**Checkpoint**: *If you see the same number of DE ganes with our choosen thresholds, please indicate with a green check. Otherwise use a red x.*
+**Checkpoint**: *If you see the same number of DE genes with our choosen thresholds, please indicate with a green check. Otherwise use a red x.*
 
 </details>
 <br>
 
-Let's now create a new column in `results_deficient_vs_control` to record the significance "call" based on these thresholds. And let's separate the call by "Up" or "Down", noting that these are relative to our "Case" condition. There are many ways to accomplish this, but the following will work:
+Let's now create a new column in `results_deficient_vs_control` to record the significance "call" based on these thresholds. And let's separate the call by "Up" or "Down", noting that these are relative to our "Case" condition. There are many ways to accomplish this, but the following will work: <!-- modify to tidyverse syntax & move "base" options to dropdown menu -->
 
-First define all values as "NS" or "not significant":
 
-```{r NSColumn}
+```{r DEColumn}
+# create new column called "call"
 results_deficient_vs_control$call = 'NS'
 head(results_deficient_vs_control)
-```
 
-Next, determine the "Up" and "Down" indices:
-
-```{r UpDownIndices}
+# determine the "Up" and "Down" indices:
 up_idx = results_deficient_vs_control$padj < fdr & results_deficient_vs_control$log2FoldChange > log2(fc)
 down_idx = results_deficient_vs_control$padj < fdr & results_deficient_vs_control$log2FoldChange < -log2(fc)
-```
 
-Last, use those indices to assign the correct "Up" or "Down" values to the correct indices, and look at the head of the result:
-
-```{r CallColumn}
+# use indices to assign the correct "Up" or "Down" values to the correct indices, and look at the head of the result:
 results_deficient_vs_control$call[up_idx] = 'Up'
 results_deficient_vs_control$call[down_idx] = 'Down'
 head(results_deficient_vs_control)
-```
 
-Finally, since plotting functions often require categorical groupings, let's make this `call` column a factor and specify the level ordering:
-
-```{r FactorCall}
+# modify column to be factor  to make for easier plotting
 results_deficient_vs_control$call = factor(results_deficient_vs_control$call, levels = c('Up', 'Down', 'NS'))
 head(results_deficient_vs_control)
 ```
@@ -149,6 +131,7 @@ head(results_deficient_vs_control)
 Now we are in a position to quickly summarize our differential expression results:
 
 ```{r TableCall}
+# check summary of results
 table(results_deficient_vs_control$call)
 ```
 
@@ -168,15 +151,7 @@ Let's coerce the `DataFrame` which was returned by `DESeq2::results()` into a `t
 results_forPlot = as_tibble(results_deficient_vs_control, rownames = 'id') %>% arrange(padj)
 ```
 
-Let's start with a very simple volcano plot that plots the `log2FoldChange` on the x-axis, and `-log10(padj)` on the y-axis.
-
-```{r VolcanoPlot}
-# Initialize the plot, specifying the plot type as 'geom_point'
-ggplot(results_forPlot, aes(x = log2FoldChange, y = -log10(padj))) +
-  geom_point()
-```
-
-This is a good start, but it's good practice to add better labels to the plot with the `labs()` function:
+Let's start with a simple volcano plot that plots the `log2FoldChange` on the x-axis, and `-log10(padj)` on the y-axis, adding custom labels to the plot with the `labs()` function:
 
 ```{r VolcanoPlot2}
 # Add plot labels and change the theme - save the plot as object `p`
@@ -206,46 +181,75 @@ p1 = p +
 p1
 ```
 
-Finally, why not color the points by their significance status? We already created the `call` column that has the correct values. In this case we can get away with adding `geom_point()` to our existing plot and specifying the correct aesthetic:
+Finally, why not color the points by their significance status? We already created the `call` column that has the correct values. In this case we can get away with adding `geom_point()` to our existing plot and specifying the correct aesthetic, before customizing to have a nicer color scheme:
 
 ```{r VolcanoPlot4}
+# map color to the `call` column from our input data
 p2 = p1 + geom_point(aes(color = call))
 p2
-```
 
-Finally, we can adjust our plot to have a nicer color scheme:
-```{r}
+# adjust our color scheme
 p3 = p2 + scale_color_manual(name = '', values=c('#B31B21',  '#1465AC', 'darkgray'))
 p3
 ```
 
 For additional visualizations for our DE results, we included some example code in the [Bonus Content module](https://umich-brcf-bioinf.github.io/2023-03-13-umich-rnaseq-demystified/html/R_bonus_content.html) and this [HBC tutorial](https://hbctraining.github.io/DGE_workshop/lessons/06_DGE_visualizing_results.html) also includes some nice examples.
 
-### Subsetting significant genes
 
-You may be interested in creating a table of only the genes that pass your significance thresholds. A useful way to do this is to conditionally subset your results. Again, we already created the `call` column, which makes this relatively simple to do.
+### Adding gene symbols to our data
 
-*Note: The tidyverse functions you learned in Software Carpentry could also be alternatively used here.*
+What if we wanted to include labels for some of the most up and/or down regulated genes from our comparisons? We can do this by using external information that maps the ENSEMBL ids from our reference files/count tables to corresponding gene symbols. We've provided a table with these mappings but in the next module, we'll show how to access resources and generate this kind of mapping table. 
 
-```{r ConditionalSubset}
-# tidyr (requires table reformatting)
-res_sig <- as_tibble(results_deficient_vs_control, rownames = "gene_ids") %>% filter(call != 'NS')
-
-# base
-res_sig <- results_deficient_vs_control[results_deficient_vs_control$call != 'NS', ]
-
-head(res_sig)
-dim(res_sig)
+```{r GeneKey, echo = FALSE, eval = TRUE}
+id_mapping = read.table("../data/R_data/ENSEMBL_id_mappings.csv",
+                       sep = ",",
+                       header = TRUE)
 ```
+
+```{r GeneKey2, eval = FALSE}
+# read in table mapping ENSEMBL ids to gene symbols
+id_mapping = read.table("data/ENSEMBL_id_mappings.csv",
+                       sep = ",",
+                       header = TRUE)
+head(id_mapping)
+```
+
+We want to match the `id` column of `results_deficient_vs_control` to the `ensembl_gene_id` column of `id_mapping`, and once that match is found, we want to extract the `external_gene_name` column of `id_mapping` to get the gene symbol. Next, look at the documentation for `dplyr::left_join()` and merge the `id_mapping` table into the `results_deficient_vs_control` table on the columns `ensembl_gene_id` and `external_gene_name`.
+```{r left_join}
+# check our starting data
+head(results_deficient_vs_control)
+
+# use `join` to add gene symbols to row with matching ENSEMBL id
+results_deficient_vs_control_annotated = as_tibble(results_deficient_vs_control, rownames = "id") %>%
+    left_join(id_mapping, by = c('id' = 'ensembl_gene_id'))
+head(results_deficient_vs_control_annotated)
+```
+
+We can use some of the `tidyverse` functions we've encountered previously to rename the `external_gene_name` column to `symbol` and to move it into the second column position? Hint: Because of the order of the packages we may have loaded, we'll use `dplyr::rename()` and `dplyr::select()` instead of just the `select()` function. We can discuss this in a moment.
+
+```{r rename_rearrange}
+# use dplyr functions to rename columns and reorganize table to make more readable
+results_deficient_vs_control_annotated = results_deficient_vs_control_annotated %>%
+  dplyr::rename('symbol' = 'external_gene_name') %>%
+  dplyr::select(id, symbol, everything())
+head(results_deficient_vs_control_annotated)
+```
+
+And now we have our differential expression results annotated with gene symbols, which can help in the interpretation of the results, and can be used in downstream analysis such as functional analysis. Although we don't have time to run this together, we can also use this table to label genes of interest in our volcano plot.
+
+> # Exercise {.unlisted .unnumbered}
+> Now that we annotated our DE results to add gene symbols, what steps would we take to add labels to our volcano plots for the top differentially expressed genes in our comparison?
 
 
 # Summary
 
 In this section, we:
 
-* Generated a volcano plot for our differential expression results
+* Discussed choosing significance and fold-change thresholds
 * Summarized our differential expression results
-* Discussed choosing thresholds
+* Generated a volcano plot for our differential expression results
+
+Next, we'll learn how to access ... 
 
 
 ---

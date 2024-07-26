@@ -140,7 +140,12 @@ pca_plot_batch = plotPCA(rld_batch, intgroup = c('batch'), ntop = 500) + ggtitle
 pca_plot_batch
 ```
 
-Next, let's save these plot as files in our `outputs/figures` folder. Since both plots are `ggplot` objects -- you can see this with `class(pca_plot)`-- we can use `ggsave()`.
+> ## Check-in and looking forward {.unlisted .unnumbered}
+>
+> Based on this plot, should we reconsider our original model that only included the `condition` column?**
+
+
+Next, let's save these plot as files in our `outputs/figures` folder to revisit later. Since both plots are `ggplot` objects -- you can see this with `class(pca_plot)`-- we can use `ggsave()`.
 
 ```{r save_pca_ggsave, eval = FALSE}
 # save PCA plots to file

@@ -35,8 +35,9 @@ knitr_fig_path("10-")
 
 In this module, we will learn:
 
-* How to generate tables of DE statistics
 * What a p-value does (and does not!) represent
+* How to modify and fit our DE model
+* How to generate tables of DE statistics
 * The importance multiple hypothesis corrections
 
 <br>
@@ -98,21 +99,26 @@ Imagine shuffling the group labels and recomputing the Wald statistic over and o
 
 # DESeq2 Model Fitting
 
-Based on our PCA results, we'll revise our DESeq object to add a covariate for "batch" and then repeat the filtering process. Then, we'll fit our model using the `DESeq` function and take a look at the objects we generate. This command applies the model to our data, using the sample information supplied when generating the initial `dds_batch` object so can take some time to run.
+Based on our PCA results, we'll copy our DESeq object and revise our original model design to add a covariate for "batch". Then, we'll fit our model using the `DESeq` function and take a look at the objects we generate. This command applies the model to our data, using the sample information supplied and model  `dds_batch` object so can take some time to run.
 
 ```{r FitModelBatch, message=FALSE}
-dds_batch = DESeqDataSetFromMatrix(countData = count_table,
-                      colData = samplesheet_batch,
-                      design = ~ batch + condition)
-dds_batch
 
-keep = rowSums(counts(dds)) >= 10
-dds_batch_filtered = dds[keep,]
-dds_batch_filtered
+#  access model slot from original `dds_filtered` DESeq2 object
+design(dds_filtered)
 
+# copy original object and then modify model
+dds_batch_filtered = dds_filtered
+design(dds_batch_filtered) <- "~ condition + batch"
+
+# after updating model, fit model with `DESeq` function
+?DESeq
 dds_batch_fitted = DESeq(dds_batch_filtered)
 dds_batch_fitted
 ```
+
+<!-- add as bonus: Accessing functions available for specific object types https://rpubs.com/mikelove/pkgmethods 
+# see what functions are available for accessing/modifying our DESeqDataSet objects
+showMethods(classes="DESeqDataSet", where=getNamespace("DESeq2"))--> 
 
 
 While we won't be able to delve into model options in detail, more complex model designs including adding "interaction terms" between multiple group labels, are helpfully described in [this support thread](https://support.bioconductor.org/p/98628/) as well as in the [DESeq2 vignette](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#interactions).
@@ -131,7 +137,7 @@ model.matrix(~ condition + batch, samplesheet_batch)
 <details>
     <summary>*Dispersion models and possible warning messages*</summary>
 
-    Depending on the data set you are analyzing, you may see a warning that the default 'parametric' dispersion model so a local regression was substituted. When seeing this warning, we recommend looking at a dispersion plot with the `plotDispEsts(dds)` function, but as [this bioconductor thread](https://support.bioconductor.org/p/107937/) discusses, other visualizations of our data might be more helpful and/or easier to interpret why the data doesn't fit the default parametric model.
+   Depending on the data set you are analyzing, you may see a warning that the default 'parametric' dispersion model so a local regression was substituted. When seeing this warning, we recommend looking at a dispersion plot with the `plotDispEsts(dds)` function, but as [this bioconductor thread](https://support.bioconductor.org/p/107937/) discusses, other visualizations of our data might be more helpful and/or easier to interpret why the data doesn't fit the default parametric model.
 
 </details>
 <br>
@@ -144,9 +150,9 @@ model.matrix(~ condition + batch, samplesheet_batch)
 plotDispEsts(dds_batch_fitted)
 ```
     
-    Above is the raw data plotted in black, the fitted (or expected) dispersion in red, and the normalized data with scaled variance in blue. Since we have fairly small sample sizes for each condition, we see shrinkage for many genes but a reasonable correlation between the expression level and dispersions.
+   Above is the raw data plotted in black, the fitted (or expected) dispersion in red, and the normalized data with scaled variance in blue. Since we have fairly small sample sizes for each condition, we see shrinkage for many genes but a reasonable correlation between the expression level and dispersions.
 
-    This [HBC tutorial](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html) has a more detailed overview of estimating size factors, estimating gene dispersion, and the shrinkage procedure, as well as examples of concerning dispersion plots that may suggest reassessing quality of the experimental data.
+   This [HBC tutorial](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html) has a more detailed overview of estimating size factors, estimating gene dispersion, and the shrinkage procedure, as well as examples of concerning dispersion plots that may suggest reassessing quality of the experimental data.
 </details>
 <br>
 
@@ -167,7 +173,7 @@ resultsNames(dds_batch_fitted)
 The results include the single comparison representing the two levels of `condition`. If there were more levels in the `condition` column, there would be more results listed here because DESeq2 would implicitly compare all other levels to the reference level.
 
 
-**Checkpoint**: *If you see the same results when you execute `resultsNames(dds_filtered)`, please indicate with the green 'yes' button. Otherwise, please use the red 'x' button to get help before the break*
+**Checkpoint**: *If you see the same results when you execute `resultsNames(dds_batch_fitted)`, please indicate with the green 'yes' button. Otherwise, please use the red 'x' button to get help*
 
 
 # Generating DE Results
@@ -257,7 +263,7 @@ The default FDR rate cutoff for our analyses is 0.05, meaning the proportion of 
 
 
 
-## Save fitted model and data in Robj
+## Save fitted model and data as .rds
 
 It can be useful to save key R objects to file as we proceed through our analysis - before we do that, let's look at the documentation for the `save` function to see if it does what we want.
 
@@ -270,7 +276,7 @@ As we can see from the documentation the function `save` writes an "external rep
 ```{r WriteFitModelObject}
 dir.create("outputs/Robjs", recursive=TRUE)
 save(dds_batch_fitted,
-          file="outputs/Robjs/dds_batch_fitted.Robj")
+          file="outputs/Robjs/dds_batch_fitted.rds")
 ```
 
 
@@ -285,6 +291,7 @@ In this section, we:
 * Performed statistical tests for comparisons of interest
 * Generated tables of differential expression results - i.e. fold changes and adjusted pvalues for each gene in dataset
 * Discussed importance and application of multiple hypothesis correction
+* Saved an Robject from our environment to file
 
 Now that we've generated our differential comparisons and have an understanding of our results, including multiple hypothesis correction, we can determine how many genes are differentially expressed between our conditions and how to visualize our results.
 

@@ -33,21 +33,38 @@ source("../bin/chunk-options.R")
 knitr_fig_path("06-")
 ```
 
-In this module, we will learn:
-
-* How to set up a differential expression analysis, using reproducible research principles  
-* What is DESeq2 and why it is widely used for differential expression comparisons
-* How to load and review gene count data
 
 <br>
 
 # Differential Expression Workflow {.unlisted .unnumbered}
 
-Today we will proceed through key steps in a differential expression analysis, starting from a count table that's similar to what you generated in the first half of the workshop and one of the outputs included in the [data that the Advanced Genomics Core delivers](https://brcf.medicine.umich.edu/cores/advanced-genomics/data-delivery/) for RNA-seq libraries.
+So far in the workshop, we've taken some steps to answer the following questions regarding RNA-seq data:
+
+* Are there quality concerns for my sequencing data?
+* How can my sequencing data be processed to remove low quality bases and/or reads?
+* How are raw sequencing data transformed into gene-level count data?
+
+Today we will proceed through key steps in a differential expression (DE) analysis, starting from a count table that's similar to what you generated in the first half of the workshop and one of the outputs included in the [data that the Advanced Genomics Core delivers](https://brcf.medicine.umich.edu/cores/advanced-genomics/data-delivery/) for RNA-seq libraries.
 
 <img src="images/wayfinder/wayfinder-DEAnalysisSetup.png" alt="wayfinder" style="width: 1000px;"/>
 
+At the conclusion of this workshop, we hope that you will be better positioned to consider these key questions when planning and executing a DE analysis:
+
+* How do I use R/Rstudio and organize my files?
+* What tools should I use to execute my DE analysis?
+* How can I control for technical variation in my experimental design?
+* What is the scale of differences expected between my treatment groups?
+* Are there covariates that should be considered?
+* What comparisons are relevant to my biological question?
+* What outputs should I expect from a DE analysis?
+
 # Getting Started in RStudio
+
+In this module, we will learn:
+
+* How to set up a differential expression analysis, using reproducible research principles  
+* What is DESeq2 and why it is widely used for differential expression comparisons
+* How to load and review gene count data
 
 ## Log on to RStudio Server
 
@@ -67,7 +84,7 @@ However, if you forget yours, a helper can retrieve it for you if you ask in Sla
 
 ## What are we working towards?
 
-To refresh ourselves on the interface of RStudio, look in the lower right pane, that has a list of files and folders. Click on the `RSD_R` folder and then click on the `WelcomeToRSD.R` script to open it.
+To refresh ourselves on the interface of RStudio, look in the lower right pane, which lists the files and folders for the selected directory. Click on the `RSD_R` folder and then click on the `WelcomeToRSD.R` script to open it.
 
 There should now be four panes in your RStudio window, with the `WelcomeToRSD` script in the upper left pane, this is the "Source" or "Scripts" pane. It displays the code that we will write to perform our analysis.
 
@@ -122,7 +139,7 @@ The new script **diffex.R** is now in the `scripts` folder. You can see that by 
 
 ## File organization for reproducible research
 
-Part of any successful bioinformatics analysis is documentation and data stewardship, which are important aspects of "reproducible research" (see: [Nobel, 2009](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000424)).
+Part of any successful bioinformatics analysis is documentation and file organization, which are important aspects of "reproducible research" (see: [Nobel, 2009](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000424)).
 
 To follow best practices for file organization for reproducible research, we should make distinct locations for:
 
@@ -131,7 +148,7 @@ To follow best practices for file organization for reproducible research, we sho
 * Output
 
 
-To organize our files , we'll create some more directories in the `RSD_R` folder which is now our project root and current working directory. We can already see that there a `data/` folder and we just created the `scripts/` folder with the RStudio GUI. Let's create an `outputs/` folder using the `dir.create()` function in R.
+We can already see that there a `data/` folder and we just created the `scripts/` folder with the RStudio GUI. To organize our files , we'll create some more directories in the `RSD_R` folder which is now our project root and current working directory after creating the RStudio Project in that location, using the `dir.create()` function in R.
 
 ```{r create_dirs, eval = FALSE}
 # create output directory and subdirectories to use for our analysis
@@ -157,11 +174,9 @@ dir.create('outputs/tables')
 
 # Tools for Differential Gene Expression analysis
 
-As discussed during the webinar, bulk RNA-seq can be used to test for differential expression between conditions or treatments, using statistical approaches that are appropriate for biological data.
+While there are several tools for differential expression comparisons that use statistical approaches appropriate for biological data, we will use [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) in our analysis today.
 
-While there are several tools that can be used for differential expression comparisons, we will use [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) in our analysis today.
-
-DESeq2 is one of two tools, along with [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html), considered ['best practice'](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-91) for differential expression comparisons. Both tools apply similar methods that account for the "shape" of data expected for RNA-seq and are fairly stringent in calling differentially expressed genes, lowering the risk of investigating "false positive" genes (e.g. genes that don't actually have different expression between treatment groups and therefore are not relevant to the biological process).
+DESeq2 is one of two tools, along with [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html), that are considered ['best practice'](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-91) for differential expression comparisons. Both tools apply similar methods that account for the "shape" of data expected for RNA-seq and are fairly stringent in calling differentially expressed genes, lowering the risk of investigating "false positive" genes (e.g. genes that don't actually have different expression between treatment groups and therefore are not relevant to the biological process).
 
 Additionally, DESeq2 also has an [excellent vignette](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html)
 from Love, Anders, and Huber, from which our workflow is partially adapted, and is a good resource when analyzing your own data
@@ -180,21 +195,21 @@ Since calculating variance is key to the statistical approach used for DESeq2, i
 </details>
 <br>
 
-> ## Exercise
+> ## Check-in and looking forward
 >
-> - Post a question that was NOT addressed but that you hope we will be addressed in the later modules **OR**
+> - Post a question you hope will be addressed in the later modules **OR**
 > - Add a thumbs up to your favorite comment(s) to upvote it
 
 ----
 
-# Getting started
+# Starting our analysis
 
 ## Load Packages
 
-Several packages have already been installed on the server, so we can load them into our R session now. To do that we'll use the `library` function to load the required packages.
+Several packages have already been installed on the server, so we need to load them into our R session to access the functions in those packages. To do that we'll use the `library` function:
 
 ```{r Modules, message=FALSE, warning= FALSE, eval=TRUE}
-# load libraries that we need to do our analysis
+# load packages that we need to do our analysis into our session
 library(DESeq2)
 library(tidyverse)
 library(matrixStats)
@@ -223,20 +238,19 @@ Another key assumption for DESeq2 is that the analysis will start with [un-norma
 To begin we'll read in a **raw** count data file, `gene_expected_count.txt` which is similar to what would be generated in the alignment steps (and what you would receive from AGC). We'll discuss a few normalizations that can be helpful for understanding broad patterns in our expression data, but raw data **should always** be used as an input for DESeq2.
 
 ```{r DataTable, eval=TRUE, echo=FALSE}
-## need to include paths relative to site build locations but keep code block hidden
+## include paths relative to site build locations but keep code block hidden
 count_table = read.table("../data/R_data/gene_expected_count.txt", header = TRUE, row.names = 1)
 ```
 
 ```{r DataTable2, eval=FALSE}
 # read in provided count data from the `data` directory
 count_table = read.table("data/gene_expected_count.txt", header = TRUE, row.names = 1)
+
+# look at the top of the table
+head(count_table, n=2) 
 ```
 
-```{r DataTableCheck, eval=TRUE}
-head(count_table, n=2) # look at the top of the table
-```
-
-By loading in the count data, we've created a data frame with 'gene ids' in ENSEMBL format as rownames and six columns of count data for our samples.
+By loading in the count data, we've created a data frame with 'gene ids' in ENSEMBL format as rownames and six columns of count data, one for each samples.
 
 How many genes were included in our reference? We can get a sense of the size of our data with the `str` function.
 ```{r DataTableCheck2, eval=TRUE}

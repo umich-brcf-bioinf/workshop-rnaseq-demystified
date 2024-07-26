@@ -132,6 +132,7 @@ samplesheet_ready <- samplesheet_batch %>%
 unique(samplesheet_ready$condition)
 ```
 
+<!---
 ```{r echo=FALSE, eval=FALSE}
 # base version - add as dropdown option instead of main content
 samplesheet_ready <- samplesheet
@@ -140,6 +141,7 @@ samplesheet_ready$condition = factor(samplesheet_ready$condition,
 samplesheet_ready$batch = factor(samplesheet_ready$batch,
                             levels = c('Day1', 'Day2'))
 ```
+-->
 
 Notice that we set "control" as the first level as the factor for the `condition` column. This ensures that the "control" (or "reference") group is the denominator in the default comparisons in our DESeq2 model.
 
@@ -176,7 +178,7 @@ In addition to the `count_table` and the `samplesheet_ready`. We will also need 
 
 We'll talk about the design formula more later but for now it's important to understand that the design specifies the relevant column(s) in the metadata table and how they should be used when fitting a model for our data. 
 
-For our dataset we only have one column we are interested in, that is `condition`. Although the design formula is required, it is not used at this step.
+For our dataset we have one experimental condition column, which is named `condition`. Although the design formula is required, it is not used at this step.
 
 ```{r DESeq2Object}
 ## Create DESeq object, line by line

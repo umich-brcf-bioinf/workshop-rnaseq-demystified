@@ -108,7 +108,7 @@ design(dds_filtered)
 
 # copy original object and then modify model
 dds_batch_filtered = dds_filtered
-design(dds_batch_filtered) <- "~ condition + batch"
+design(dds_batch_filtered) <- ~ condition + batch
 
 # after updating model, fit model with `DESeq` function
 ?DESeq

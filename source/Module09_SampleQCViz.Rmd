@@ -136,7 +136,7 @@ The samples don't appear to cluster too tightly on their `condition`, but we do 
 Next, let's plot the same data but now labeling by the batch column from our metadata and adding a title with `ggtitle`:
 ```{r BatchPCA}
 # create PCA plot with batches labeled
-pca_plot_batch = plotPCA(rld_batch, intgroup = c('batch'), ntop = 500) + ggtitle(title="Batch labeled - iron deficiency data")
+pca_plot_batch = plotPCA(rld, intgroup = c('batch'), ntop = 500) + ggtitle("Batch labeled - iron deficiency data")
 pca_plot_batch
 ```
 

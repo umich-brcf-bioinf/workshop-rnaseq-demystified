@@ -93,7 +93,7 @@ We can access additional genomic annotations using the [`bioMart` package](https
 ```{r AddAnotation3, warning=FALSE}
 id_mapping = getBM(attributes=c('ensembl_gene_id', 'external_gene_name'),
       filters = 'ensembl_gene_id',
-      values = row.names(assay(dds_fitted)),
+      values = row.names(assay(dds_batch_fitted)),
       mart = ensembl)
 # will take some time for the query to run
 
@@ -115,7 +115,7 @@ A key aspect of our analysis is preserving the relevant datasets for both our re
 
 We'll write out our DE results, now that we've added information to the table to help us or our collaborators interpret the results.
 
-```{r DEResultsOuput, eval = FALSE}
+```{r DEResultsOutput, eval = FALSE}
 write.csv(results_deficient_vs_control,
           row.names = FALSE,
           na = ".",
@@ -143,7 +143,7 @@ dim(res_sig)
 res_sig <- results_deficient_vs_control[results_deficient_vs_control$call != 'NS', ] -->
 
 Once we've created this table, we can also write it out to file:
-```{r DEResultsOuput, eval = FALSE}
+```{r DEOnlyOutput, eval = FALSE}
 write.csv(res_sig,
           row.names = FALSE,
           na = ".",

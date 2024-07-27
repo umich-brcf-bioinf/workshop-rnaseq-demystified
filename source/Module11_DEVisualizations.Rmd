@@ -51,7 +51,7 @@ library(pheatmap)
 library(RColorBrewer)
 # load("rdata/RunningData.RData")
 
-results_deficient_vs_control = results(dds_fitted, name = 'condition_deficient_vs_control')
+results_deficient_vs_control = results(dds_batch_fitted, name = 'condition_deficient_vs_control')
 ```
 
 # Differential Expression Workflow {.unlisted .unnumbered}

@@ -38,7 +38,7 @@ In this module, we will learn:
 * The advantages of using gene ids when analyzing RNA-seq data.
 * How to find gene symbols and other annotations, using ENSEMBL gene ids
 * How to output our results to file
-* Discuss options for functional enrichments and other follow-ups
+* General options for functional enrichments and other follow-ups
 
 <br>
 

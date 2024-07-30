@@ -57,44 +57,6 @@ Now we will consider what we learned from our QC results before testing for diff
 
 ---
 
-# Testing for DE
-
-Before showing the code for generating differential expression results, let's walk through some toy data and discuss our intuition, its limitations, and what we can do to formalize our thought around determining if a gene is differentially expressed.
-
-Let's start by looking at expression boxplots for a few "genes" where we've made up the data. In each plot, we are comparing the expression levels (on the y-axis) for samples (each point) representing a WT (red) and KO (teal) condition. The boxplot shows the 25% - 75% distribution, along with outliers, with a bar representing the median value, and a black-crossed-point representing the mean.
-
-For the first example, we ask: Does the KO affect the expression of the gene?
-
-![](./images/Module10_stat_plot_Gene_3.png){width=75%}
-
-It seems pretty clear that there is a large difference between the means of the two groups, and within-group spread is quite low. So the answer to the question is likely "Yes".
-
-Consider a second example:
-
-![](./images/Module10_stat_plot_Gene_1.png){width=75%}
-
-Here there isn't a large difference between the means of the two groups, and there is quite a bit of spread within-group. The answer here is likely "No".
-
-Finally, consider a third example:
-
-![](./images/Module10_stat_plot_Gene_2.png){width=75%}
-
-The means are not so close to each other in this example, though there is still quite a bit of spread. This is example is perhaps less clear.
-
-Looking at all three of the hypothetical genes together, we see them in relation to one another and how they span the range from No, to Maybe?, to Definitely.
-
-![](./images/Module10_stat_plot.png)
-
-Now, consider needing to make this decision for 20,000 genes. Even if all the genes had clear separation, that would take a lot of time. However, it's reasonable to expect to see a lot of genes with more ambiguous expression like Gene 2.
-
-**We need a formal, reproducible, way to make this decision!**
-
-Thankfully statistics provides the formality we want, but for any statistical test we need to clearly state what we are testing.  When testing for differential expression we assume that for any particular gene, there is no difference in expression between conditions. Statisticians would call this the **"null hypothesis"**.
-
-For each gene, DESeq2 computes a "Wald statistic" which is a single number encapsulating the difference in the means and the spread of the groups. However, this number alone doesn't allow us to determine if a gene is differentially expressed. We need a **second** number to give us an idea of how extreme that statistic is among the distribution of possible statistics, which is the **"p-value"**. The **"p-value"** along with choosing a threshold will inform us if we can **reject the null hypothesis** and classify a gene as differentially expressed.
-
-Imagine shuffling the group labels and recomputing the Wald statistic over and over again. You'd get a distribution of statistics that would look similar to a normal curve. The p-value essentially tells you how likely you are to have seen the statistic by chance. So when we set a p-value = 0.05 as a threshold, we're saying, "there is a 5% chance I'd see something this extreme when there was actually no effect". So the evidence is **strong**, but not **ironclad**.
-
 
 
 # DESeq2 Model Fitting
@@ -174,6 +136,47 @@ The results include the single comparison representing the two levels of `condit
 
 
 **Checkpoint**: *If you see the same results when you execute `resultsNames(dds_batch_fitted)`, please indicate with the green 'yes' button. Otherwise, please use the red 'x' button to get help*
+
+
+# Testing for DE
+
+Before showing the code for generating our tables of differential expression results, let's walk through some toy data and discuss our intuition, its limitations, and what we can do to formalize our thought around determining if a gene is differentially expressed.
+
+Let's start by looking at expression boxplots for a few "genes" where we've made up the data. In each plot, we are comparing the expression levels (on the y-axis) for samples (each point) representing a WT (red) and KO (teal) condition. The boxplot shows the 25% - 75% distribution, along with outliers, with a bar representing the median value, and a black-crossed-point representing the mean.
+
+For the first example, we ask: Does the KO affect the expression of the gene?
+
+![](./images/Module10_stat_plot_Gene_3.png){width=75%}
+
+It seems pretty clear that there is a large difference between the means of the two groups, and within-group spread is quite low. So the answer to the question is likely "Yes".
+
+Consider a second example:
+
+![](./images/Module10_stat_plot_Gene_1.png){width=75%}
+
+Here there isn't a large difference between the means of the two groups, and there is quite a bit of spread within-group. The answer here is likely "No".
+
+Finally, consider a third example:
+
+![](./images/Module10_stat_plot_Gene_2.png){width=75%}
+
+The means are not so close to each other in this example, though there is still quite a bit of spread. This is example is perhaps less clear.
+
+Looking at all three of the hypothetical genes together, we see them in relation to one another and how they span the range from No, to Maybe?, to Definitely.
+
+![](./images/Module10_stat_plot.png)
+
+Now, consider needing to make this decision for 20,000 genes. Even if all the genes had clear separation, that would take a lot of time. However, it's reasonable to expect to see a lot of genes with more ambiguous expression like Gene 2.
+
+**We need a formal, reproducible, way to make this decision!**
+
+Thankfully statistics provides the formality we want, but for any statistical test we need to clearly state what we are testing.  When testing for differential expression we assume that for any particular gene, there is no difference in expression between conditions. Statisticians would call this the **"null hypothesis"**.
+
+For each gene, DESeq2 computes a "Wald statistic" which is a single number encapsulating the difference in the means and the spread of the groups. However, this number alone doesn't allow us to determine if a gene is differentially expressed. We need a **second** number to give us an idea of how extreme that statistic is among the distribution of possible statistics, which is the **"p-value"**. The **"p-value"** along with choosing a threshold will inform us if we can **reject the null hypothesis** and classify a gene as differentially expressed.
+
+Imagine shuffling the group labels and recomputing the Wald statistic over and over again. You'd get a distribution of statistics that would look similar to a normal curve. The p-value essentially tells you how likely you are to have seen the statistic by chance. So when we set a p-value = 0.05 as a threshold, we're saying, "there is a 5% chance I'd see something this extreme when there was actually no effect". So the evidence is **strong**, but not **ironclad**.
+
+
 
 
 # Generating DE Results

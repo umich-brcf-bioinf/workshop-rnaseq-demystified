@@ -11,7 +11,7 @@
 
 <meta name="author" content="UM Bioinformatics Core" />
 
-<meta name="date" content="2024-07-26" />
+<meta name="date" content="2024-07-30" />
 
 <title>Covariates and Batch correction - DEPRECIATED</title>
 
@@ -465,7 +465,7 @@ div.tocify {
 <h1 class="title toc-ignore">Covariates and Batch correction -
 DEPRECIATED</h1>
 <h4 class="author">UM Bioinformatics Core</h4>
-<h4 class="date">2024-07-26</h4>
+<h4 class="date">2024-07-30</h4>
 
 </div>
 
@@ -589,7 +589,8 @@ class: DESeqTransform
 dim: 6 6 
 metadata(1): version
 assays(1): ''
-rownames(6): ENSMUSG00000000001 ENSMUSG00000000028 ... ENSMUSG00000000049 ENSMUSG00000000056
+rownames(6): ENSMUSG00000000001 ENSMUSG00000000028 ... ENSMUSG00000000049
+  ENSMUSG00000000056
 rowData names(7): baseMean baseVar ... dispFit rlogIntercept
 colnames(6): sample_A sample_B ... sample_E sample_F
 colData names(4): genotype condition batch sizeFactor
@@ -625,8 +626,8 @@ resultsNames(dds_batch_fitted)
 ```
 
 ```
-[1] "Intercept"                      "batch_Day2_vs_Day1"             "batch_Day3_vs_Day1"            
-[4] "condition_deficient_vs_control"
+[1] "Intercept"                      "batch_Day2_vs_Day1"            
+[3] "batch_Day3_vs_Day1"             "condition_deficient_vs_control"
 ```
 Notice that we have two additional sets of results that include the `batch` labels. While this indicates that the term we included for `batch` was fit, these results would not be biologically interesting.
 

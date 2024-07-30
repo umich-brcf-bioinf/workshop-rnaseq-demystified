@@ -51,9 +51,9 @@ library(dplyr)
 
 # Differential Expression Workflow {.unlisted .unnumbered}
 
-Now we test for differential expression between our groups of interest and return a table of results.
+Now we will consider what we learned from our QC results before testing for differential expression between samples in our groups of interest.
 
-![](./images/wayfinder/wayfinder-DEComparisons.png){width=75%}
+![](./images/wayfinder/wayfinder-batchAndCovars.png){width=75%}
 
 ---
 

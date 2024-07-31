@@ -11,11 +11,11 @@
 
 <meta name="author" content="UM Bioinformatics Core" />
 
-<meta name="date" content="2024-07-30" />
+<meta name="date" content="2024-07-31" />
 
 <title>DE Testing</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
@@ -430,9 +430,6 @@ div.tocify {
       <a href="Module10_DEComparisons.html">DE Testing</a>
     </li>
     <li>
-      <a href="Module10a_batchAndCovars.html">Batches and Covariates</a>
-    </li>
-    <li>
       <a href="Module11_DEVisualizations.html">DE Visualization</a>
     </li>
     <li>
@@ -464,7 +461,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">DE Testing</h1>
 <h4 class="author">UM Bioinformatics Core</h4>
-<h4 class="date">2024-07-30</h4>
+<h4 class="date">2024-07-31</h4>
 
 </div>
 
@@ -521,8 +518,8 @@ dds_batch_fitted</code></pre>
 dim: 16249 6 
 metadata(1): version
 assays(4): counts mu H cooks
-rownames(16249): ENSMUSG00000000001 ENSMUSG00000000028 ... ENSMUSG00000118651
-  ENSMUSG00000118653
+rownames(16249): ENSMUSG00000000001 ENSMUSG00000000028 ...
+  ENSMUSG00000118651 ENSMUSG00000118653
 rowData names(26): baseMean baseVar ... deviance maxCooks
 colnames(6): sample_A sample_B ... sample_E sample_F
 colData names(4): genotype condition batch sizeFactor</code></pre>
@@ -547,15 +544,15 @@ confounded, which would cause <code>DESeq2</code> to return a
 We can do that using the <code>model.matrix</code> function, providing
 our intended model and our sample information.</p>
 <pre class="r"><code>model.matrix(~ condition + batch, samplesheet_batch)</code></pre>
-<pre><code>         (Intercept) conditiondeficient batchDay2 batchDay3
-sample_A           1                  0         0         0
-sample_B           1                  0         1         0
-sample_C           1                  0         0         1
-sample_D           1                  1         0         0
-sample_E           1                  1         1         0
-sample_F           1                  1         0         1
+<pre><code>         (Intercept) conditiondeficient batchDay2
+sample_A           1                  0         0
+sample_B           1                  0         1
+sample_C           1                  0         1
+sample_D           1                  1         0
+sample_E           1                  1         1
+sample_F           1                  1         1
 attr(,&quot;assign&quot;)
-[1] 0 1 2 2
+[1] 0 1 2
 attr(,&quot;contrasts&quot;)
 attr(,&quot;contrasts&quot;)$condition
 [1] &quot;contr.treatment&quot;
@@ -713,14 +710,22 @@ head(results_deficient_vs_control)</code></pre>
 <pre><code>log2 fold change (MLE): condition deficient vs control 
 Wald test p-value: condition deficient vs control 
 DataFrame with 6 rows and 6 columns
-                      baseMean log2FoldChange     lfcSE      stat    pvalue      padj
-                     &lt;numeric&gt;      &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
-ENSMUSG00000000001  1489.83039       0.278343  0.148278  1.877165 0.0604955  0.324515
-ENSMUSG00000000028  1748.93544       0.221671  0.128835  1.720588 0.0853256  0.385578
-ENSMUSG00000000031  2151.87715       0.135823  0.284313  0.477724 0.6328467  0.866812
-ENSMUSG00000000037    24.91672       0.599542  0.562067  1.066673 0.2861195        NA
-ENSMUSG00000000049     7.78377      -1.227258  1.148327 -1.068735 0.2851890        NA
-ENSMUSG00000000056 19653.54030      -0.201183  0.167344 -1.202215 0.2292803  0.596345</code></pre>
+                      baseMean log2FoldChange     lfcSE      stat    pvalue
+                     &lt;numeric&gt;      &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
+ENSMUSG00000000001  1489.83039       0.278343  0.148278  1.877165 0.0604955
+ENSMUSG00000000028  1748.93544       0.221671  0.128835  1.720588 0.0853256
+ENSMUSG00000000031  2151.87715       0.135823  0.284313  0.477724 0.6328467
+ENSMUSG00000000037    24.91672       0.599542  0.562067  1.066673 0.2861195
+ENSMUSG00000000049     7.78377      -1.227258  1.148327 -1.068735 0.2851890
+ENSMUSG00000000056 19653.54030      -0.201183  0.167344 -1.202215 0.2292803
+                        padj
+                   &lt;numeric&gt;
+ENSMUSG00000000001  0.324515
+ENSMUSG00000000028  0.385578
+ENSMUSG00000000031  0.866812
+ENSMUSG00000000037        NA
+ENSMUSG00000000049        NA
+ENSMUSG00000000056  0.596345</code></pre>
 <p>If we look at the results table, we see that the row names are gene
 identifiers (in this case ENSEMBL IDs because that’s what the GTF we
 used in the call to RSEM+STAR) and then we see the following
@@ -772,14 +777,22 @@ head(alt_results_deficient_vs_control)</code></pre>
 <pre><code>log2 fold change (MLE): condition deficient vs control 
 Wald test p-value: condition deficient vs control 
 DataFrame with 6 rows and 6 columns
-                      baseMean log2FoldChange     lfcSE      stat    pvalue      padj
-                     &lt;numeric&gt;      &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
-ENSMUSG00000000001  1489.83039       0.278343  0.148278  1.877165 0.0604955  0.324515
-ENSMUSG00000000028  1748.93544       0.221671  0.128835  1.720588 0.0853256  0.385578
-ENSMUSG00000000031  2151.87715       0.135823  0.284313  0.477724 0.6328467  0.866812
-ENSMUSG00000000037    24.91672       0.599542  0.562067  1.066673 0.2861195        NA
-ENSMUSG00000000049     7.78377      -1.227258  1.148327 -1.068735 0.2851890        NA
-ENSMUSG00000000056 19653.54030      -0.201183  0.167344 -1.202215 0.2292803  0.596345</code></pre>
+                      baseMean log2FoldChange     lfcSE      stat    pvalue
+                     &lt;numeric&gt;      &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
+ENSMUSG00000000001  1489.83039       0.278343  0.148278  1.877165 0.0604955
+ENSMUSG00000000028  1748.93544       0.221671  0.128835  1.720588 0.0853256
+ENSMUSG00000000031  2151.87715       0.135823  0.284313  0.477724 0.6328467
+ENSMUSG00000000037    24.91672       0.599542  0.562067  1.066673 0.2861195
+ENSMUSG00000000049     7.78377      -1.227258  1.148327 -1.068735 0.2851890
+ENSMUSG00000000056 19653.54030      -0.201183  0.167344 -1.202215 0.2292803
+                        padj
+                   &lt;numeric&gt;
+ENSMUSG00000000001  0.324515
+ENSMUSG00000000028  0.385578
+ENSMUSG00000000031  0.866812
+ENSMUSG00000000037        NA
+ENSMUSG00000000049        NA
+ENSMUSG00000000056  0.596345</code></pre>
 <p>This way of calling <code>results()</code> is especially helpful when
 the levels of the column of interest contain more than two levels
 because you can specify exactly which levels to test with little
@@ -880,7 +893,8 @@ from the file at a later date by using the function <code>load</code> or
 <code>attach</code> in most cases. We’ll proceed with saving our
 <code>dds_batch_fitted</code> object, creating a subdirectory first.</p>
 <pre class="r"><code>dir.create(&quot;outputs/Robjs&quot;, recursive=TRUE)</code></pre>
-<pre><code>Warning in dir.create(&quot;outputs/Robjs&quot;, recursive = TRUE): &#39;outputs/Robjs&#39; already exists</code></pre>
+<pre><code>Warning in dir.create(&quot;outputs/Robjs&quot;, recursive = TRUE): &#39;outputs/Robjs&#39;
+already exists</code></pre>
 <pre class="r"><code>save(dds_batch_fitted,
           file=&quot;outputs/Robjs/dds_batch_fitted.rds&quot;)</code></pre>
 <hr />

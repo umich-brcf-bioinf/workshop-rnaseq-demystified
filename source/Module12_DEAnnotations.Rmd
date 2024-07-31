@@ -36,8 +36,9 @@ knitr_fig_path("11-")
 In this module, we will learn:
 
 * The advantages of using gene ids when analyzing RNA-seq data.
-* How to add gene symbols and other annotations, using ENSEMBL gene ids
-* Discuss options for functional enrichments and other follow-ups
+* How to find gene symbols and other annotations, using ENSEMBL gene ids
+* How to output our results to file
+* General options for functional enrichments and other follow-ups
 
 <br>
 
@@ -63,7 +64,7 @@ Here we will generate summary figures for our results and annotate our DE tables
 
 ---
 
-# Adding genome annotations
+# Generating gene annotations
 
 Since, gene symbols can change over time or be ambiguous we use, and recommend, using the EMSEMBL reference genome and ENSEMBL IDs for alignments and we've been working with tables and data where all genes are labeled only by their long ENSEMBL ID. However, this can make it difficult to quickly look for genes of interest.
 
@@ -75,7 +76,7 @@ We'll start by loading the `biomaRt` library and calling the `useEnsembl()` func
 
 ```{r Pullmart, warning=FALSE}
 library('biomaRt')
-ensembl = useEnsembl(dataset = 'mmusculus_gene_ensembl', biomart='ensembl', mirror = "useast")
+ensembl = useEnsembl(dataset = 'mmusculus_gene_ensembl', biomart='ensembl')
 ```
 
 **Note** *- this process takes some time and will take up a larger amount of working memory so proceed with caution if you try to run these commands on a laptop with less than 4G of memory*
@@ -92,43 +93,19 @@ We can access additional genomic annotations using the [`bioMart` package](https
 ```{r AddAnotation3, warning=FALSE}
 id_mapping = getBM(attributes=c('ensembl_gene_id', 'external_gene_name'),
       filters = 'ensembl_gene_id',
-      values = row.names(assay(dds_fitted)),
+      values = row.names(assay(dds_batch_fitted)),
       mart = ensembl)
-# will take some time for query
+# will take some time for the query to run
 
 # Preview the result
 head(id_mapping)
 ```
 
-Now that we have the ENSEMBL information and a gene symbol to match to our results, we can proceed in the smaller groups. As with the previous exercise, we have broken it into small steps with hints as needed.
+The `id_mapping` table now includes the ENSEMBL information and a gene symbol only for the genes included in our results. This table should look familiar as it's the same table we used to annotate our results table in the last module.
 
 **Note**: For additional information regarding bioMart, please consult the [ENSEMBL bioMart vignette](https://bioconductor.org/packages/release/bioc/vignettes/biomaRt/inst/doc/accessing_ensembl.html) or the broader [Bioconductor Annotation Resources vignette ](http://bioconductor.org/packages/devel/workflows/vignettes/annotation/inst/doc/Annotation_Resources.html).
 
-Look at the two data frames that are going to be needed: `id_mapping` and `results_deficient_vs_control`.
-
-```{r preview_tables}
-head(id_mapping)
-head(results_deficient_vs_control)
-```
-
-We want to match the `id` column of `results_deficient_vs_control` to the `ensembl_gene_id` column of `id_mapping`, and once that match is found, we want to extract the `external_gene_name` column of `id_mapping` to get the gene symbol. Next, look at the documentation for `dplyr::left_join()` and merge the `id_mapping` table into the `results_deficient_vs_control` table on the columns `ensembl_gene_id` and `external_gene_name`.
-
-```{r left_join}
-results_deficient_vs_control_annotated = as_tibble(results_deficient_vs_control, rownames = "id") %>%
-    left_join(id_mapping, by = c('id' = 'ensembl_gene_id'))
-head(results_deficient_vs_control_annotated)
-```
-
-We can use some of the `tidyverse` functions we've encountered previously to rename the `external_gene_name` column to `symbol` and to move it into the second column position? Hint: Because of the order of the packages we may have loaded, we'll use `dplyr::rename()` and `dplyr::select()` instead of just the `select()` function. We can discuss this in a moment.
-
-```{r rename_rearrange}
-results_deficient_vs_control_annotated = results_deficient_vs_control_annotated %>%
-    dplyr::rename('symbol' = 'external_gene_name') %>%
-    dplyr::select(id, symbol, everything())
-results_deficient_vs_control_annotated
-```
-
-And now we have our differential expression results annotated with gene symbols, which can help in the interpretation of the results, and can be used in downstream analysis such as functional analysis. Although we don't have time to run this together, we can also use this table to label genes of interest in our volcano plot.
+---
 
 # Outputting results to file
 
@@ -138,7 +115,7 @@ A key aspect of our analysis is preserving the relevant datasets for both our re
 
 We'll write out our DE results, now that we've added information to the table to help us or our collaborators interpret the results.
 
-```{r DEResultsOuput, eval = FALSE}
+```{r DEResultsOutput, eval = FALSE}
 write.csv(results_deficient_vs_control,
           row.names = FALSE,
           na = ".",
@@ -147,6 +124,30 @@ write.csv(results_deficient_vs_control,
 write.csv(results_deficient_vs_control_annotated,
           row.names = FALSE,
           file="outputs/tables/DE_results_deficient_vs_control_annotated.csv")
+```
+
+
+## Subsetting significant genes
+
+You may be interested in creating a table of only the genes that pass your significance thresholds. A useful way to do this is to conditionally subset your results. Again, we already created the `call` column, which makes this relatively simple to do:
+
+```{r ConditionalSubset}
+# tidyr (requires table reformatting)
+res_sig <- as_tibble(results_deficient_vs_control, rownames = "gene_ids") %>% filter(call != 'NS')
+
+head(res_sig)
+dim(res_sig)
+```
+
+<!-- add base version as dropdown: # base
+res_sig <- results_deficient_vs_control[results_deficient_vs_control$call != 'NS', ] -->
+
+Once we've created this table, we can also write it out to file:
+```{r DEOnlyOutput, eval = FALSE}
+write.csv(res_sig,
+          row.names = FALSE,
+          na = ".",
+          file="outputs/tables/DEGs-only_deficient_vs_control.csv")
 ```
 
 
@@ -185,7 +186,7 @@ What to consider moving forward:
 
 ---
 
-# But how do we make sense of large numbers of DE genes?
+# Next steps - How do we make sense of large numbers of DE genes?
 
 A way to determine possible [broader biological interpretations](https://www.ebi.ac.uk/training-beta/online/courses/functional-genomics-ii-common-technologies-and-data-analysis-methods/biological-interpretation-of-gene-expression-data-2/) from the observed DE results, is functional enrichments. 
 

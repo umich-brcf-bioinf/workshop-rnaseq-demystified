@@ -43,6 +43,8 @@ library(RColorBrewer)
 
 Additional visualizations for gene/sample level QC assessment
 
+<!--- Improvement - add gene level heatmap visualizations -->
+
 # Count boxplots
 
 To evaluate the difference between the count distributions before and after normalization, let's extract the raw counts and the rlog normalized counts, and coerce them to `tibble`s.

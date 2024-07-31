@@ -1,0 +1,7 @@
+sample,genotype,condition,batch
+sample_A,wt,control,Day1
+sample_B,wt,control,Day2
+sample_C,wt,control,Day2
+sample_D,wt,deficient,Day1
+sample_E,wt,deficient,Day2
+sample_F,wt,deficient,Day2

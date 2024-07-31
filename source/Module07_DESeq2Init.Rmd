@@ -84,7 +84,7 @@ samplesheet_batch = read.table("../data/R_data/samplesheet_batch.csv",
 ```
 
 ```{r Samplesheet2, eval = FALSE}
-samplesheet_batch = read.table("data/samplesheet.csv",
+samplesheet_batch = read.table("data/samplesheet_batch.csv",
                        sep = ",",
                        header = TRUE,
                        row.names = 1)

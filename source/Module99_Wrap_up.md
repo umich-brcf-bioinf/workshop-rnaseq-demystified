@@ -113,13 +113,14 @@ connect to enable gene expression analysis from bulk RNA-Seq data.
 ![Sponsors](images/Module00_Introduction/sponsor_logos.png)
 
 ## Thank you to/from the workshop team
-| ![](images/Module00_Introduction/headshots/headshot_cgates.jpg) | ![](images/Module00_Introduction/headshots/headshot_mbradenb.jpg) | ![](images/Module00_Introduction/headshots/headshot_trsaari.jpg) |
+| ![](images/Module00_Introduction/headshots/headshot_cgates.jpg) | ![](images/Module00_Introduction/headshots/headshot_mbradenb.jpg) | ![](images/Module00_Introduction/headshots/headshot_trsaari.jpg) | ![](images/Module00_Introduction/headshots/headshot_rcavalca.jpg) |
 |:-:|:-:|:-:|:-:|
-| **Chris** | **Marci** | **Travis** |
-![](images/Module00_Introduction/headshots/headshot_damki.jpg) | ![](images/Module00_Introduction/headshots/headshot_rcavalca.jpg) |
-| **Dana** | **Raymond** |
+| **Chris** | **Marci** | **Travis** | **Raymond** |
+| ![](images/Module00_Introduction/headshots/headshot_damki.jpg) | ![](images/Module00_Introduction/headshots/headshot_mkdohert.jpg) | ![](images/Module00_Introduction/headshots/headshot_ncarruth.jpg) |
+| **Dana** | **Matt** | **Nick** |
 
 <br/>
+
 
 
 

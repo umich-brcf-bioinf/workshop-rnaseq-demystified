@@ -39,7 +39,7 @@ render('source/workshop_setup/setup_instructions_advanced.md', output_dir='html/
 
 render_site('source/index.md')
 render_site('source/breakout_exercises.md')
-render_site('source/Module00_Introduction.md')
+render_site('source/Module00_Introduction.Rmd')
 render_site('source/Module01_Warming_Up.md')
 render_site('source/Module02a_Sequence_QC.md')
 render_site('source/Module02b_Trimming.md')
